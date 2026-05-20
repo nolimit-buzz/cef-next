@@ -6,3 +6,6 @@ coverage/
 *.log
 .env*
 !.env.example
+yarn-error.log
+yarn.lock
+package-lock.json

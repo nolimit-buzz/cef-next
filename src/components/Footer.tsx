@@ -218,7 +218,7 @@ export const Footer = () => {
                       partner.type === "text" ? (
                         <span
                           key={i}
-                          className="text-lg md:text-2xl font-serif italic tracking-tight text-[var(--color-text-secondary)]/30 hover:text-[var(--color-text-secondary)] transition-colors cursor-default"
+                          className="text-lg md:text-2xl font-sans italic tracking-tight text-[var(--color-text-secondary)]/30 hover:text-[var(--color-text-secondary)] transition-colors cursor-default"
                         >
                           {partner.name}
                         </span>
@@ -337,10 +337,12 @@ export const Footer = () => {
                 <Instagram className="w-4 h-4" />
               </a>
             </div>
-            <div className="text-xs text-[var(--color-text-secondary)] flex items-center gap-2">
-              <a href="#" className="hover:text-white transition-colors">Privacy Policy & Terms of Service</a>
-              <span className="opacity-50">•</span>
+            <div className="text-xs text-[var(--color-text-secondary)] flex flex-row items-center gap-2 justify-center">
+            < div className="inline items-center gap-2">
+             <a href="#" className="hover:text-white transition-colors">Privacy Policy & Terms of Service</a>
+              <span className="opacity-50 px-2">•</span>
               <span>© 2026 Clean Energy Fund Facility</span>
+            </div>
             </div>
           </div>
         </div>

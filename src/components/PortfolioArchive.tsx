@@ -465,7 +465,7 @@ export default function PortfolioArchive() {
                           className="w-full py-8 flex items-center justify-between group text-left"
                         >
                           <div className="flex items-center gap-8 md:gap-16 flex-1">
-                            <span className="text-4xl font-light text-white/20 font-serif w-12">{item.id}</span>
+                            <span className="text-4xl font-light text-white/20 font-sans w-12">{item.id}</span>
                             <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-12 flex-1">
                               <h3 className="text-xl md:text-2xl font-medium text-white group-hover:translate-x-2 transition-transform duration-300">
                                 {item.name}
@@ -642,7 +642,7 @@ export default function PortfolioArchive() {
                         <div className="relative z-10 p-8 flex flex-col h-full">
                           {/* Top: Number */}
                           <div className="flex justify-between items-start mb-6">
-                            <span className="text-4xl font-serif italic text-white/30">{(idx + 1).toString().padStart(2, '0')}</span>
+                            <span className="text-4xl font-sans italic text-white/30">{(idx + 1).toString().padStart(2, '0')}</span>
                           </div>
 
                           {/* Title & SDGs */}

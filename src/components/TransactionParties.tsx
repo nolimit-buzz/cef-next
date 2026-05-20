@@ -78,7 +78,7 @@ export const TransactionPartiesGrid = () => {
     {
       logoHtml: (
          <div className="flex flex-col items-center">
-           <span className="text-[#13498b] font-black text-4xl tracking-tighter leading-[0.8]" style={{ fontFamily: 'Impact, sans-serif'}}>fsdh</span>
+           <span className="text-[#13498b] font-black text-4xl tracking-tighter leading-[0.8]">fsdh</span>
            <span className="text-[#009bd9] text-[8px] font-bold tracking-[0.1em] uppercase mt-1">Capital Ltd</span>
          </div>
       ),

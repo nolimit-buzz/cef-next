@@ -861,7 +861,7 @@ const ImpactSDGsSection = () => {
               
               <div className="relative z-10 flex flex-col h-full">
                 <div className="flex justify-between items-start mb-6">
-                  <span className="text-4xl font-light text-white/20 font-serif">{'0' + (i + 1)}</span>
+                  <span className="text-4xl font-light text-white/20 font-sans">{'0' + (i + 1)}</span>
                   <ArrowUpRight className="w-5 h-5 text-white/30 group-hover:text-white/80 group-hover:-translate-y-1 group-hover:translate-x-1 transition-all duration-500" />
                 </div>
                 

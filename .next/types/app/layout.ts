@@ -1,4 +1,4 @@
-// File: C:\Users\HP\Downloads\remix_-cef-v1.6.4\src\app\layout.tsx
+// File: C:\Users\Syntax\Documents\Projects\cef-nextjs-\src\app\layout.tsx
 import * as entry from '../../../src/app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
