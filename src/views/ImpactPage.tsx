@@ -99,7 +99,7 @@ const HeroSection = () => {
       </div>
 
       {/* Bottom Tier: 3-Column Content Grid */}
-      <div className="w-full grid grid-cols-1 lg:grid-cols-4 z-20 relative shrink-0">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-4 z-20 relative shrink-0 mb-40">
         {/* Column 1: Sub-headline */}
         <div className="lg:col-span-2 bg-white p-8 lg:py-12 xl:py-14 lg:pl-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] lg:pr-12 border-t border-r border-gray-200 flex items-center">
           <motion.p 
