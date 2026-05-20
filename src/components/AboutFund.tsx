@@ -488,7 +488,7 @@ export const AboutFund = () => {
                       partner.type === "text" ? (
                         <span
                           key={i}
-                          className="text-lg md:text-2xl font-serif italic tracking-tight text-[var(--color-text-secondary)]/30 hover:text-[var(--color-text-secondary)] transition-colors cursor-default"
+                          className="text-lg md:text-2xl font-sans italic tracking-tight text-[var(--color-text-secondary)]/30 hover:text-[var(--color-text-secondary)] transition-colors cursor-default"
                         >
                           {partner.name}
                         </span>

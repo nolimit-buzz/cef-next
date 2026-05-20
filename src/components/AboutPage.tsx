@@ -959,7 +959,7 @@ const ValuesAndImpactSection = () => {
           >
             <div>
               <div className="flex justify-between items-start mb-6">
-                <span className="text-4xl font-light text-gray-300 font-serif">05</span>
+                <span className="text-4xl font-light text-gray-300 font-sans">05</span>
                 <ArrowUpRight className="w-5 h-5 text-gray-400 group-hover:text-[#0A1224] group-hover:-translate-y-1 group-hover:translate-x-1 transition-all duration-500" />
               </div>
               <h4 className="text-xl font-medium text-[#0A1224] mb-4">Gender Equality</h4>
@@ -998,7 +998,7 @@ const ValuesAndImpactSection = () => {
           >
             <div>
               <div className="flex justify-between items-start mb-6">
-                <span className="text-4xl font-light text-gray-300 font-serif">08</span>
+                <span className="text-4xl font-light text-gray-300 font-sans">08</span>
                 <ArrowUpRight className="w-5 h-5 text-gray-400 group-hover:text-[#0A1224] group-hover:-translate-y-1 group-hover:translate-x-1 transition-all duration-500" />
               </div>
               <h4 className="text-xl font-medium text-[#0A1224] mb-4">Decent Work & Growth</h4>
@@ -1023,7 +1023,7 @@ const ValuesAndImpactSection = () => {
           >
             <div>
               <div className="flex justify-between items-start mb-6">
-                <span className="text-4xl font-light text-gray-300 font-serif">11</span>
+                <span className="text-4xl font-light text-gray-300 font-sans">11</span>
                 <ArrowUpRight className="w-5 h-5 text-gray-400 group-hover:text-[#0A1224] group-hover:-translate-y-1 group-hover:translate-x-1 transition-all duration-500" />
               </div>
               <h4 className="text-xl font-medium text-[#0A1224] mb-4">Sustainable Cities</h4>
@@ -1062,7 +1062,7 @@ const ValuesAndImpactSection = () => {
           >
             <div>
               <div className="flex justify-between items-start mb-6">
-                <span className="text-4xl font-light text-gray-300 font-serif">13</span>
+                <span className="text-4xl font-light text-gray-300 font-sans">13</span>
                 <ArrowUpRight className="w-5 h-5 text-gray-400 group-hover:text-[#0A1224] group-hover:-translate-y-1 group-hover:translate-x-1 transition-all duration-500" />
               </div>
               <h4 className="text-xl font-medium text-[#0A1224] mb-4">Climate Action</h4>
