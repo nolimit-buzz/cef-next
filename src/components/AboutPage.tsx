@@ -776,7 +776,7 @@ const FundStructureSection = () => {
                   </div>
 
                   {/* Arrow Right 1 */}
-                  <AnimatedHorizontalArrow direction="right" label="Credit Enhancement for Senior Debt by Other Institutional Investors" labelPosition="-bottom-12 w-48" delay={2.0} className="w-28" />
+                  <AnimatedHorizontalArrow direction="right" label="Credit Enhancement for Senior Debt by Other Institutional Investors" labelPosition="-bottom-12 w-48" delay={2.0} className="w-28 mx-10" />
 
                   {/* Center Box */}
                   <div className="border-2 border-[#00A859] rounded-2xl p-5 bg-white shadow-xl flex flex-col items-center w-64 relative z-10">
@@ -789,7 +789,7 @@ const FundStructureSection = () => {
                   </div>
 
                   {/* Arrows Right/Left 2 */}
-                  <div className="relative w-28 flex flex-col justify-center gap-6">
+                  <div className="relative w-28 flex flex-col justify-center gap-6 mx-4">
                     <AnimatedHorizontalArrow direction="right" label="Senior Debt Commercial Funding" labelPosition="-top-8 w-full" delay={2.2} className="w-full" />
                     <AnimatedHorizontalArrow direction="left" label="Interest" labelPosition="top-2 w-full" delay={2.4} className="w-full" />
                   </div>
