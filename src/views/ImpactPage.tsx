@@ -16,6 +16,7 @@ import Link from "next/link";
 import { cn } from "../lib/utils";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { NigeriaMap } from "../components/NigeriaMap";
+import { SDGMap } from "../components/SDGMap";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -43,7 +44,9 @@ export const ImpactPage = () => {
       <ImpactBodySection />
       <NigeriaMap />
       <CorePillarsSection />
-      <CaseStudySpotlight />
+      {/* <CaseStudySpotlight /> */}
+
+         <SDGMap />
     </main>
   );
 };

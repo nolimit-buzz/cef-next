@@ -144,7 +144,7 @@ export const Footer = () => {
   };
 
   return (
-    <footer className="bg-[#040d18] text-white pt-0 pb-12 relative z-20 border-t-2 border-electric-blue">
+    <footer className="bg-[#040d18] text-white pt-0 pb-12 relative z-20">
 
       <div className="max-w-7xl mx-auto px-6">
 

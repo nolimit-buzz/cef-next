@@ -709,7 +709,7 @@ export default function PortfolioArchive() {
       <NigeriaMap />
 
       {/* SDG Map Section */}
-      <SDGMap />
+      {/* <SDGMap /> */}
     </div>
   );
 }

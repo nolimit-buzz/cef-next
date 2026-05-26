@@ -8,7 +8,7 @@
    ============================================ */
 @theme {
   /* Typography — variable is now fed by next/font in layout.tsx */
-  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
 
   /* Backgrounds */
   --color-background: #050A15;
