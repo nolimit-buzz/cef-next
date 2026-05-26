@@ -1,8 +1,7 @@
 {
   "/portfolio/page": "app/portfolio/page.js",
-  "/impact/page": "app/impact/page.js",
-  "/fund/page": "app/fund/page.js",
   "/investor-relations/page": "app/investor-relations/page.js",
-  "/eligibility/page": "app/eligibility/page.js",
-  "/about/page": "app/about/page.js"
+  "/about/page": "app/about/page.js",
+  "/impact/page": "app/impact/page.js",
+  "/fund/page": "app/fund/page.js"
 }

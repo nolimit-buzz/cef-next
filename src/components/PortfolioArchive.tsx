@@ -6,8 +6,8 @@ import Link from "next/link";
 import { portfolioData } from '../data/projects';
 import Breadcrumbs from './Breadcrumbs';
 import { cn } from '../lib/utils';
-import { SDGMap } from './SDGMap';
-import { NigeriaMap } from './NigeriaMap';
+import dynamic from 'next/dynamic';
+const NigeriaMap = dynamic(() => import('./NigeriaMap').then(m => m.NigeriaMap), { ssr: false });
 import { FundPerformanceChart } from './FundPerformanceChart';
 
 const fadeUp = {
@@ -707,9 +707,6 @@ export default function PortfolioArchive() {
 
       {/* Nigeria Map Section */}
       <NigeriaMap />
-
-      {/* SDG Map Section */}
-      {/* <SDGMap /> */}
     </div>
   );
 }

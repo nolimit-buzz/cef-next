@@ -7,7 +7,7 @@ import { ArrowUpRight } from 'lucide-react';
 
 import { portfolioData } from '../data/projects';
 
-const nigeriaTopoUrl = "/nigeria-states.geojson";
+const geoUrl = "https://unpkg.com/world-atlas@2.0.2/countries-110m.json";
 
 // Project interface for map interaction
 interface Project {
@@ -20,6 +20,10 @@ interface Project {
 
 // Data mapping states to projects
 const stateData: Record<string, { projects: Project[], description: string }> = {
+  "Nigeria": {
+    projects: portfolioData,
+    description: "Driving clean energy transition across Nigeria — from solar installations to sustainable mobility and industrial decarbonization."
+  },
   "Lagos": { 
     projects: [portfolioData[0]], 
     description: "Hub for sustainable urban mobility and clean transport infrastructure." 
@@ -105,48 +109,41 @@ export const NigeriaMap = () => {
 
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Map Container */}
-          <div className="w-full lg:w-2/3 relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden flex items-center justify-center">
-            <ComposableMap 
-              projection="geoMercator" 
-              projectionConfig={{ scale: 2400, center: [8.6753, 9.0820] }}
-              style={{ width: "100%", height: "100%" }}
+          <div className="w-full lg:w-2/3 relative h-[400px] md:h-[500px] lg:h-[600px]">
+            <ComposableMap
+              projection="geoMercator"
+              projectionConfig={{ scale: 2500, center: [8, 9] }}
+              width={800}
+              height={600}
+              style={{ width: "100%", height: "100%", position: "absolute", top: 0, left: 0 }}
             >
-              <Geographies geography={nigeriaTopoUrl}>
+              <Geographies geography={geoUrl}>
                 {({ geographies }) =>
                   geographies.map((geo) => {
-                    const stateName = geo.properties.shapeName || geo.properties.NAME_1 || geo.properties.name;
-                    const hasProjects = Object.keys(stateData).includes(stateName);
-                    const isActive = activeState === stateName;
-
+                    const isNigeria = geo.properties.name === "Nigeria";
+                    const isActive = activeState === "Nigeria" && isNigeria;
                     return (
                       <Geography
                         key={geo.rsmKey}
                         geography={geo}
-                        onClick={() => handleStateClick(stateName)}
+                        onClick={() => { if (isNigeria) handleStateClick("Nigeria"); }}
                         style={{
                           default: {
-                            fill: isActive 
-                              ? "var(--color-accent-green)" 
-                              : (hasProjects ? "#1E3A8A" : "#0B1426"),
+                            fill: isActive ? "var(--color-accent-green)" : isNigeria ? "#1E3A8A" : "#0B1426",
                             outline: "none",
                             stroke: "rgba(255,255,255,0.1)",
                             strokeWidth: 0.5,
                             transition: "all 0.3s ease",
-                            cursor: "pointer",
+                            cursor: isNigeria ? "pointer" : "default",
                           },
                           hover: {
-                            fill: isActive 
-                              ? "var(--color-accent-green)" 
-                              : (hasProjects ? "var(--color-accent)" : "#132345"),
+                            fill: isNigeria ? "var(--color-accent)" : "#0B1426",
                             outline: "none",
                             stroke: "rgba(255,255,255,0.2)",
                             strokeWidth: 0.5,
-                            cursor: "pointer",
+                            cursor: isNigeria ? "pointer" : "default",
                           },
-                          pressed: {
-                            fill: "var(--color-accent-green)",
-                            outline: "none",
-                          },
+                          pressed: { fill: "var(--color-accent-green)", outline: "none" },
                         }}
                       />
                     );
@@ -154,14 +151,10 @@ export const NigeriaMap = () => {
                 }
               </Geographies>
             </ComposableMap>
-            <div className="absolute bottom-4 left-4 bg-white/5 backdrop-blur-md border border-white/10 rounded p-3 text-xs flex flex-col gap-2">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-[#1E3A8A]"></div>
-                <span className="text-white/80 font-medium">Active Projects</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-[#0B1426] border border-white/10"></div>
-                <span className="text-white/50">Pipeline / Evaluation</span>
+            <div className="absolute bottom-6 left-6 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg p-4 pointer-events-none">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 rounded-full bg-[#1E3A8A] animate-pulse" />
+                <span className="text-sm font-medium text-white">Active Region: Nigeria</span>
               </div>
             </div>
             <div className="absolute top-4 right-4 bg-white/5 backdrop-blur-md p-2 rounded text-[10px] text-white/50 border border-white/10">
