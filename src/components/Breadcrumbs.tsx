@@ -8,8 +8,7 @@ import { portfolioData } from '../data/projects';
 
 export default function Breadcrumbs() {
   const pathname = usePathname();
-  const location = typeof window !== 'undefined' ? window.location : { hash: '', pathname };
-  const pathnames = (location?.pathname || "").split('/').filter((x) => x);
+  const pathnames = (pathname || "").split('/').filter((x) => x);
 
   const breadcrumbsList: {name: string, path: string}[] = [];
   pathnames.forEach((name, index) => {

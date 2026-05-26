@@ -42,11 +42,11 @@ export const ImpactPage = () => {
       <HeroSection />
       <ImpactStatementSection />
       <ImpactBodySection />
-      <NigeriaMap />
+         <SDGMap />
+      {/* <NigeriaMap /> */}
       <CorePillarsSection />
       {/* <CaseStudySpotlight /> */}
 
-         <SDGMap />
     </main>
   );
 };
