@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
-import { Share2, Facebook, Twitter, Linkedin, Link as LinkIcon, ChevronRight, Sun, Moon } from 'lucide-react';
+import { Share2, Facebook, Twitter, Linkedin, Link as LinkIcon, Sun, Moon } from 'lucide-react';
+import Breadcrumbs from './Breadcrumbs';
 import { useParams, redirect } from "next/navigation";
 
 import Link from "next/link";
@@ -31,14 +32,7 @@ export const ArticlePage = () => {
       {/* Hero Section */}
       <article className="max-w-7xl mx-auto px-6">
         <div className="mb-8 flex items-center justify-between">
-          {/* Breadcrumbs */}
-          <nav className={cn("flex items-center gap-2 text-sm font-medium", isDarkMode ? "text-white/60" : "text-[#1A1A1A]/60")}>
-            <Link href="/" className={cn("transition-colors", isDarkMode ? "hover:text-[var(--color-accent-green)]" : "hover:text-[var(--color-accent)]")}>Home</Link>
-            <ChevronRight className="w-4 h-4" />
-            <Link href="/news" className={cn("transition-colors", isDarkMode ? "hover:text-[var(--color-accent-green)]" : "hover:text-[var(--color-accent)]")}>News</Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className={cn("truncate max-w-[120px] sm:max-w-xs md:max-w-md", isDarkMode ? "text-white" : "text-[#1A1A1A]")}>{article.title}</span>
-          </nav>
+          <Breadcrumbs isDarkMode={isDarkMode} />
 
           {/* Dark Mode Toggle */}
           <button 
