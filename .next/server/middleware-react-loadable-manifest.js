@@ -1,1 +1,0 @@
-self.__REACT_LOADABLE_MANIFEST='{"components\\\\PortfolioArchive.tsx -> ./NigeriaMap":{"id":4814,"files":["static/chunks/427-9463106e96dcdff6.js","static/chunks/814.ef7c816a3ed30ce4.js"]}}';
