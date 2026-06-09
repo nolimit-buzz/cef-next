@@ -354,7 +354,7 @@ export const CaseStudy = () => {
                     return (
                       <React.Fragment key={idx}>
                         <blockquote className="border-l-[3px] border-[var(--color-accent)] pl-8 py-2 my-12 text-2xl md:text-3xl font-light text-slate-900 italic leading-snug">
-                          "{challengeQuote}"
+                          &quot;{challengeQuote}&quot;
                         </blockquote>
                         <p className="text-slate-600 leading-relaxed mb-6">
                           {paragraph}

@@ -448,7 +448,7 @@ const DocumentLibrarySection = () => {
               <div className="text-center py-24 bg-white border border-gray-100 rounded-xl shadow-sm">
                 <FileText className="w-12 h-12 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No documents found</h3>
-                <p className="text-gray-500">We couldn't find any documents matching your search.</p>
+                <p className="text-gray-500">We couldn&apos;t find any documents matching your search.</p>
               </div>
             )}
           </div>

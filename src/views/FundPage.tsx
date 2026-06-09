@@ -147,7 +147,7 @@ const HeroSection = () => {
             </motion.div>
             
             <motion.h1 variants={fadeUp} className="text-[40px] md:text-5xl lg:text-[48px] xl:text-[52px] font-medium leading-[1.1] tracking-tight">
-              <span className="text-white">Powering Nigeria's</span> <br className="hidden lg:block" /> <span className="text-white/50">Clean Energy Future.</span>
+              <span className="text-white">Powering Nigeria&apos;s</span> <br className="hidden lg:block" /> <span className="text-white/50">Clean Energy Future.</span>
             </motion.h1>
           </motion.div>
         </div>

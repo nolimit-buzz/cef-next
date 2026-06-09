@@ -132,7 +132,7 @@ const HeroSection = () => {
             <motion.div variants={fadeUp} className="inline-flex items-center gap-3 mb-6 lg:mb-8 bg-white/5 border border-white/10 px-5 py-2.5 rounded-full">
               <span className="text-base">🏆</span>
               <span className="text-xs font-medium uppercase tracking-[0.2em] text-white/90">
-                Nigeria's First & Only Certified Green Fund
+                Nigeria&apos;s First & Only Certified Green Fund
               </span>
             </motion.div>
             
@@ -174,7 +174,7 @@ const HeroSection = () => {
             initial="hidden" animate="visible" variants={fadeUp}
             className="text-[#0A1224] text-lg leading-relaxed font-light"
           >
-            Bridging the $9.2 Billion market gap. We deliver risk-adjusted, stable returns for domestic institutional investors while driving Nigeria's energy transition—without FX exposure.
+            Bridging the $9.2 Billion market gap. We deliver risk-adjusted, stable returns for domestic institutional investors while driving Nigeria&apos;s energy transition—without FX exposure.
           </motion.p>
         </div>
 
@@ -872,7 +872,7 @@ const TechnicalAssistanceSection = () => {
                 <span className="text-gray-500 text-[10px] tracking-[0.2em] mt-1">RATINGS</span>
               </div>
               <div className="text-[11px] text-gray-600 border-l border-gray-400/50 pl-4 leading-tight">
-                An Affiliate<br/>of Moody's<br/>Investors Service
+                An Affiliate<br/>of Moody&apos;s<br/>Investors Service
               </div>
             </div>
           </div>
@@ -936,7 +936,7 @@ const ValuesAndImpactSection = () => {
             {/* Right: Description */}
             <motion.div variants={fadeUp} className="flex flex-col justify-start items-start">
               <p className="text-lg text-gray-600 font-light leading-relaxed mb-8 max-w-xl">
-                As Nigeria's only Climate Bonds Certified fund, our investments are strictly mapped to the UN Sustainable Development Goals. We don't just measure megawatts; we measure human advancement.
+                As Nigeria&apos;s only Climate Bonds Certified fund, our investments are strictly mapped to the UN Sustainable Development Goals. We don&apos;t just measure megawatts; we measure human advancement.
               </p>
             </motion.div>
           </div>
@@ -1074,7 +1074,7 @@ const ValuesAndImpactSection = () => {
               </div>
             </div>
             <p className="text-gray-600 font-light leading-relaxed text-sm mt-auto">
-              Confronting climate change head-on by accelerating private capital into climate-smart technologies for Nigeria's energy transition.
+              Confronting climate change head-on by accelerating private capital into climate-smart technologies for Nigeria&apos;s energy transition.
             </p>
           </GradientCard>
 

@@ -535,7 +535,7 @@ const GovernanceImpactSection = () => {
             className="md:w-1/2 lg:w-5/12 md:flex md:justify-end"
           >
             <p className="text-lg text-gray-600 leading-relaxed max-w-md md:text-right">
-              As Nigeria's only Climate Bonds Certified fund, our investments are strictly mapped to the UN SDGs. We don't just measure megawatts; we measure human advancement.
+              As Nigeria&apos;s only Climate Bonds Certified fund, our investments are strictly mapped to the UN SDGs. We don&apos;t just measure megawatts; we measure human advancement.
             </p>
           </motion.div>
         </div>
@@ -569,7 +569,7 @@ const GovernanceImpactSection = () => {
               </div>
             </div>
             <p className="text-gray-700 text-lg leading-relaxed relative z-10 italic">
-              "A core pillar of our deployment criteria is empowering female entrepreneurs across the clean energy value chain and creating sustainable, high-paying local jobs."
+              &quot;A core pillar of our deployment criteria is empowering female entrepreneurs across the clean energy value chain and creating sustainable, high-paying local jobs.&quot;
             </p>
           </motion.div>
         </div>

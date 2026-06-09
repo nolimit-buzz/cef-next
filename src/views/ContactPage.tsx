@@ -135,7 +135,7 @@ const ContactStatementSection = () => {
             className="lg:w-1/2"
           >
             <h2 className="text-[32px] md:text-4xl lg:text-[40px] font-medium leading-[1.15] tracking-tight mb-8">
-              <span className="text-[#0A1224]">Let's Connect and</span><br/>
+              <span className="text-[#0A1224]">Let&apos;s Connect and</span><br/>
               <span className="text-gray-400">Scale Impact.</span>
             </h2>
           </motion.div>
@@ -248,7 +248,7 @@ const ContactBodySection = () => {
                 Our Offices.
               </h2>
               <p className="text-gray-600 leading-relaxed text-lg mb-10">
-                Operating directly from Nigeria's commercial capital to efficiently manage, evaluate, and fund clean infrastructure nationwide.
+                Operating directly from Nigeria&apos;s commercial capital to efficiently manage, evaluate, and fund clean infrastructure nationwide.
               </p>
 
               {/* Lagos Office */}

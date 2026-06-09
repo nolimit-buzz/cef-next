@@ -259,7 +259,7 @@ export const Footer = () => {
                 />
               </div>
               <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed">
-                Financing Nigeria's energy transition through local currency climate infrastructure investment.
+                Financing Nigeria&apos;s energy transition through local currency climate infrastructure investment.
               </p>
             </div>
 

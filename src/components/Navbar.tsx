@@ -779,7 +779,7 @@ export const Navbar = () => {
                     </div>
                   ) : (
                     <div className="p-8 text-center text-white/50">
-                      No results found for "{searchQuery}"
+                      No results found for &quot;{searchQuery}&quot;
                     </div>
                   )}
                 </div>
@@ -964,7 +964,7 @@ export const Hero = () => {
         className="relative z-20 w-full container-responsive border-t border-white/20 pt-6 flex justify-between items-center"
       >
         <div className="text-[10px] md:text-xs font-medium tracking-widest uppercase text-white/60">
-          Nigeria's First Certified Green Fund
+          Nigeria&apos;s First Certified Green Fund
         </div>
         <div className="text-[10px] md:text-xs font-medium tracking-widest uppercase text-white/60">
           Scroll to Explore

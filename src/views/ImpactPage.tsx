@@ -224,7 +224,7 @@ const ImpactBodySection = () => {
             className="md:w-1/2 lg:w-6/12"
           >
             <p className="text-lg text-gray-600 leading-relaxed mb-8">
-              Impact isn't just a byproduct of our funding—it's the core
+              Impact isn&apos;t just a byproduct of our funding—it&apos;s the core
               strategy. We deploy capital rigorously to ensure every Naira
               invested directly correlates to reduced carbon emissions, job
               creation, and sustainable economic growth across Nigeria.
