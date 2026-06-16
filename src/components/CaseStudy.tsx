@@ -2,12 +2,12 @@
 import { useEffect, useState, useRef } from 'react';
 import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, ArrowLeft, Layers, Zap, DollarSign, Leaf, Users, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useParams, redirect } from "next/navigation";
+import { ArrowUpRight, Layers, Zap, ChevronLeft, ChevronRight } from 'lucide-react';
 
 import Link from "next/link";
-import { portfolioData } from '../data/projects';
 import Breadcrumbs from './Breadcrumbs';
+import { resolveProject, resolveProjectWithCaseStudy } from '../lib/resolveProject';
+import type { ProjectItem } from '../types/portfolio';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -29,13 +29,17 @@ const itemVariants = {
 
 const sections = ['Overview', 'The Challenge', 'Our Solution', 'Impact Metrics', 'Gallery'];
 
-export const CaseStudy = () => {
-  const params = useParams() as { id?: string };
-  const id = params?.id;
+export interface CaseStudyProps {
+  rawProject?: ProjectItem;
+  rawOtherProjects: ProjectItem[];
+}
+
+export const CaseStudy = ({ rawProject, rawOtherProjects }: CaseStudyProps) => {
+  const project = rawProject ? resolveProjectWithCaseStudy(rawProject) : undefined;
+  const otherProjects = rawOtherProjects.map(resolveProject);
+  const id = project?.id;
   const [activeSection, setActiveSection] = useState('overview');
   const galleryRef = useRef<HTMLDivElement>(null);
-
-  const project = portfolioData.find(p => p.id === id);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -102,26 +106,26 @@ export const CaseStudy = () => {
     if (typeof window !== "undefined") window.location.href = "/"; return null;
   }
 
-  // Fallback data if caseStudy details are not fully populated in projects.ts
-  const overviewText = project.caseStudy?.overview || [
+  // Fallback data if caseStudy details aren't fully populated in the CMS yet
+  const overviewText = project.caseStudy.overview.length ? project.caseStudy.overview : [
     project.description,
     "Their integrated approach not only reduces carbon emissions but also significantly lowers operating costs, creating a tangible economic and environmental impact."
   ];
 
-  const challengeText = project.caseStudy?.challenge?.text || [
+  const challengeText = project.caseStudy.challenge.text.length ? project.caseStudy.challenge.text : [
     "Nigeria's infrastructure sectors are heavily reliant on expensive and polluting fossil fuels, which contribute significantly to urban air pollution.",
     "The primary hurdle for this project was securing the upfront capital expenditure required to scale their infrastructure simultaneously, a capital-intensive endeavor that traditional commercial banks view as high-risk."
   ];
 
-  const challengeQuote = project.caseStudy?.challenge?.quote || "The transition to clean energy requires more than just technology; it demands a reliable, ubiquitous infrastructure that eliminates risk for commercial operators.";
+  const challengeQuote = project.caseStudy.challenge.quote || "The transition to clean energy requires more than just technology; it demands a reliable, ubiquitous infrastructure that eliminates risk for commercial operators.";
 
-  const solutionText = project.caseStudy?.solution || [
+  const solutionText = project.caseStudy.solution.length ? project.caseStudy.solution : [
     "We structured a local currency financing facility that provided the long-term capital needed to aggressively expand their network without exposure to foreign exchange volatility.",
     "By utilizing a blended finance approach, we integrated a partial credit guarantee. This de-risked the transaction sufficiently to attract local pension funds.",
     "The facility also incorporated a technical assistance grant to support the development of proprietary management software, ensuring optimal operations."
   ];
 
-  const impactMetrics = project.caseStudy?.impactMetrics || project.metrics.map(m => ({
+  const impactMetrics = project.caseStudy.impactMetrics.length ? project.caseStudy.impactMetrics : project.metrics.map(m => ({
     label: m.label,
     value: m.value,
     icon: m.icon,
@@ -130,13 +134,11 @@ export const CaseStudy = () => {
     sdg: project.sdgs[0] || { id: 7, color: '#FCC30B', label: 'Affordable and Clean Energy' }
   }));
 
-  const galleryImages = project.caseStudy?.galleryImages || [
+  const galleryImages = project.caseStudy.galleryImages.length ? project.caseStudy.galleryImages : [
     project.image,
     "https://images.unsplash.com/photo-1620800647868-81d9f8260401?q=80&w=1200&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=1200&auto=format&fit=crop"
   ];
-
-  const otherProjects = portfolioData.filter(p => p.id !== id).slice(0, 2);
 
   return (
     <div className="bg-white text-[#1A1A1A] min-h-screen font-sans">

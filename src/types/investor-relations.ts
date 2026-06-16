@@ -91,6 +91,9 @@ export interface PerformanceHighlightsSection {
   tabFundPerformanceLabel: string;
   chartTitle: string;
   chartDescription: string;
+  chartSeriesNav: string;
+  chartSeriesPerformance: string;
+  chartSeriesDividend: string;
   highlights: HighlightStatItem[];
 }
 

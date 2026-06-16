@@ -1,6 +1,7 @@
 import type { AboutPageData } from "../types/about";
 import type { ImpactPageData } from "../types/impact";
 import type { InvestorRelationsPageData } from "../types/investor-relations";
+import type { PortfolioPageData } from "../types/portfolio";
 
 export interface StrapiResponse<T> {
   data: T;
@@ -69,4 +70,21 @@ const INVESTOR_RELATIONS_POPULATE_QUERY = [
 
 export function getInvestorRelationsPage(): Promise<InvestorRelationsPageData> {
   return fetchAPI<InvestorRelationsPageData>("/investor-relations", INVESTOR_RELATIONS_POPULATE_QUERY);
+}
+
+const PORTFOLIO_POPULATE_QUERY = [
+  "populate[sections][on][portfolio-page.hero-section][populate]=*",
+  "populate[sections][on][portfolio-page.performance-section][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][metrics][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][sdgs][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][overview][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][solution][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][impactMetrics][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][galleryImages][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][challenge][populate][text][populate]=*",
+  "populate[sections][on][portfolio-page.nigeria-map-section][populate][states][populate]=*",
+].join("&");
+
+export function getPortfolioPage(): Promise<PortfolioPageData> {
+  return fetchAPI<PortfolioPageData>("/portfolio", PORTFOLIO_POPULATE_QUERY);
 }

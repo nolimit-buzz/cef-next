@@ -252,6 +252,9 @@ const PerformanceHighlightsSection = ({
   tabFundPerformanceLabel,
   chartTitle,
   chartDescription,
+  chartSeriesNav,
+  chartSeriesPerformance,
+  chartSeriesDividend,
   highlights,
 }: PerformanceHighlightsSectionData) => {
   const [activeTab, setActiveTab] = useState<'Highlights' | 'Fund Performance'>('Highlights');
@@ -393,11 +396,13 @@ const PerformanceHighlightsSection = ({
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.4 }}
               >
-                <div className="mb-8">
-                  <h3 className="text-xl font-medium text-[#0A1224] mb-2">{chartTitle}</h3>
-                  <p className="text-gray-500 text-sm">{chartDescription}</p>
-                </div>
-                <FundPerformanceChart />
+                <FundPerformanceChart
+                  chartTitle={chartTitle}
+                  chartSubtitle={chartDescription}
+                  seriesNav={chartSeriesNav}
+                  seriesPerformance={chartSeriesPerformance}
+                  seriesDividend={chartSeriesDividend}
+                />
               </motion.div>
             )}
           </AnimatePresence>
