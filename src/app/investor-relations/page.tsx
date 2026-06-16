@@ -1,2 +1,7 @@
 import { InvestorRelationsPage } from "../../views/InvestorRelationsPage";
-export default function Page() { return <InvestorRelationsPage />; }
+import { getInvestorRelationsPage } from "../../lib/strapi";
+
+export default async function Page() {
+  const data = await getInvestorRelationsPage();
+  return <InvestorRelationsPage sections={data.sections} />;
+}

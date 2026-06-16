@@ -1,2 +1,7 @@
 import { AboutPage } from "../../components/AboutPage";
-export default function Page() { return <AboutPage />; }
+import { getAboutPage } from "../../lib/strapi";
+
+export default async function Page() {
+  const data = await getAboutPage();
+  return <AboutPage sections={data.sections} />;
+}
