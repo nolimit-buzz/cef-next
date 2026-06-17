@@ -22,6 +22,7 @@ export interface ReportCardItem {
   title: string;
   description: string;
   ctaLabel: string;
+  link: string;
 }
 
 export interface InvestorTypeItem {
@@ -29,6 +30,7 @@ export interface InvestorTypeItem {
   tag: string;
   title: string;
   description: string;
+  image: string;
 }
 
 export interface DistributionRecordItem {
@@ -43,6 +45,7 @@ export interface InvestorHoldingItem {
   id: number;
   name: string;
   holding: string;
+  logo?: string;
 }
 
 export interface DownloadDocumentItem {
@@ -128,6 +131,15 @@ export interface DistributionHistorySection {
   tabHoldingsLabel: string;
   seriesOneLabel: string;
   seriesTwoLabel: string;
+  distributionColPeriod: string;
+  distributionColSeries: string;
+  distributionColAmount: string;
+  distributionColAmountMobile: string;
+  distributionColStatus: string;
+  holdingsColLogo: string;
+  holdingsColInvestorName: string;
+  holdingsColHolding: string;
+  holdingsColHoldingMobile: string;
   distributionRecords: DistributionRecordItem[];
   seriesOneHoldings: InvestorHoldingItem[];
   seriesTwoHoldings: InvestorHoldingItem[];
@@ -140,6 +152,10 @@ export interface DownloadsSection {
   headingPrimary: string;
   headingSecondary: string;
   body: string;
+  downloadButtonLabel: string;
+  fileTypeLabel: string;
+  viewMoreLabel: string;
+  viewLessLabel: string;
   categories: DownloadCategoryItem[];
 }
 

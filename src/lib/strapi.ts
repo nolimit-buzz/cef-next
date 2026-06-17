@@ -61,14 +61,16 @@ export function getImpactPage(): Promise<ImpactPageData> {
 }
 
 const INVESTOR_RELATIONS_POPULATE_QUERY = [
-  "populate[sections][on][investor-relations-page.hero-section][populate]=*",
-  "populate[sections][on][investor-relations-page.sticky-nav-section][populate]=*",
-  "populate[sections][on][investor-relations-page.performance-highlights-section][populate]=*",
-  "populate[sections][on][investor-relations-page.performance-reports-section][populate]=*",
-  "populate[sections][on][investor-relations-page.investor-base-section][populate]=*",
-  "populate[sections][on][investor-relations-page.distribution-history-section][populate]=*",
-  "populate[sections][on][investor-relations-page.downloads-section][populate][categories][populate]=*",
-  "populate[sections][on][investor-relations-page.investor-enquiries-section][populate]=*",
+  "populate[sections][on][investor-relations-page.hero-section][populate][credentials][populate]=*",
+  "populate[sections][on][investor-relations-page.sticky-nav-section][populate][navItems][populate]=*",
+  "populate[sections][on][investor-relations-page.performance-highlights-section][populate][highlights][populate]=*",
+  "populate[sections][on][investor-relations-page.performance-reports-section][populate][reports][populate]=*",
+  "populate[sections][on][investor-relations-page.investor-base-section][populate][investorTypes][populate]=*",
+  "populate[sections][on][investor-relations-page.distribution-history-section][populate][seriesOneHoldings][populate]=*",
+  "populate[sections][on][investor-relations-page.distribution-history-section][populate][seriesTwoHoldings][populate]=*",
+  "populate[sections][on][investor-relations-page.distribution-history-section][populate][distributionRecords][populate]=*",
+  "populate[sections][on][investor-relations-page.downloads-section][populate][categories][populate][documents][populate]=*",
+  "populate[sections][on][investor-relations-page.investor-enquiries-section][populate][subjectOptions][populate]=*",
 ].join("&");
 
 export function getInvestorRelationsPage(): Promise<InvestorRelationsPageData> {
