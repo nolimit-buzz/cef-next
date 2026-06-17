@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 
@@ -193,8 +193,8 @@ const DocumentLibrarySection = ({ cms }: { cms?: ResourcesDocumentLibrarySection
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedYear, setExpandedYear] = useState<string>("2025");
 
-  const categories = cms?.categories ?? [];
-  const documents = cms?.documents ?? [];
+  const categories = useMemo(() => cms?.categories ?? [], [cms]);
+  const documents = useMemo(() => cms?.documents ?? [], [cms]);
 
   useEffect(() => {
     if (location.hash) {
