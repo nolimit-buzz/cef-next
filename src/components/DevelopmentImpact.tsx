@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react';
 import { motion } from 'framer-motion';
 import { Users, TrendingUp, Lightbulb, ArrowUpRight } from 'lucide-react';
 import { cn } from '../lib/utils';
+import type { DevelopmentImpactSection } from '../types/home';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -25,13 +26,13 @@ const itemVariants = {
   },
 };
 
-export const DevelopmentImpact = () => {
+export const DevelopmentImpact = ({ cms }: { cms?: DevelopmentImpactSection }) => {
   return (
     <section className="py-24 lg:py-32 bg-[var(--color-background)] relative z-10 border-t border-[var(--color-border)]">
       <div className="max-w-7xl mx-auto px-6">
-        
+
         {/* Header Section */}
-        <motion.div 
+        <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: false, amount: 0.2 }}
@@ -41,27 +42,28 @@ export const DevelopmentImpact = () => {
           <motion.div variants={itemVariants} className="flex items-center gap-3 mb-8">
             <div className="w-2 h-2 rounded-full bg-[var(--color-accent-light)]" />
             <span className="text-xs font-medium uppercase tracking-[0.3em] text-white/40">
-              Development Impact
+              {cms?.eyebrow ?? "Development Impact"}
             </span>
           </motion.div>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
             {/* Left: Headline */}
             <motion.div variants={itemVariants}>
               <h3 className="text-3xl md:text-[42px] font-medium leading-[1.15] tracking-tight">
-                <span className="text-white">A holistic approach to</span> <br className="hidden lg:block" />
-                <span className="text-[var(--color-text-secondary)]">Clean Energy Infrastructure <br className="hidden lg:block" />
-                & Resilience.</span>
+                <span className="text-white">{cms?.headline_part1 ?? "A holistic approach to"}</span>
+                {cms?.headline_part2 && (
+                  <><br className="hidden lg:block" /><span className="text-[var(--color-text-secondary)]">{cms.headline_part2}</span></>
+                )}
               </h3>
             </motion.div>
 
             {/* Right: Description & CTA */}
             <motion.div variants={itemVariants} className="flex flex-col justify-start items-start">
               <p className="text-lg text-white/70 font-light leading-relaxed mb-8 max-w-xl">
-                We deliver impact by displacing fossil fuels, driving local economic growth, and building sustainable communities. Guided by a strong <span className="text-white font-medium">Gender & Impact Lens</span>, we empower women-led enterprises and ensure equitable job creation across the green economy.
+                {cms?.body ?? "We deliver impact by displacing fossil fuels, driving local economic growth, and building sustainable communities. Guided by a strong Gender & Impact Lens, we empower women-led enterprises and ensure equitable job creation across the green economy."}
               </p>
               <a href="#" className="text-sm font-medium text-white hover:text-white/80 transition-colors flex items-center gap-1">
-                Learn More <ArrowUpRight className="w-4 h-4" />
+                {cms?.learn_more_link ?? "Learn More"} <ArrowUpRight className="w-4 h-4" />
               </a>
             </motion.div>
           </div>
@@ -76,21 +78,21 @@ export const DevelopmentImpact = () => {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[320px]"
         >
           {/* Column 1, Row 1: 01 Renewable Energy */}
-          <motion.div 
+          <motion.div
             variants={itemVariants}
             className="group relative bg-[#0A1224] border border-white/10 rounded-lg p-8 flex flex-col justify-between transition-all duration-500 hover:border-[var(--card-color)] hover:shadow-[0_8px_30px_var(--card-glow)]"
             style={{ '--card-color': 'rgba(252, 195, 11, 0.5)', '--card-glow': 'rgba(252, 195, 11, 0.15)' } as CSSProperties}
           >
-            <div 
+            <div
               className="absolute inset-0 pointer-events-none transition-opacity duration-500"
               style={{ background: `radial-gradient(circle at top right, rgba(252, 195, 11, 0.15) 0%, transparent 60%)` }}
             />
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-6">
-                <span className="text-4xl font-light text-white/20 font-sans">01</span>
+                <span className="text-4xl font-light text-white/20 font-sans">{cms?.impact_cards?.[0]?.number ?? "01"}</span>
                 <ArrowUpRight className="w-5 h-5 text-white/30 group-hover:text-white/80 group-hover:-translate-y-1 group-hover:translate-x-1 transition-all duration-500" />
               </div>
-              <h4 className="text-xl font-medium text-white mb-4">Renewable Energy</h4>
+              <h4 className="text-xl font-medium text-white mb-4">{cms?.impact_cards?.[0]?.title ?? "Renewable Energy"}</h4>
               <div className="flex flex-wrap gap-2 mb-4">
                 <div className="group/sdg relative flex items-center gap-1.5 px-2 py-1 rounded-full bg-[#FCC30B]/10 border border-[#FCC30B]/20 cursor-default">
                   <div className="w-4 h-4 rounded-full bg-[#FCC30B] flex items-center justify-center text-[9px] font-bold text-black">7</div>
@@ -119,7 +121,7 @@ export const DevelopmentImpact = () => {
               </div>
             </div>
             <p className="text-white/60 font-light leading-relaxed text-sm relative z-10">
-              Financing clean energy generation to power communities, foster innovation, and drive global climate action.
+              {cms?.impact_cards?.[0]?.body ?? "Financing clean energy generation to power communities, foster innovation, and drive global climate action."}
             </p>
           </motion.div>
 
@@ -150,10 +152,10 @@ export const DevelopmentImpact = () => {
             />
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-6">
-                <span className="text-4xl font-light text-[var(--color-accent-light)]/40 font-sans">02</span>
+                <span className="text-4xl font-light text-[var(--color-accent-light)]/40 font-sans">{cms?.impact_cards?.[1]?.number ?? "02"}</span>
                 <ArrowUpRight className="w-5 h-5 text-[var(--color-accent-light)]/50 group-hover:text-[var(--color-accent-light)] group-hover:-translate-y-1 group-hover:translate-x-1 transition-all duration-500" />
               </div>
-              <h4 className="text-xl font-medium text-white mb-4">Energy Efficiency</h4>
+              <h4 className="text-xl font-medium text-white mb-4">{cms?.impact_cards?.[1]?.title ?? "Energy Efficiency"}</h4>
               <div className="flex flex-wrap gap-2 mb-4">
                 <div className="group/sdg relative flex items-center gap-1.5 px-2 py-1 rounded-full bg-[#FCC30B]/10 border border-[#FCC30B]/20 cursor-default">
                   <div className="w-4 h-4 rounded-full bg-[#FCC30B] flex items-center justify-center text-[9px] font-bold text-black">7</div>
@@ -182,7 +184,7 @@ export const DevelopmentImpact = () => {
               </div>
             </div>
             <p className="text-white/70 font-light leading-relaxed text-sm relative z-10">
-              Optimizing energy consumption in sustainable cities and industrial infrastructure to reduce carbon footprints.
+              {cms?.impact_cards?.[1]?.body ?? "Optimizing energy consumption in sustainable cities and industrial infrastructure to reduce carbon footprints."}
             </p>
           </motion.div>
 
@@ -198,10 +200,10 @@ export const DevelopmentImpact = () => {
             />
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-6">
-                <span className="text-4xl font-light text-[var(--color-accent-green)]/40 font-sans">03</span>
+                <span className="text-4xl font-light text-[var(--color-accent-green)]/40 font-sans">{cms?.impact_cards?.[2]?.number ?? "03"}</span>
                 <ArrowUpRight className="w-5 h-5 text-[var(--color-accent-green)]/50 group-hover:text-[var(--color-accent-green)] group-hover:-translate-y-1 group-hover:translate-x-1 transition-all duration-500" />
               </div>
-              <h4 className="text-xl font-medium text-white mb-4">Gender Equality & Jobs</h4>
+              <h4 className="text-xl font-medium text-white mb-4">{cms?.impact_cards?.[2]?.title ?? "Gender Equality & Jobs"}</h4>
               <div className="flex flex-wrap gap-2 mb-4">
                 <div className="group/sdg relative flex items-center gap-1.5 px-2 py-1 rounded-full bg-[#FF3A21]/10 border border-[#FF3A21]/20 cursor-default">
                   <div className="w-4 h-4 rounded-full bg-[#FF3A21] flex items-center justify-center text-[9px] font-bold text-white">5</div>
@@ -222,7 +224,7 @@ export const DevelopmentImpact = () => {
               </div>
             </div>
             <p className="text-white/70 font-light leading-relaxed text-sm relative z-10">
-              Empowering women in leadership and creating decent work opportunities across the clean energy value chain.
+              {cms?.impact_cards?.[2]?.body ?? "Empowering women in leadership and creating decent work opportunities across the clean energy value chain."}
             </p>
           </motion.div>
 
@@ -253,10 +255,10 @@ export const DevelopmentImpact = () => {
             />
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-6">
-                <span className="text-4xl font-light text-white/20 font-sans">04</span>
+                <span className="text-4xl font-light text-white/20 font-sans">{cms?.impact_cards?.[3]?.number ?? "04"}</span>
                 <ArrowUpRight className="w-5 h-5 text-white/30 group-hover:text-white/80 group-hover:-translate-y-1 group-hover:translate-x-1 transition-all duration-500" />
               </div>
-              <h4 className="text-xl font-medium text-white mb-4">Partnership for Growth</h4>
+              <h4 className="text-xl font-medium text-white mb-4">{cms?.impact_cards?.[3]?.title ?? "Partnership for Growth"}</h4>
               <div className="flex flex-wrap gap-2 mb-4">
                 <div className="group/sdg relative flex items-center gap-1.5 px-2 py-1 rounded-full bg-[#19486A]/10 border border-[#19486A]/20 cursor-default">
                   <div className="w-4 h-4 rounded-full bg-[#19486A] flex items-center justify-center text-[9px] font-bold text-white">17</div>
@@ -269,7 +271,7 @@ export const DevelopmentImpact = () => {
               </div>
             </div>
             <p className="text-white/60 font-light leading-relaxed text-sm relative z-10">
-              Collaborating with global and local institutions to mobilize capital for sustainable, inclusive development.
+              {cms?.impact_cards?.[3]?.body ?? "Collaborating with global and local institutions to mobilize capital for sustainable, inclusive development."}
             </p>
           </motion.div>
 

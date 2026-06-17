@@ -1,7 +1,10 @@
 import type { AboutPageData } from "../types/about";
+import type { EligibilityPageData } from "../types/eligibility";
+import type { HomePageData } from "../types/home";
 import type { ImpactPageData } from "../types/impact";
 import type { InvestorRelationsPageData } from "../types/investor-relations";
 import type { PortfolioPageData } from "../types/portfolio";
+import type { ResourcesPageData } from "../types/resources";
 
 export interface StrapiResponse<T> {
   data: T;
@@ -87,4 +90,51 @@ const PORTFOLIO_POPULATE_QUERY = [
 
 export function getPortfolioPage(): Promise<PortfolioPageData> {
   return fetchAPI<PortfolioPageData>("/portfolio", PORTFOLIO_POPULATE_QUERY);
+}
+
+const HOME_POPULATE_QUERY = [
+  // Hero — sliding card panel + impact stats row
+  "populate[sections][on][home-page.hero-section][populate][sliding_card][populate]=*",
+  "populate[sections][on][home-page.hero-section][populate][stats][populate]=*",
+  // About Fund — 5-box bento grid + scrolling partners strip
+  "populate[sections][on][home-page.about-fund-section][populate][bento_cards][populate]=*",
+  "populate[sections][on][home-page.about-fund-section][populate][partners][populate]=*",
+  // Approach — scalar fields come automatically; only arrays need explicit populate
+  "populate[sections][on][home-page.approach-section][populate][why_cef_cards][populate]=*",
+  "populate[sections][on][home-page.approach-section][populate][fund_aims][populate]=*",
+  "populate[sections][on][home-page.approach-section][populate][how_cef_steps][populate]=*",
+  // Portfolio — label/button fields only, no nested arrays
+  "populate[sections][on][home-page.portfolio-section][populate]=*",
+  // Development Impact — 4 numbered impact cards
+  "populate[sections][on][home-page.development-impact-section][populate][impact_cards][populate]=*",
+  // News — headline/body/button fields only, no nested arrays
+  "populate[sections][on][home-page.news-section][populate]=*",
+  // Eligibility — sector carousel cards
+  "populate[sections][on][home-page.eligibility-section][populate][sectors][populate]=*",
+].join("&");
+
+export function getHomePage(): Promise<HomePageData> {
+  return fetchAPI<HomePageData>("/home-page", HOME_POPULATE_QUERY);
+}
+
+const ELIGIBILITY_POPULATE_QUERY = [
+  "populate[sections][on][eligibility-page.hero-section][populate][heroBadges][populate]=*",
+  "populate[sections][on][eligibility-page.statement-section][populate]=*",
+  "populate[sections][on][eligibility-page.criteria-section][populate][criteria][populate]=*",
+  "populate[sections][on][eligibility-page.process-section][populate][steps][populate]=*",
+].join("&");
+
+export function getEligibilityPage(): Promise<EligibilityPageData> {
+  return fetchAPI<EligibilityPageData>("/eligibility", ELIGIBILITY_POPULATE_QUERY);
+}
+
+const RESOURCES_POPULATE_QUERY = [
+  "populate[sections][on][resources-page.hero-section][populate][gridItems][populate]=*",
+  "populate[sections][on][resources-page.statement-section][populate]=*",
+  "populate[sections][on][resources-page.document-library-section][populate][categories][populate]=*",
+  "populate[sections][on][resources-page.document-library-section][populate][documents][populate]=*",
+].join("&");
+
+export function getResourcesPage(): Promise<ResourcesPageData> {
+  return fetchAPI<ResourcesPageData>("/resources-page", RESOURCES_POPULATE_QUERY);
 }

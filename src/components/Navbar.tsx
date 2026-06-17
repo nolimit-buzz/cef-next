@@ -794,22 +794,33 @@ export const Navbar = () => {
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 
-export const Hero = () => {
+import type { HeroSection, HeroStatItem } from "../types/home";
+
+const DEFAULT_SLIDES = [
+  {
+    label: "Fund Highlight",
+    value: "Series 2 Capital Raise Now Open for Institutional Investors",
+    link: "Read Announcement",
+    isMetric: false,
+  },
+  { label: "Total Dividends Paid", value: "₦730M", link: "Across two distributions", isMetric: true },
+  { label: "Series 1 Investors", value: "8", link: "100% Subscribed", isMetric: true },
+  { label: "Fund Rating", value: "BBB(IM)", link: "Investment Grade / Stable", isMetric: true },
+  { label: "Green Certification", value: "Active", link: "Climate Bonds Initiative", isMetric: true },
+];
+
+export const Hero = ({ hero }: { hero?: HeroSection }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const slides = [
-    {
-      label: "Fund Highlight",
-      value: "Series 2 Capital Raise Now Open for Institutional Investors",
-      link: "Read Announcement",
-      isMetric: false,
-    },
-    { label: "Total Dividends Paid", value: "₦730M", link: "Across two distributions", isMetric: true },
-    { label: "Series 1 Investors", value: "8", link: "100% Subscribed", isMetric: true },
-    { label: "Fund Rating", value: "BBB(IM)", link: "Investment Grade / Stable", isMetric: true },
-    { label: "Green Certification", value: "Active", link: "Climate Bonds Initiative", isMetric: true },
-  ];
+  const slides = hero?.sliding_card?.length
+    ? hero.sliding_card.map((card, i) => ({
+        label: card.subtitle,
+        value: card.title,
+        link: card.CTA,
+        isMetric: i > 0,
+      }))
+    : DEFAULT_SLIDES;
 
   useEffect(() => {
     if (videoRef.current) {
@@ -864,16 +875,14 @@ export const Hero = () => {
             variants={fadeUp}
             className="text-display font-medium text-white mb-6"
           >
-            Powering a <br className="hidden md:block" />
-            Resilient Future
+            {hero?.headline ?? "Powering a Resilient Future"}
           </motion.h1>
 
           <motion.p
             variants={fadeUp}
             className="text-body text-white/80 max-w-xl mb-10 leading-relaxed font-light md:text-xl"
           >
-            Providing local currency funding to climate-aligned, sustainable,
-            and inclusive clean energy infrastructure across Nigeria.
+            {hero?.description ?? "Providing local currency funding to climate-aligned, sustainable, and inclusive clean energy infrastructure across Nigeria."}
           </motion.p>
 
           <motion.div
@@ -885,14 +894,14 @@ export const Hero = () => {
               whileTap={{ scale: 0.98 }}
               className="bg-white text-black font-bold px-8 py-4 rounded-sm text-sm transition-colors flex items-center justify-center gap-2 shadow-lg hover:bg-[var(--color-accent-green)] hover:text-white"
             >
-              Explore Funding Options <ArrowUpRight className="w-4 h-4" />
+              {hero?.primary_cta ?? "Explore Funding Options"} <ArrowUpRight className="w-4 h-4" />
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="bg-transparent text-white px-8 py-4 rounded-sm text-sm font-medium transition-colors flex items-center justify-center gap-2 hover:text-white/80"
             >
-              View Investor Relations <ArrowUpRight className="w-4 h-4" />
+              {hero?.secondary_cta ?? "View Investor Relations"} <ArrowUpRight className="w-4 h-4" />
             </motion.button>
           </motion.div>
         </motion.div>
@@ -964,7 +973,7 @@ export const Hero = () => {
         className="relative z-20 w-full container-responsive border-t border-white/20 pt-6 flex justify-between items-center"
       >
         <div className="text-[10px] md:text-xs font-medium tracking-widest uppercase text-white/60">
-          Nigeria&apos;s First Certified Green Fund
+          {hero?.down_text ?? "Nigeria’s First Certified Green Fund"}
         </div>
         <div className="text-[10px] md:text-xs font-medium tracking-widest uppercase text-white/60">
           Scroll to Explore
@@ -976,13 +985,15 @@ export const Hero = () => {
 
 // ─── ImpactStats ──────────────────────────────────────────────────────────────
 
-export const ImpactStats = () => {
-  const stats = [
-    { value: "5,324+", label: "New Energy Connections" },
-    { value: "21,197", label: "Tonnes CO₂ Avoided" },
-    { value: "226+", label: "Jobs Created" },
-    { value: "217+", label: "SMEs Supported" },
-  ];
+const DEFAULT_STATS = [
+  { value: "5,324+", label: "New Energy Connections" },
+  { value: "21,197", label: "Tonnes CO₂ Avoided" },
+  { value: "226+", label: "Jobs Created" },
+  { value: "217+", label: "SMEs Supported" },
+];
+
+export const ImpactStats = ({ stats: cmStats }: { stats?: HeroStatItem[] }) => {
+  const stats = cmStats?.length ? cmStats : DEFAULT_STATS;
 
   return (
     // FIX 10: section-padding replaces py-24; container-responsive replaces max-w-7xl mx-auto px-6

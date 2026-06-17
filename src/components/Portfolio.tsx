@@ -5,8 +5,9 @@ import { Plus, Minus, ArrowUpRight, Globe2, Zap, Users, Leaf, DollarSign } from 
 
 import Link from "next/link";
 import { portfolioData, PortfolioItem } from '../data/projects';
+import type { PortfolioSection } from '../types/home';
 
-export const Portfolio = () => {
+export const Portfolio = ({ cms }: { cms?: PortfolioSection }) => {
   const [expandedId, setExpandedId] = useState<string | null>(portfolioData[0].id);
   const [expandedTextId, setExpandedTextId] = useState<string | null>(null);
   const [selectedSector, setSelectedSector] = useState<string | null>(null);
@@ -43,7 +44,7 @@ export const Portfolio = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-8">
           <div className="max-w-2xl">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false, amount: 0.2 }}
@@ -51,36 +52,38 @@ export const Portfolio = () => {
             >
               <div className="w-2 h-2 rounded-full bg-[var(--color-accent-light)]" />
               <span className="text-xs font-medium uppercase tracking-[0.3em] text-white/40">
-                Our Portfolio
+                {cms?.eyebrow ?? "Our Portfolio"}
               </span>
             </motion.div>
-            <motion.h2 
+            <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false, amount: 0.2 }}
               transition={{ delay: 0.1 }}
               className="text-3xl md:text-[42px] font-medium leading-[1.15] tracking-tight"
             >
-              <span className="text-white">Investing in high-impact</span> <br />
-              <span className="text-[var(--color-text-secondary)]">clean energy solutions.</span>
+              <span className="text-white">{cms?.headline_part1 ?? "Investing in high-impact"}</span>
+              {(cms?.headline_part2 ?? "clean energy solutions.") && (
+                <><br /><span className="text-[var(--color-text-secondary)]">{cms?.headline_part2 ?? "clean energy solutions."}</span></>
+              )}
             </motion.h2>
           </div>
-          <Link 
+          <Link
             href="/portfolio"
             className="bg-white text-black hover:bg-[var(--color-accent-green)] hover:text-white px-8 py-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 shadow-lg"
           >
-            View All Projects <ArrowUpRight className="w-4 h-4" />
+            {cms?.view_all_button ?? "View All Projects"} <ArrowUpRight className="w-4 h-4" />
           </Link>
         </div>
 
         <div className="flex flex-col lg:flex-row lg:items-center gap-6 mb-12">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-white/40 mr-2">Sector:</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/40 mr-2">{cms?.filter_label ?? "Sector:"}</span>
             <button 
               onClick={() => setSelectedSector(null)}
               className={`px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${!selectedSector ? 'bg-white text-black' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
             >
-              All
+              {cms?.all_filter_label ?? "All"}
             </button>
             {uniqueSectors.map(sector => (
               <button 
@@ -153,11 +156,11 @@ export const Portfolio = () => {
                               ? item.description
                               : `${item.description.substring(0, 120)}...`}
                             {item.description.length > 120 && (
-                              <button 
+                              <button
                                 onClick={(e) => { e.stopPropagation(); setExpandedTextId(expandedTextId === item.id ? null : item.id); }}
                                 className="ml-3 text-sm font-medium text-[var(--color-accent-green)] hover:text-white transition-colors"
                               >
-                                {expandedTextId === item.id ? 'Read Less' : 'Read More'}
+                                {expandedTextId === item.id ? (cms?.read_less ?? 'Read Less') : (cms?.read_more ?? 'Read More')}
                               </button>
                             )}
                           </p>
@@ -203,7 +206,7 @@ export const Portfolio = () => {
                         >
                           <div className="flex items-center gap-6">
                             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 whitespace-nowrap">
-                              SDG Impact:
+                              {cms?.sdg_impact_label ?? "SDG Impact:"}
                             </span>
                             <div className="flex flex-wrap items-center gap-2">
                               {item.sdgs.map((sdg) => (
@@ -233,7 +236,7 @@ export const Portfolio = () => {
                           
                           <motion.div variants={itemVariants}>
                             <Link href={`/portfolio/${item.id}`} className="text-[11px] font-bold uppercase tracking-[0.2em] flex items-center gap-3 hover:text-[var(--color-accent-light)] transition-colors group/link">
-                              Full Case Study 
+                              {cms?.case_study_link ?? "Full Case Study"}
                               <ArrowUpRight className="w-4 h-4 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform" />
                             </Link>
                           </motion.div>
@@ -262,11 +265,11 @@ export const Portfolio = () => {
         </div>
 
         <div className="mt-12 text-center">
-          <Link 
+          <Link
             href="/portfolio"
             className="inline-flex items-center gap-2 text-sm font-medium text-white/70 hover:text-white transition-colors"
           >
-            View all projects <ArrowUpRight className="w-4 h-4" />
+            {cms?.view_all_link ?? "View all projects"} <ArrowUpRight className="w-4 h-4" />
           </Link>
         </div>
       </div>
