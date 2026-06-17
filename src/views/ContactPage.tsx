@@ -257,8 +257,7 @@ const ContactBodySection = () => {
                   Lagos Hub
                 </h3>
                 <address className="not-italic text-gray-600 leading-relaxed pl-7">
-                  3rd Floor, Standard Chartered Building,<br />
-                  142 Ahmadu Bello Way,<br />
+                  12 Clean Energy Way,<br />
                   Victoria Island, Lagos, Nigeria
                 </address>
               </div>

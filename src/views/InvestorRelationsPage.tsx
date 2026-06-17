@@ -858,7 +858,9 @@ const DownloadsSection = ({ data }: { data?: DownloadsSectionData }) => {
                                   animate={{ opacity: 1, scale: 1 }}
                                   exit={{ opacity: 0, scale: 0.95 }}
                                   transition={{ duration: 0.3 }}
-                                  href="#"
+                                  href={doc.fileUrl || '#'}
+                                  target={doc.fileUrl ? '_blank' : undefined}
+                                  rel={doc.fileUrl ? 'noopener noreferrer' : undefined}
                                   className="group flex flex-col p-6 rounded-lg bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-300 hover:-translate-y-1"
                                 >
                                   <div className="flex items-start justify-between mb-6">

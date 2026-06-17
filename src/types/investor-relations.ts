@@ -53,6 +53,7 @@ export interface DownloadDocumentItem {
   name: string;
   date: string;
   size: string;
+  fileUrl?: string;
 }
 
 export interface DownloadCategoryItem {
