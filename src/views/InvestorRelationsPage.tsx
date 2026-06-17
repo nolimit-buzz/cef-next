@@ -186,7 +186,6 @@ const HeroSection = ({ data }: { data?: HeroSectionData }) => {
               src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2670&auto=format&fit=crop"
               alt="Institutional Data"
               className="hidden motion-reduce:block absolute inset-0 w-full h-full object-cover"
-              referrerPolicy="no-referrer"
             />
             <div className="absolute inset-0 bg-black/40 z-10" />
             <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-background)] via-transparent to-transparent z-10 lg:block hidden" />
@@ -525,7 +524,6 @@ const InvestorBaseSection = ({ data }: { data?: InvestorBaseSectionData }) => {
                   src={inv.image}
                   alt={inv.title}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#050A15]/40 via-[#050A15]/60 to-[#050A15]/95" />
 
