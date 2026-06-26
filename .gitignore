@@ -10,3 +10,5 @@ coverage/
 yarn-error.log
 yarn.lock
 .claude
+
+test
