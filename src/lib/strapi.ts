@@ -1,3 +1,4 @@
+import type { FundPageData } from "../types/fund";
 import type { AboutPageData } from "../types/about";
 import type { EligibilityPageData } from "../types/eligibility";
 import type { GovernancePageData } from "../types/governance";
@@ -27,6 +28,21 @@ async function fetchAPI<T>(path: string, query = ""): Promise<T> {
 
   const json: StrapiResponse<T> = await res.json();
   return json.data;
+}
+
+const FUND_POPULATE_QUERY = [
+  "populate[sections][on][fund-page.hero-section][populate]=*",
+  "populate[sections][on][fund-page.sticky-sub-nav-section][populate][navItems][populate]=*",
+  "populate[sections][on][fund-page.overview-section][populate][items][populate]=*",
+  "populate[sections][on][fund-page.challenge-section][populate][challengeImage][populate]=*",
+  "populate[sections][on][fund-page.challenge-section][populate][challengeStats][populate]=*",
+  "populate[sections][on][fund-page.investment-strategy-section][populate]=*",
+  "populate[sections][on][fund-page.aim-of-funds-section][populate][aimCards][populate][image][populate]=*",
+  "populate[sections][on][fund-page.impact-sdgs-section][populate][sdgCards][populate]=*",
+].join("&");
+
+export function getFundPage(): Promise<FundPageData> {
+  return fetchAPI<FundPageData>("/fund", FUND_POPULATE_QUERY);
 }
 
 // Strapi dynamic zones need the `on`-syntax to deep-populate components nested
