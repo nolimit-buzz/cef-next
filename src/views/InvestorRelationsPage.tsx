@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import Breadcrumbs from '../components/Breadcrumbs';
 import { cn } from '../lib/utils';
+import { getStrapiURL } from '../lib/strapi';
 import { FundPerformanceChart } from '../components/FundPerformanceChart';
 import type {
   InvestorRelationsPageSection,
@@ -676,8 +677,8 @@ const DistributionHistorySection = ({ data }: { data?: DistributionHistorySectio
                   {holdingsForSeries.map((investor, idx) => (
                     <div key={investor.id ?? idx} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center py-4 px-4 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
                       <div className="col-span-2 flex items-center h-12">
-                        {investor.logo ? (
-                          <img src={investor.logo} alt={investor.name} className="h-10 w-16 object-contain" referrerPolicy="no-referrer" />
+                        {investor.logo?.url ? (
+                          <img src={getStrapiURL(investor.logo.url)} alt={investor.logo.alternativeText ?? investor.name} className="h-10 w-16 object-contain" referrerPolicy="no-referrer" />
                         ) : (
                           <div className="w-16 h-10 bg-gray-200 rounded flex items-center justify-center text-[10px] text-gray-400 uppercase tracking-wider font-bold">{data?.holdingsColLogo}</div>
                         )}

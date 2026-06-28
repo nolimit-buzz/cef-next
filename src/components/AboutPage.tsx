@@ -1188,12 +1188,20 @@ const MilestonesSection = ({ headingPrimary, headingSecondary, body, nodes }: Mi
 };
 
 const TEAM_PHOTOS = [
-  "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop",
+   "/leadership/humprehy.png",
+   "/leadership/wella.png",
   "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=800&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop",
+  "/leadership/alli.png",
 ];
+
+
+
+
+  // "/leadership/musa.png",
+  // "/leadership/simone.png",
+  // "/leadership/henry.png",
+  // "/leadership/alli.png",
 
 const TeamSection = ({ sectionLabel, headingPrimary, headingSecondary, body, cta, members }: TeamSectionData) => {
   return (

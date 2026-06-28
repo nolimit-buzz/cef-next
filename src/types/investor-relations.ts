@@ -1,5 +1,12 @@
 // Types for the Strapi `investor-relations` singleType (cms/src/api/investor-relations + cms/src/components/investor-relations-page/*).
 
+export interface StrapiMedia {
+  id: number;
+  url: string;
+  name: string;
+  alternativeText?: string | null;
+}
+
 export interface CredentialItem {
   id: number;
   label: string;
@@ -45,7 +52,7 @@ export interface InvestorHoldingItem {
   id: number;
   name: string;
   holding: string;
-  logo?: string;
+  logo?: StrapiMedia | null;
 }
 
 export interface DownloadDocumentItem {
