@@ -161,8 +161,8 @@ export const Navbar = () => {
           <img
             src={
               useDarkText
-                ? "https://reverse.cleanenergyfund.ng/wp-content/uploads/2023/03/Clean-Energy-Logo-1.svg"
-                : "https://reverse.cleanenergyfund.ng/wp-content/uploads/2023/09/Clean-Energy-Logo-1-2.svg"
+                ? "/Logo1.svg"
+                : "/Logo.svg"
             }
             alt="Clean Energy Local Currency Fund"
             className="h-10 w-auto transition-opacity duration-500"
