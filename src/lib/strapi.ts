@@ -1,5 +1,6 @@
 import type { AboutPageData } from "../types/about";
 import type { EligibilityPageData } from "../types/eligibility";
+import type { GovernancePageData } from "../types/governance";
 import type { HomePageData } from "../types/home";
 import type { ImpactPageData } from "../types/impact";
 import type { InvestorRelationsPageData } from "../types/investor-relations";
@@ -128,6 +129,19 @@ const ELIGIBILITY_POPULATE_QUERY = [
 
 export function getEligibilityPage(): Promise<EligibilityPageData> {
   return fetchAPI<EligibilityPageData>("/eligibility", ELIGIBILITY_POPULATE_QUERY);
+}
+
+const GOVERNANCE_POPULATE_QUERY = [
+  "populate[sections][on][governance-page.hero-section][populate]=*",
+  "populate[sections][on][governance-page.sticky-sub-nav-section][populate][navItems][populate]=*",
+  "populate[sections][on][governance-page.investment-committee-section][populate][members][populate]=*",
+  "populate[sections][on][governance-page.fund-managers-section][populate][transactionParties][populate]=*",
+  "populate[sections][on][governance-page.investment-strategy-section][populate][performanceStats][populate]=*",
+  "populate[sections][on][governance-page.governance-impact-section][populate]=*",
+].join("&");
+
+export function getGovernancePage(): Promise<GovernancePageData> {
+  return fetchAPI<GovernancePageData>("/governance", GOVERNANCE_POPULATE_QUERY);
 }
 
 const RESOURCES_POPULATE_QUERY = [
