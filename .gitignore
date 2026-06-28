@@ -12,3 +12,5 @@ yarn.lock
 .claude
 
 test
+.env
+.env.local
