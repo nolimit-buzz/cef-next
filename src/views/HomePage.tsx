@@ -38,7 +38,7 @@ export function HomePage({ sections }: { sections: HomePageSection[] }) {
       <AboutFund aboutFund={aboutFund} approach={approach} />
       <Portfolio cms={portfolio} />
       <DevelopmentImpact cms={developmentImpact} />
-      <Blog cms={news} />
+      {/* <Blog cms={news} /> */}
       <EligibilityCriteria cms={eligibility} />
     </main>
   );

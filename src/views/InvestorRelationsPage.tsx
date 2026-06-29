@@ -59,9 +59,9 @@ export const InvestorRelationsPage = ({ sections = [] }: { sections: InvestorRel
       <HeroSection data={hero} />
       <StickySubNav navItems={stickyNav?.navItems} />
       <PerformanceHighlightsSection data={perf} />
-      <PerformanceReportsSection data={reports} />
+      {/* <PerformanceReportsSection data={reports} /> */}
       <DistributionHistorySection data={dist} />
-      <DownloadsSection data={downloads} />
+      {/* <DownloadsSection data={downloads} /> */}
       <InvestorBaseSection data={invBase} />
       <InvestorEnquiriesSection data={enquiries} />
     </main>

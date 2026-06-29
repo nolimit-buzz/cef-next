@@ -324,7 +324,7 @@ export const Footer = () => {
                 FundCo is authorised and registered by the Nigeria Securities & Exchange Commission to act as fund manager for the Clean Energy Local Currency Fund
               </p>
 
-              <div className="mb-6">
+              {/* <div className="mb-6">
                 <img
                   src="https://reverse.cleanenergyfund.ng/wp-content/uploads/2023/09/ren-cap-01-1.svg"
                   alt="Renaissance Capital"
@@ -334,7 +334,7 @@ export const Footer = () => {
               </div>
               <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed">
                 Renaissance Securities (Nigeria) Limited is acting as the Issuing House and Financial Adviser to the Clean Energy Local Currency Fund
-              </p>
+              </p> */}
             </div>
 
           </div>

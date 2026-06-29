@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { articles } from "../data/articles";
+// import { articles } from "../data/articles";
 import { getPortfolioPage } from "../lib/strapi";
 
 const BASE_URL =
@@ -10,12 +10,12 @@ const STATIC_ROUTES: MetadataRoute.Sitemap = [
   { url: `${BASE_URL}/about`, priority: 0.8, changeFrequency: "monthly" },
   { url: `${BASE_URL}/fund`, priority: 0.8, changeFrequency: "monthly" },
   { url: `${BASE_URL}/impact`, priority: 0.8, changeFrequency: "monthly" },
-  { url: `${BASE_URL}/news`, priority: 0.8, changeFrequency: "weekly" },
+  // { url: `${BASE_URL}/news`, priority: 0.8, changeFrequency: "weekly" },
   { url: `${BASE_URL}/portfolio`, priority: 0.8, changeFrequency: "monthly" },
   { url: `${BASE_URL}/eligibility`, priority: 0.7, changeFrequency: "monthly" },
   { url: `${BASE_URL}/governance`, priority: 0.7, changeFrequency: "monthly" },
   { url: `${BASE_URL}/investor-relations`, priority: 0.7, changeFrequency: "monthly" },
-  { url: `${BASE_URL}/resources`, priority: 0.7, changeFrequency: "monthly" },
+  // { url: `${BASE_URL}/resources`, priority: 0.7, changeFrequency: "monthly" },
   { url: `${BASE_URL}/contact`, priority: 0.7, changeFrequency: "yearly" },
   { url: `${BASE_URL}/privacy-policy`, priority: 0.4, changeFrequency: "yearly" },
 ];
@@ -33,11 +33,11 @@ async function getPortfolioIds(): Promise<string[]> {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const newsEntries: MetadataRoute.Sitemap = articles.map((article) => ({
-    url: `${BASE_URL}/news/${article.id}`,
-    priority: 0.6,
-    changeFrequency: "yearly",
-  }));
+  // const newsEntries: MetadataRoute.Sitemap = articles.map((article) => ({
+  //   url: `${BASE_URL}/news/${article.id}`,
+  //   priority: 0.6,
+  //   changeFrequency: "yearly",
+  // }));
 
   const portfolioIds = await getPortfolioIds();
   const portfolioEntries: MetadataRoute.Sitemap = portfolioIds.map((id) => ({
@@ -46,5 +46,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: "monthly",
   }));
 
-  return [...STATIC_ROUTES, ...newsEntries, ...portfolioEntries];
+  return [...STATIC_ROUTES, ...portfolioEntries];
 }

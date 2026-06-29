@@ -1245,6 +1245,9 @@ const TeamSection = ({ sectionLabel, headingPrimary, headingSecondary, body, cta
             const lastName = nameParts[nameParts.length - 1];
             const photo = TEAM_PHOTOS[i % TEAM_PHOTOS.length];
 
+            // hide members whose real photo isn't available yet
+            if (photo.startsWith('https://images.unsplash.com')) return null;
+
             return (
               <motion.div
                 key={member.id}

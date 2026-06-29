@@ -250,7 +250,7 @@ export const Navbar = () => {
             Eligibility Criteria
           </Link>
 
-          {/* Media Center — hover on desktop, click-toggle on tablet */}
+          {/* Media Center — hidden
           <div
             className="group h-full flex items-center"
             onMouseEnter={() => setActiveMegaMenu("news")}
@@ -268,6 +268,7 @@ export const Navbar = () => {
               Media Center
             </Link>
           </div>
+          */}
 
           <Link
             href="/contact"
@@ -563,7 +564,7 @@ export const Navbar = () => {
               </div>
             )}
 
-            {/* News / Media Center */}
+            {/* News / Media Center — hidden
             {activeMegaMenu === "news" && (
               <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-12 text-left">
                 <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -634,6 +635,7 @@ export const Navbar = () => {
                 </motion.div>
               </div>
             )}
+            */}
           </motion.div>
         )}
       </AnimatePresence>
@@ -665,6 +667,7 @@ export const Navbar = () => {
               </Link>
             ))}
 
+            {/* News & Resources mobile links — hidden
             <div className="flex flex-col items-center gap-4">
               <span className="text-2xl font-medium tracking-widest uppercase text-white/50">
                 News & Resources
@@ -684,6 +687,7 @@ export const Navbar = () => {
                 Resources
               </Link>
             </div>
+            */}
 
             <Link
               href="/contact"
