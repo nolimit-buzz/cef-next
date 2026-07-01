@@ -590,7 +590,7 @@ const AnimatedHorizontalArrow = ({ direction, label, labelPosition, delay = 0, c
 
 const FundStructureSection = ({ sectionLabel, headingPrimary, headingSecondary, body, steps, flowchart }: FundStructureSectionData) => {
   return (
-    <section id="structure" className="py-24 lg:py-32 bg-[#f6f9fc] relative z-20 border-y border-gray-200 overflow-hidden">
+    <section id="structure" className="py-24 lg:py-32 bg-[#f6f9fc] relative z-20 border-y border-gray-200 overflow-hidden ">
       <div className="max-w-7xl mx-auto px-6 w-full">
 
         {/* Top Row: Editorial Split */}
@@ -657,7 +657,7 @@ const FundStructureSection = ({ sectionLabel, headingPrimary, headingSecondary, 
 
           {/* Right Column: Flowchart (White Background) */}
           <div className="w-full xl:w-[65%] bg-white p-10 lg:p-16 flex items-center justify-center">
-            <div className="w-full overflow-x-auto pb-8 no-scrollbar">
+            <div className="w-full overflow-x-auto pb-8 no-scrollbar hidden md:block">
               <div className="min-w-[750px] w-full flex flex-col items-center font-sans">
 
                 {/* Top Tier */}

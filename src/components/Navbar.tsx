@@ -844,7 +844,7 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
   const heroY = useTransform(scrollY, [0, 600], [0, 100]);
 
   return (
-    <section className="relative h-[100dvh] min-h-[600px] lg:min-h-[800px] flex flex-col justify-end pb-16 overflow-hidden bg-obsidian text-white">
+    <section className="relative h-[100dvh] min-h-[600px] lg:min-h-[800px] flex flex-col justify-end pb-16 overflow-hidden bg-obsidian text-white ">
 
       {/* Video Background */}
       <motion.div style={{ opacity: 1 }} className="absolute inset-0 z-0 bg-obsidian">
