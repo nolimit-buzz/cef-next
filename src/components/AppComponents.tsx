@@ -42,7 +42,6 @@ import { EligibilityCriteria } from "./EligibilityCriteria";
 import { usePathname } from "next/navigation";
 
 import Link from "next/link";
-import { AboutPage } from "./AboutPage";
 import { portfolioData } from "../data/projects";
 
 // --- Animation Variants ---

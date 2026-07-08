@@ -1,5 +1,15 @@
 // Types for the Strapi `about` singleType (cms/src/api/about + cms/src/components/about-page/*).
 
+export interface StrapiMedia {
+  id: number;
+  documentId: string;
+  url: string;
+  alternativeText: string | null;
+  width: number | null;
+  height: number | null;
+  mime: string;
+}
+
 export interface StatItem {
   id: number;
   value: string;
@@ -44,12 +54,25 @@ export interface TeamMemberItem {
   id: number;
   name: string;
   title: string;
+  photo?: StrapiMedia | null;
+  photo_alt_text?: string;
 }
 
 export interface PartnerItem {
   id: number;
   name: string;
   body: string;
+  logo?: StrapiMedia | null;
+  logo_alt_text?: string;
+}
+
+export interface TransactionPartyItem {
+  id: number;
+  partyName: string;
+  roleHighlight: string;
+  roleRest: string;
+  logo?: StrapiMedia | null;
+  logo_alt_text?: string;
 }
 
 export interface RatingAgencyItem {
@@ -73,6 +96,8 @@ export interface InvestorItem {
   id: number;
   title: string;
   desc: string;
+  image?: StrapiMedia | null;
+  image_alt_text?: string;
 }
 
 export interface NavItem {
@@ -98,6 +123,9 @@ export interface HeroSection {
   credentials: CredentialItem[];
   ratingLabel: string;
   ratingValue: string;
+  hero_video?: StrapiMedia | null;
+  poster_image?: StrapiMedia | null;
+  poster_image_alt_text?: string;
 }
 
 export interface StickyNavSection {
@@ -115,6 +143,8 @@ export interface AboutFundSection {
   subheading: string;
   stats: StatItem[];
   approach: ApproachBlock;
+  bento_image?: StrapiMedia | null;
+  bento_image_alt_text?: string;
 }
 
 export interface MacroProblemSection {
@@ -126,6 +156,8 @@ export interface MacroProblemSection {
   subheading: string;
   stats: StatItem[];
   solution: ApproachBlock;
+  bento_image?: StrapiMedia | null;
+  bento_image_alt_text?: string;
 }
 
 export interface FundOverviewSection {
@@ -148,6 +180,8 @@ export interface FundStructureSection {
   body: string;
   steps: FundStep[];
   flowchart: FundStructureFlowchart;
+  steps_background_image?: StrapiMedia | null;
+  steps_background_image_alt_text?: string;
 }
 
 export interface TechnicalAssistanceSection {
@@ -177,6 +211,7 @@ export interface TeamSection {
   body: string;
   cta: string;
   members: TeamMemberItem[];
+  transactionParties: TransactionPartyItem[];
 }
 
 export interface ValuesAndImpactSection {
@@ -187,6 +222,10 @@ export interface ValuesAndImpactSection {
   headingSecondary: string;
   body: string;
   sdgs: SdgItem[];
+  decorative_image_1?: StrapiMedia | null;
+  decorative_image_1_alt_text?: string;
+  decorative_image_2?: StrapiMedia | null;
+  decorative_image_2_alt_text?: string;
 }
 
 export interface TargetInvestorsSection {

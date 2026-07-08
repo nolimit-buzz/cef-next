@@ -1,6 +1,7 @@
-import type { AboutPageData } from "../types/about";
+import type { AboutPageData, StrapiMedia } from "../types/about";
 import type { ImpactPageData } from "../types/impact";
 import type { InvestorRelationsPageData } from "../types/investor-relations";
+import type { PortfolioPageData } from "../types/portfolio";
 
 export interface StrapiResponse<T> {
   data: T;
@@ -10,6 +11,11 @@ export interface StrapiResponse<T> {
 export function getStrapiURL(path = ""): string {
   const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
   return `${baseUrl}${path}`;
+}
+
+export function getStrapiMediaURL(media?: StrapiMedia | null): string | undefined {
+  if (!media?.url) return undefined;
+  return media.url.startsWith("http") ? media.url : getStrapiURL(media.url);
 }
 
 async function fetchAPI<T>(path: string, query = ""): Promise<T> {
@@ -33,11 +39,13 @@ const ABOUT_POPULATE_QUERY = [
   "populate[sections][on][about-page.macro-problem-section][populate]=*",
   "populate[sections][on][about-page.fund-overview-section][populate]=*",
   "populate[sections][on][about-page.fund-structure-section][populate]=*",
-  "populate[sections][on][about-page.technical-assistance-section][populate]=*",
+  "populate[sections][on][about-page.technical-assistance-section][populate][partners][populate]=*",
+  "populate[sections][on][about-page.technical-assistance-section][populate][ratingAgencies][populate]=*",
   "populate[sections][on][about-page.milestones-section][populate]=*",
-  "populate[sections][on][about-page.team-section][populate]=*",
+  "populate[sections][on][about-page.team-section][populate][members][populate]=*",
+  "populate[sections][on][about-page.team-section][populate][transactionParties][populate]=*",
   "populate[sections][on][about-page.values-and-impact-section][populate]=*",
-  "populate[sections][on][about-page.target-investors-section][populate]=*",
+  "populate[sections][on][about-page.target-investors-section][populate][investors][populate]=*",
 ].join("&");
 
 export function getAboutPage(): Promise<AboutPageData> {
@@ -69,4 +77,24 @@ const INVESTOR_RELATIONS_POPULATE_QUERY = [
 
 export function getInvestorRelationsPage(): Promise<InvestorRelationsPageData> {
   return fetchAPI<InvestorRelationsPageData>("/investor-relations", INVESTOR_RELATIONS_POPULATE_QUERY);
+}
+
+const PORTFOLIO_POPULATE_QUERY = [
+  "populate[sections][on][portfolio-page.hero-section][populate]=*",
+  "populate[sections][on][portfolio-page.performance-section][populate][sdgCards][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][metrics][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][sdgs][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][image][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][overview][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][challenge][populate][text][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][solution][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][impactMetrics][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][galleryImages][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][solutionImage1][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][solutionImage2][populate]=*",
+  "populate[sections][on][portfolio-page.nigeria-map-section][populate]=*",
+].join("&");
+
+export function getPortfolioPage(): Promise<PortfolioPageData> {
+  return fetchAPI<PortfolioPageData>("/portfolio", PORTFOLIO_POPULATE_QUERY);
 }

@@ -9,6 +9,26 @@ import Breadcrumbs from '../components/Breadcrumbs';
 import { cn } from '../lib/utils';
 import { GradientCard } from '../components/GradientCard';
 import { TransactionPartiesGrid } from '../components/TransactionParties';
+import type { TransactionPartyItem } from '../types/about';
+
+const mockMedia = (url: string): TransactionPartyItem['logo'] => ({
+  id: 0,
+  documentId: '',
+  url,
+  alternativeText: null,
+  width: null,
+  height: null,
+  mime: 'image/svg+xml',
+});
+
+const FUND_MANAGER_PARTIES: TransactionPartyItem[] = [
+  { id: 1, partyName: 'KPMG', roleHighlight: 'Auditors', roleRest: 'to the Fund', logo: mockMedia('https://upload.wikimedia.org/wikipedia/commons/d/db/KPMG_blue_logo.svg'), logo_alt_text: 'KPMG' },
+  { id: 2, partyName: 'Olaniwun Ajayi', roleHighlight: 'Solicitors', roleRest: 'to The Fund' },
+  { id: 3, partyName: 'Africa Prudential', roleHighlight: 'Registrar', roleRest: 'to the Fund' },
+  { id: 4, partyName: 'UBA', roleHighlight: 'Custodian', roleRest: 'to The Fund', logo: mockMedia('https://www.ubagroup.com/wp-content/uploads/2025/03/UBA-58567.svg'), logo_alt_text: 'UBA' },
+  { id: 5, partyName: 'Stanbic IBTC', roleHighlight: 'Trustee', roleRest: 'to The Fund' },
+  { id: 6, partyName: 'FSDH Capital', roleHighlight: 'Fund Adviser /', roleRest: 'Issuing House' },
+];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -668,7 +688,7 @@ const FundManagersSection = () => {
           </div>
         </div>
 
-        <TransactionPartiesGrid />
+        <TransactionPartiesGrid parties={FUND_MANAGER_PARTIES} />
 
       </div>
     </section>
