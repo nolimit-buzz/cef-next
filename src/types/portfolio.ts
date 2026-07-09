@@ -1,6 +1,5 @@
 // Types for the Strapi `portfolio` singleType (cms/src/api/portfolio + cms/src/components/portfolio-page/*).
-
-import type { StrapiMedia } from "./about";
+// Media fields are plain Cloudinary URL strings (see cms schema: media was converted to string).
 
 export interface HeroStatItem {
   id: number;
@@ -16,7 +15,7 @@ export interface HeroSection {
   headingSecondary: string;
   subHeadline: string;
   stats: HeroStatItem[];
-  backgroundImage?: StrapiMedia | null;
+  backgroundImage?: string | null;
   backgroundImage_alt_text?: string;
 }
 
@@ -72,14 +71,14 @@ export interface CaseStudyImpactMetricItem {
   value: string;
   icon: string;
   description: string;
-  image?: StrapiMedia | null;
+  image?: string | null;
   image_alt_text?: string;
   sdgNumber: string;
 }
 
 export interface GalleryImageItem {
   id: number;
-  url?: StrapiMedia | null;
+  url?: string | null;
   url_alt_text?: string;
 }
 
@@ -89,9 +88,9 @@ export interface ProjectCaseStudy {
   solution: CaseStudyParagraphItem[];
   impactMetrics: CaseStudyImpactMetricItem[];
   galleryImages: GalleryImageItem[];
-  solutionImage1?: StrapiMedia | null;
+  solutionImage1?: string | null;
   solutionImage1_alt_text?: string;
-  solutionImage2?: StrapiMedia | null;
+  solutionImage2?: string | null;
   solutionImage2_alt_text?: string;
 }
 
@@ -104,7 +103,7 @@ export interface ProjectItem {
   location: string;
   status: string;
   description: string;
-  image?: StrapiMedia | null;
+  image?: string | null;
   image_alt_text?: string;
   metrics: ProjectMetricItem[];
   sdgs: ProjectSdgItem[];

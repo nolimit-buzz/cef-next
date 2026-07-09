@@ -1,14 +1,5 @@
 // Types for the Strapi `about` singleType (cms/src/api/about + cms/src/components/about-page/*).
-
-export interface StrapiMedia {
-  id: number;
-  documentId: string;
-  url: string;
-  alternativeText: string | null;
-  width: number | null;
-  height: number | null;
-  mime: string;
-}
+// Media fields are plain Cloudinary URL strings (see cms schema: media was converted to string).
 
 export interface StatItem {
   id: number;
@@ -54,7 +45,7 @@ export interface TeamMemberItem {
   id: number;
   name: string;
   title: string;
-  photo?: StrapiMedia | null;
+  photo?: string | null;
   photo_alt_text?: string;
 }
 
@@ -62,7 +53,7 @@ export interface PartnerItem {
   id: number;
   name: string;
   body: string;
-  logo?: StrapiMedia | null;
+  logo?: string | null;
   logo_alt_text?: string;
 }
 
@@ -71,7 +62,7 @@ export interface TransactionPartyItem {
   partyName: string;
   roleHighlight: string;
   roleRest: string;
-  logo?: StrapiMedia | null;
+  logo?: string | null;
   logo_alt_text?: string;
 }
 
@@ -96,7 +87,7 @@ export interface InvestorItem {
   id: number;
   title: string;
   desc: string;
-  image?: StrapiMedia | null;
+  image?: string | null;
   image_alt_text?: string;
 }
 
@@ -123,8 +114,8 @@ export interface HeroSection {
   credentials: CredentialItem[];
   ratingLabel: string;
   ratingValue: string;
-  hero_video?: StrapiMedia | null;
-  poster_image?: StrapiMedia | null;
+  hero_video?: string | null;
+  poster_image?: string | null;
   poster_image_alt_text?: string;
 }
 
@@ -143,7 +134,7 @@ export interface AboutFundSection {
   subheading: string;
   stats: StatItem[];
   approach: ApproachBlock;
-  bento_image?: StrapiMedia | null;
+  bento_image?: string | null;
   bento_image_alt_text?: string;
 }
 
@@ -156,7 +147,7 @@ export interface MacroProblemSection {
   subheading: string;
   stats: StatItem[];
   solution: ApproachBlock;
-  bento_image?: StrapiMedia | null;
+  bento_image?: string | null;
   bento_image_alt_text?: string;
 }
 
@@ -180,7 +171,7 @@ export interface FundStructureSection {
   body: string;
   steps: FundStep[];
   flowchart: FundStructureFlowchart;
-  steps_background_image?: StrapiMedia | null;
+  steps_background_image?: string | null;
   steps_background_image_alt_text?: string;
 }
 
@@ -222,9 +213,9 @@ export interface ValuesAndImpactSection {
   headingSecondary: string;
   body: string;
   sdgs: SdgItem[];
-  decorative_image_1?: StrapiMedia | null;
+  decorative_image_1?: string | null;
   decorative_image_1_alt_text?: string;
-  decorative_image_2?: StrapiMedia | null;
+  decorative_image_2?: string | null;
   decorative_image_2_alt_text?: string;
 }
 

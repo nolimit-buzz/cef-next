@@ -1,4 +1,4 @@
-import type { AboutPageData, StrapiMedia } from "../types/about";
+import type { AboutPageData } from "../types/about";
 import type { ImpactPageData } from "../types/impact";
 import type { InvestorRelationsPageData } from "../types/investor-relations";
 import type { PortfolioPageData } from "../types/portfolio";
@@ -13,9 +13,11 @@ export function getStrapiURL(path = ""): string {
   return `${baseUrl}${path}`;
 }
 
-export function getStrapiMediaURL(media?: StrapiMedia | null): string | undefined {
-  if (!media?.url) return undefined;
-  return media.url.startsWith("http") ? media.url : getStrapiURL(media.url);
+// Media fields are plain URL strings in the CMS (usually absolute Cloudinary
+// URLs); relative paths are still resolved against the Strapi host.
+export function getStrapiMediaURL(url?: string | null): string | undefined {
+  if (!url) return undefined;
+  return url.startsWith("http") ? url : getStrapiURL(url);
 }
 
 async function fetchAPI<T>(path: string, query = ""): Promise<T> {
@@ -84,14 +86,11 @@ const PORTFOLIO_POPULATE_QUERY = [
   "populate[sections][on][portfolio-page.performance-section][populate][sdgCards][populate]=*",
   "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][metrics][populate]=*",
   "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][sdgs][populate]=*",
-  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][image][populate]=*",
   "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][overview][populate]=*",
   "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][challenge][populate][text][populate]=*",
   "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][solution][populate]=*",
   "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][impactMetrics][populate]=*",
   "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][galleryImages][populate]=*",
-  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][solutionImage1][populate]=*",
-  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][solutionImage2][populate]=*",
   "populate[sections][on][portfolio-page.nigeria-map-section][populate]=*",
 ].join("&");
 
