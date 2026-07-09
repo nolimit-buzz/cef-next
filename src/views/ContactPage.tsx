@@ -30,8 +30,7 @@ export const ContactPage = () => {
 
 const HeroSection = () => {
   return (
-    <section className="relative bg-[var(--color-background)] flex flex-col border-b border-white/5 lg:h-screen lg:min-h-[700px] lg:max-h-[1080px]">
-      {/* Top Tier: Split Hero */}
+<section className="relative bg-[var(--color-background)] flex flex-col  lg:h-screen lg:min-h-[700px] lg:max-h-[1080px]">      {/* Top Tier: Split Hero */}
       <div className="flex flex-col lg:flex-row w-full lg:flex-1 pt-24 lg:pt-28">
         {/* Left Column: Dark Background */}
         <div className="w-full lg:w-[55%] bg-[var(--color-background)] flex flex-col justify-center px-6 lg:pl-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] lg:pr-12 py-12 lg:py-0 relative z-20">
@@ -258,8 +257,7 @@ const ContactBodySection = () => {
                   Lagos Hub
                 </h3>
                 <address className="not-italic text-gray-600 leading-relaxed pl-7">
-                  3rd Floor, Standard Chartered Building,<br />
-                  142 Ahmadu Bello Way,<br />
+                  12 Clean Energy Way,<br />
                   Victoria Island, Lagos, Nigeria
                 </address>
               </div>

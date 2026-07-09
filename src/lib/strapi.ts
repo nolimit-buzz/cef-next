@@ -1,4 +1,8 @@
+import type { FundPageData } from "../types/fund";
 import type { AboutPageData } from "../types/about";
+import type { EligibilityPageData } from "../types/eligibility";
+import type { GovernancePageData } from "../types/governance";
+import type { HomePageData } from "../types/home";
 import type { ImpactPageData } from "../types/impact";
 import type { InvestorRelationsPageData } from "../types/investor-relations";
 import type { PortfolioPageData } from "../types/portfolio";
@@ -30,6 +34,21 @@ async function fetchAPI<T>(path: string, query = ""): Promise<T> {
 
   const json: StrapiResponse<T> = await res.json();
   return json.data;
+}
+
+const FUND_POPULATE_QUERY = [
+  "populate[sections][on][fund-page.hero-section][populate]=*",
+  "populate[sections][on][fund-page.sticky-sub-nav-section][populate][navItems][populate]=*",
+  "populate[sections][on][fund-page.overview-section][populate][items][populate]=*",
+  "populate[sections][on][fund-page.challenge-section][populate][challengeImage][populate]=*",
+  "populate[sections][on][fund-page.challenge-section][populate][challengeStats][populate]=*",
+  "populate[sections][on][fund-page.investment-strategy-section][populate]=*",
+  "populate[sections][on][fund-page.aim-of-funds-section][populate][aimCards][populate][image][populate]=*",
+  "populate[sections][on][fund-page.impact-sdgs-section][populate][sdgCards][populate]=*",
+].join("&");
+
+export function getFundPage(): Promise<FundPageData> {
+  return fetchAPI<FundPageData>("/fund", FUND_POPULATE_QUERY);
 }
 
 // Strapi dynamic zones need the `on`-syntax to deep-populate components nested
@@ -67,14 +86,16 @@ export function getImpactPage(): Promise<ImpactPageData> {
 }
 
 const INVESTOR_RELATIONS_POPULATE_QUERY = [
-  "populate[sections][on][investor-relations-page.hero-section][populate]=*",
-  "populate[sections][on][investor-relations-page.sticky-nav-section][populate]=*",
-  "populate[sections][on][investor-relations-page.performance-highlights-section][populate]=*",
-  "populate[sections][on][investor-relations-page.performance-reports-section][populate]=*",
-  "populate[sections][on][investor-relations-page.investor-base-section][populate]=*",
-  "populate[sections][on][investor-relations-page.distribution-history-section][populate]=*",
-  "populate[sections][on][investor-relations-page.downloads-section][populate][categories][populate]=*",
-  "populate[sections][on][investor-relations-page.investor-enquiries-section][populate]=*",
+  "populate[sections][on][investor-relations-page.hero-section][populate][credentials][populate]=*",
+  "populate[sections][on][investor-relations-page.sticky-nav-section][populate][navItems][populate]=*",
+  "populate[sections][on][investor-relations-page.performance-highlights-section][populate][highlights][populate]=*",
+  "populate[sections][on][investor-relations-page.performance-reports-section][populate][reports][populate]=*",
+  "populate[sections][on][investor-relations-page.investor-base-section][populate][investorTypes][populate]=*",
+  "populate[sections][on][investor-relations-page.distribution-history-section][populate][seriesOneHoldings][populate]=*",
+  "populate[sections][on][investor-relations-page.distribution-history-section][populate][seriesTwoHoldings][populate]=*",
+  "populate[sections][on][investor-relations-page.distribution-history-section][populate][distributionRecords][populate]=*",
+  "populate[sections][on][investor-relations-page.downloads-section][populate][categories][populate][documents][populate]=*",
+  "populate[sections][on][investor-relations-page.investor-enquiries-section][populate][subjectOptions][populate]=*",
 ].join("&");
 
 export function getInvestorRelationsPage(): Promise<InvestorRelationsPageData> {

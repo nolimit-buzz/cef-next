@@ -10,3 +10,7 @@ coverage/
 yarn-error.log
 yarn.lock
 .claude
+
+test
+.env
+.env.local

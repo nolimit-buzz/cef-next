@@ -60,37 +60,55 @@ const mockData: PerformanceData = {
   ]
 };
 
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-white border border-gray-100 shadow-xl rounded-lg p-4 min-w-[200px]">
-        <p className="text-sm font-bold text-[#0A1224] mb-3 border-b border-gray-100 pb-2">{label}</p>
-        {payload.map((entry: any, index: number) => (
-          <div key={index} className="flex justify-between items-center py-1 gap-4">
-            <div className="flex items-center gap-2">
-              <div 
-                className="w-2 h-2 rounded-full" 
-                style={{ backgroundColor: entry.color }}
-              />
-              <span className="text-xs text-gray-600 font-medium">{entry.name}</span>
+const makeCustomTooltip = (seriesPerformance: string) => {
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white border border-gray-100 shadow-xl rounded-lg p-4 min-w-[200px]">
+          <p className="text-sm font-bold text-[#0A1224] mb-3 border-b border-gray-100 pb-2">{label}</p>
+          {payload.map((entry: any, index: number) => (
+            <div key={index} className="flex justify-between items-center py-1 gap-4">
+              <div className="flex items-center gap-2">
+                <div
+                  className="w-2 h-2 rounded-full"
+                  style={{ backgroundColor: entry.color }}
+                />
+                <span className="text-xs text-gray-600 font-medium">{entry.name}</span>
+              </div>
+              <span className="text-xs font-bold text-[#0A1224]">
+                {entry.name === seriesPerformance ? `${entry.value}%` : `₦${entry.value}`}
+              </span>
             </div>
-            <span className="text-xs font-bold text-[#0A1224]">
-              {entry.name === 'Fund Performance' ? `${entry.value}%` : `₦${entry.value}`}
-            </span>
-          </div>
-        ))}
-      </div>
-    );
-  }
-  return null;
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+  return CustomTooltip;
 };
 
-export const FundPerformanceChart = () => {
+interface FundPerformanceChartProps {
+  chartTitle?: string;
+  chartSubtitle?: string;
+  seriesNav?: string;
+  seriesPerformance?: string;
+  seriesDividend?: string;
+}
+
+export const FundPerformanceChart = ({
+  chartTitle = "Historical Performance",
+  chartSubtitle = "NAV growth, fund performance, and dividend distribution.",
+  seriesNav = "NAV Growth",
+  seriesPerformance = "Fund Performance",
+  seriesDividend = "Dividend Distribution",
+}: FundPerformanceChartProps = {}) => {
   const [timeframe, setTimeframe] = useState<'1Y' | '3Y' | '5Y'>('1Y');
   const data = mockData[timeframe];
+  const CustomTooltip = makeCustomTooltip(seriesPerformance);
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -99,8 +117,8 @@ export const FundPerformanceChart = () => {
       {/* Header & Toggles */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
         <div>
-          <h3 className="text-2xl font-medium text-[#0A1224] mb-2">Historical Performance</h3>
-          <p className="text-sm text-gray-500">NAV growth, fund performance, and dividend distribution.</p>
+          <h3 className="text-2xl font-medium text-[#0A1224] mb-2">{chartTitle}</h3>
+          <p className="text-sm text-gray-500">{chartSubtitle}</p>
         </div>
         
         <div className="flex bg-gray-50 p-1 rounded-lg border border-gray-100">
@@ -166,29 +184,29 @@ export const FundPerformanceChart = () => {
               wrapperStyle={{ fontSize: '12px', color: '#4b5563', paddingBottom: '20px' }}
             />
             
-            <Bar 
+            <Bar
               yAxisId="left"
-              dataKey="dividend" 
-              name="Dividend Distribution" 
-              fill="#bfdbfe" 
+              dataKey="dividend"
+              name={seriesDividend}
+              fill="#bfdbfe"
               radius={[4, 4, 0, 0]}
               barSize={30}
             />
-            <Area 
+            <Area
               yAxisId="left"
-              type="monotone" 
-              dataKey="nav" 
-              name="NAV Growth" 
-              stroke="#0A1224" 
+              type="monotone"
+              dataKey="nav"
+              name={seriesNav}
+              stroke="#0A1224"
               strokeWidth={2}
-              fillOpacity={1} 
-              fill="url(#colorNav)" 
+              fillOpacity={1}
+              fill="url(#colorNav)"
             />
-            <Line 
+            <Line
               yAxisId="right"
-              type="monotone" 
-              dataKey="performance" 
-              name="Fund Performance" 
+              type="monotone"
+              dataKey="performance"
+              name={seriesPerformance}
               stroke="var(--color-accent-green)" 
               strokeWidth={3}
               dot={{ r: 4, fill: 'white', stroke: 'var(--color-accent-green)', strokeWidth: 2 }}
