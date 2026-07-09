@@ -14,7 +14,17 @@ import Breadcrumbs from '../components/Breadcrumbs';
 import { cn } from '../lib/utils';
 import { GradientCard } from '../components/GradientCard';
 import { TransactionPartiesGrid } from '../components/TransactionParties';
+import { getStrapiMediaURL } from '../lib/strapi';
 import type { TransactionPartyItem } from '../types/about';
+import type {
+  GovernancePageSection,
+  HeroSection as HeroSectionData,
+  StickySubNavSection as StickySubNavSectionData,
+  InvestmentCommitteeSection as InvestmentCommitteeSectionData,
+  FundManagersSection as FundManagersSectionData,
+  InvestmentStrategySection as InvestmentStrategySectionData,
+  GovernanceImpactSection as GovernanceImpactSectionData,
+} from '../types/governance';
 
 const FUND_MANAGER_PARTIES: TransactionPartyItem[] = [
   { id: 1, partyName: 'KPMG', roleHighlight: 'Auditors', roleRest: 'to the Fund', logo: 'https://upload.wikimedia.org/wikipedia/commons/d/db/KPMG_blue_logo.svg', logo_alt_text: 'KPMG' },
@@ -225,7 +235,7 @@ const InvestmentCommitteeSection = ({
             const nameParts = member.name.split(" ");
             const firstName = nameParts.slice(0, -1).join(" ");
             const lastName = nameParts[nameParts.length - 1];
-            const photoSrc = member.photo ? getStrapiURL(member.photo.url) : "";
+            const photoSrc = getStrapiMediaURL(member.photo) ?? "";
 
             return (
               <motion.div

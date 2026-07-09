@@ -1,6 +1,8 @@
 // Types for the Strapi `portfolio` singleType (cms/src/api/portfolio + cms/src/components/portfolio-page/*).
 // Media fields are plain Cloudinary URL strings (see cms schema: media was converted to string).
 
+import type { LucideIcon } from "lucide-react";
+
 export interface HeroStatItem {
   id: number;
   value: string;
@@ -127,9 +129,82 @@ export interface ProjectsSection {
   projects: ProjectItem[];
 }
 
+export interface StateProjectRef {
+  id: number;
+  projectId: string;
+}
+
+export interface StateItem {
+  id: number;
+  stateName: string;
+  description: string;
+  projectRefs: StateProjectRef[];
+}
+
 export interface NigeriaMapSection {
   id: number;
   __component: "portfolio-page.nigeria-map-section";
+  eyebrow: string;
+  headingPrimary: string;
+  headingSecondary: string;
+  description: string;
+  mapRegionLabel: string;
+  apiConnectedLabel: string;
+  apiConnectedStatus: string;
+  emptyStateHeading: string;
+  emptyStateBody: string;
+  regionalImpactLabel: string;
+  currentProjectsLabel: string;
+  aggregatedSdgLabel: string;
+  noProjectsText: string;
+  futureEvaluationText: string;
+  states: StateItem[];
+}
+
+export interface ResolvedSdg {
+  id: number;
+  color: string;
+  label: string;
+}
+
+export interface ResolvedMetric {
+  label: string;
+  value: string;
+  icon: LucideIcon;
+}
+
+export interface ResolvedProject {
+  id: string;
+  name: string;
+  sector: string;
+  sectorColor: string;
+  location: string;
+  status: string;
+  description: string;
+  image: string;
+  metrics: ResolvedMetric[];
+  sdgs: ResolvedSdg[];
+}
+
+export interface ResolvedCaseStudyImpactMetric {
+  label: string;
+  value: string;
+  icon: LucideIcon;
+  description: string;
+  image: string;
+  sdg: ResolvedSdg;
+}
+
+export interface ResolvedCaseStudy {
+  overview: string[];
+  challenge: { text: string[]; quote: string };
+  solution: string[];
+  impactMetrics: ResolvedCaseStudyImpactMetric[];
+  galleryImages: string[];
+}
+
+export interface ResolvedProjectWithCaseStudy extends ResolvedProject {
+  caseStudy: ResolvedCaseStudy;
 }
 
 export type PortfolioPageSection =

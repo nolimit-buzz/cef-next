@@ -799,6 +799,7 @@ export const Navbar = () => {
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 
 import type { HeroSection, HeroStatItem } from "../types/home";
+import { getStrapiMediaURL } from "../lib/strapi";
 
 const DEFAULT_SLIDES = [
   {
@@ -854,10 +855,19 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
           loop
           muted
           playsInline
-          poster="https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2672&auto=format&fit=crop"
+          poster={
+            getStrapiMediaURL(hero?.poster_image) ??
+            "https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2672&auto=format&fit=crop"
+          }
           className="absolute inset-0 w-full h-full object-cover -z-10"
         >
-          <source src="https://nolimitlms.com/wp-content/uploads/2026/04/solar_p.mp4" type="video/mp4" />
+          <source
+            src={
+              getStrapiMediaURL(hero?.hero_video) ??
+              "https://nolimitlms.com/wp-content/uploads/2026/04/solar_p.mp4"
+            }
+            type="video/mp4"
+          />
         </video>
         <div className="absolute inset-0 bg-[#050A15]/80 z-10" />
       </motion.div>

@@ -1,4 +1,10 @@
 // Types for the Strapi `impact` singleType (cms/src/api/impact + cms/src/components/impact-page/*).
+// Media on this page arrives via the `shared.media` wrapper component: `{ file: "<url>" }`.
+
+export interface SharedMedia {
+  id: number;
+  file: string | null;
+}
 
 export interface HeroFeatureItem {
   id: number;
@@ -15,6 +21,7 @@ export interface HeroSection {
   features: HeroFeatureItem[];
   statLabel: string;
   statValue: string;
+  heroImage?: SharedMedia | null;
 }
 
 export interface ImpactStatementSection {
@@ -43,6 +50,7 @@ export interface ImpactBodySection {
   body: string;
   methodologyLink: string;
   stats: StatCardItem[];
+  accentImage?: SharedMedia | null;
 }
 
 export interface PillarPointItem {
@@ -78,6 +86,7 @@ export interface CaseStudySpotlightSection {
   body: string;
   stats: CaseStudyStatItem[];
   ctaLabel: string;
+  spotlightImage?: SharedMedia | null;
 }
 
 export type ImpactPageSection =
