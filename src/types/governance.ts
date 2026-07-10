@@ -1,13 +1,10 @@
-export interface StrapiMedia {
-  url: string;
-  alternativeText: string | null;
-}
+// Media fields are plain Cloudinary URL strings (see cms schema: media was converted to string).
 
 export interface CommitteeMemberItem {
   id: number;
   name: string;
   bio: string;
-  photo: StrapiMedia | null;
+  photo: string | null;
 }
 
 export interface TransactionPartyItem {
@@ -15,7 +12,7 @@ export interface TransactionPartyItem {
   name: string;
   roleHighlight: string;
   roleRest: string;
-  logo: StrapiMedia | null;
+  logo: string | null;
 }
 
 export interface PerformanceStatItem {

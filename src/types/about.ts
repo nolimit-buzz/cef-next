@@ -1,4 +1,5 @@
 // Types for the Strapi `about` singleType (cms/src/api/about + cms/src/components/about-page/*).
+// Media fields are plain Cloudinary URL strings (see cms schema: media was converted to string).
 
 export interface StatItem {
   id: number;
@@ -44,12 +45,25 @@ export interface TeamMemberItem {
   id: number;
   name: string;
   title: string;
+  photo?: string | null;
+  photo_alt_text?: string;
 }
 
 export interface PartnerItem {
   id: number;
   name: string;
   body: string;
+  logo?: string | null;
+  logo_alt_text?: string;
+}
+
+export interface TransactionPartyItem {
+  id: number;
+  partyName: string;
+  roleHighlight: string;
+  roleRest: string;
+  logo?: string | null;
+  logo_alt_text?: string;
 }
 
 export interface RatingAgencyItem {
@@ -73,6 +87,8 @@ export interface InvestorItem {
   id: number;
   title: string;
   desc: string;
+  image?: string | null;
+  image_alt_text?: string;
 }
 
 export interface NavItem {
@@ -98,6 +114,9 @@ export interface HeroSection {
   credentials: CredentialItem[];
   ratingLabel: string;
   ratingValue: string;
+  hero_video?: string | null;
+  poster_image?: string | null;
+  poster_image_alt_text?: string;
 }
 
 export interface StickyNavSection {
@@ -115,6 +134,8 @@ export interface AboutFundSection {
   subheading: string;
   stats: StatItem[];
   approach: ApproachBlock;
+  bento_image?: string | null;
+  bento_image_alt_text?: string;
 }
 
 export interface MacroProblemSection {
@@ -126,6 +147,8 @@ export interface MacroProblemSection {
   subheading: string;
   stats: StatItem[];
   solution: ApproachBlock;
+  bento_image?: string | null;
+  bento_image_alt_text?: string;
 }
 
 export interface FundOverviewSection {
@@ -148,6 +171,8 @@ export interface FundStructureSection {
   body: string;
   steps: FundStep[];
   flowchart: FundStructureFlowchart;
+  steps_background_image?: string | null;
+  steps_background_image_alt_text?: string;
 }
 
 export interface TechnicalAssistanceSection {
@@ -177,6 +202,7 @@ export interface TeamSection {
   body: string;
   cta: string;
   members: TeamMemberItem[];
+  transactionParties: TransactionPartyItem[];
 }
 
 export interface ValuesAndImpactSection {
@@ -187,6 +213,10 @@ export interface ValuesAndImpactSection {
   headingSecondary: string;
   body: string;
   sdgs: SdgItem[];
+  decorative_image_1?: string | null;
+  decorative_image_1_alt_text?: string;
+  decorative_image_2?: string | null;
+  decorative_image_2_alt_text?: string;
 }
 
 export interface TargetInvestorsSection {

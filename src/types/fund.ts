@@ -1,8 +1,4 @@
-export interface StrapiMedia {
-  url: string;
-  alternativeText?: string;
-  mime?: string;
-}
+// Media fields are plain Cloudinary URL strings (see cms schema: media was converted to string).
 
 export interface NavItem {
   id: number;
@@ -26,7 +22,7 @@ export interface AimCardItem {
   id: number;
   title: string;
   hoverText: string;
-  image: StrapiMedia | null;
+  image: string | null;
 }
 
 export interface SdgCardItem {
@@ -43,7 +39,7 @@ export interface HeroSection {
   headingPrimary: string;
   headingSecondary: string;
   subheadline: string;
-  video: StrapiMedia | null;
+  video: string | null;
   credential1: string;
   credential2: string;
   ratingLabel: string;
@@ -73,7 +69,7 @@ export interface ChallengeSection {
   headingPrimary: string;
   headingSecondary: string;
   supportingText: string;
-  challengeImage: StrapiMedia | null;
+  challengeImage: string | null;
   challengeStats: ChallengeStatItem[];
   solutionLabel: string;
   solutionHeading: string;

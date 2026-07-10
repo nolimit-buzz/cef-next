@@ -3,6 +3,7 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import { Leaf, ArrowUpRight, ShieldCheck, TrendingUp, CheckCircle2, Building2, FileText, Settings, BarChart } from "lucide-react";
 import Breadcrumbs from "../components/Breadcrumbs";
+import { getStrapiMediaURL } from "../lib/strapi";
 import type {
   EligibilityPageSection,
   EligibilityHeroSection,
@@ -99,8 +100,11 @@ const HeroSection = ({ cms }: { cms?: EligibilityHeroSection }) => {
           <div className="absolute inset-0 bg-black/30 z-10" />
           <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-background)] via-transparent to-transparent z-10 lg:block hidden" />
           <img
-            src="https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2670&auto=format&fit=crop"
-            alt="Eligibility Criteria"
+            src={
+              getStrapiMediaURL(cms?.hero_image) ??
+              "https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2670&auto=format&fit=crop"
+            }
+            alt={cms?.hero_image_alt_text || "Eligibility Criteria"}
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
           />

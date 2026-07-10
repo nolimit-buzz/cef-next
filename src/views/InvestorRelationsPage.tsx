@@ -9,7 +9,7 @@ import {
 import Link from "next/link";
 import Breadcrumbs from '../components/Breadcrumbs';
 import { cn } from '../lib/utils';
-import { getStrapiURL } from '../lib/strapi';
+import { getStrapiMediaURL } from '../lib/strapi';
 import { FundPerformanceChart } from '../components/FundPerformanceChart';
 import type {
   InvestorRelationsPageSection,
@@ -178,14 +178,26 @@ const HeroSection = ({ data }: { data?: HeroSectionData }) => {
               loop
               muted
               playsInline
-              poster="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2670&auto=format&fit=crop"
+              poster={
+                getStrapiMediaURL(data?.heroPoster?.file) ??
+                "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2670&auto=format&fit=crop"
+              }
               className="w-full h-full object-cover motion-reduce:hidden"
             >
-              <source src="https://cdn.coverr.co/videos/coverr-office-buildings-in-the-city-4344/1080p.mp4" type="video/mp4" />
+              <source
+                src={
+                  getStrapiMediaURL(data?.heroVideo?.file) ??
+                  "https://cdn.coverr.co/videos/coverr-office-buildings-in-the-city-4344/1080p.mp4"
+                }
+                type="video/mp4"
+              />
             </video>
             <img
-              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2670&auto=format&fit=crop"
-              alt="Institutional Data"
+              src={
+                getStrapiMediaURL(data?.heroFallbackImage?.file) ??
+                "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2670&auto=format&fit=crop"
+              }
+              alt={data?.heroFallbackImage_alt_text || "Institutional Data"}
               className="hidden motion-reduce:block absolute inset-0 w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-black/40 z-10" />
@@ -522,7 +534,7 @@ const InvestorBaseSection = ({ data }: { data?: InvestorBaseSectionData }) => {
             return (
               <motion.div key={inv.id ?? idx} variants={fadeUp} className="group relative rounded-lg overflow-hidden h-[400px] cursor-pointer">
                 <img
-                  src={inv.image}
+                  src={getStrapiMediaURL(inv.image?.file)}
                   alt={inv.title}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -677,8 +689,8 @@ const DistributionHistorySection = ({ data }: { data?: DistributionHistorySectio
                   {holdingsForSeries.map((investor, idx) => (
                     <div key={investor.id ?? idx} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center py-4 px-4 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
                       <div className="col-span-2 flex items-center h-12">
-                        {investor.logo?.url ? (
-                          <img src={getStrapiURL(investor.logo.url)} alt={investor.logo.alternativeText ?? investor.name} className="h-10 w-16 object-contain" referrerPolicy="no-referrer" />
+                        {investor.logo ? (
+                          <img src={getStrapiMediaURL(investor.logo)} alt={investor.name} className="h-10 w-16 object-contain" referrerPolicy="no-referrer" />
                         ) : (
                           <div className="w-16 h-10 bg-gray-200 rounded flex items-center justify-center text-[10px] text-gray-400 uppercase tracking-wider font-bold">{data?.holdingsColLogo}</div>
                         )}

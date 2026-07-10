@@ -13,6 +13,8 @@ export interface EligibilityHeroSection {
   headingSecondary: string;
   subHeadline: string;
   heroBadges: HeroBadgeItem[];
+  hero_image?: string | null;
+  hero_image_alt_text?: string;
 }
 
 export interface EligibilityStatementSection {

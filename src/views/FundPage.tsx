@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Breadcrumbs from '../components/Breadcrumbs';
 import { cn } from '../lib/utils';
-import { getStrapiURL } from '../lib/strapi';
+import { getStrapiMediaURL } from '../lib/strapi';
 import type {
   FundPageSection,
   HeroSection as HeroSectionData,
@@ -197,7 +197,7 @@ const HeroSection = ({ data }: { data: HeroSectionData }) => {
                 playsInline
                 className="w-full h-full object-cover motion-reduce:hidden"
               >
-                <source src={getStrapiURL(data.video.url)} type={data.video.mime ?? 'video/mp4'} />
+                <source src={getStrapiMediaURL(data.video)} type="video/mp4" />
               </video>
             ) : (
               <div className="w-full h-full bg-[var(--color-background)]" />
@@ -367,8 +367,8 @@ const ChallengeSection = ({ data }: { data: ChallengeSectionData }) => {
           <motion.div variants={fadeUp} className="rounded-2xl overflow-hidden min-h-[280px] lg:min-h-[320px] h-full bg-white/5">
             {data.challengeImage && (
               <img
-                src={getStrapiURL(data.challengeImage.url)}
-                alt={data.challengeImage.alternativeText ?? 'Challenge image'}
+                src={getStrapiMediaURL(data.challengeImage)}
+                alt="Challenge image"
                 className="w-full h-full object-cover"
               />
             )}
@@ -657,8 +657,8 @@ const AimOfFundsSection = ({ data }: { data: AimOfFundsSectionData }) => {
               >
                 {card.image ? (
                   <img
-                    src={getStrapiURL(card.image.url)}
-                    alt={card.image.alternativeText ?? card.title}
+                    src={getStrapiMediaURL(card.image)}
+                    alt={card.title}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 ) : (

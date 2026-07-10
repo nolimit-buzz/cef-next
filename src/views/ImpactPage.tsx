@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "../lib/utils";
+import { getStrapiMediaURL } from "../lib/strapi";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { SDGMap } from "../components/SDGMap";
 import type {
@@ -80,6 +81,7 @@ const HeroSection = ({
   features,
   statLabel,
   statValue,
+  heroImage,
 }: HeroSectionData) => {
   return (
 <section className="relative bg-[var(--color-background)] flex flex-col  lg:h-screen lg:min-h-[700px] lg:max-h-[1080px]">      {/* Top Tier: Split Hero */}
@@ -121,7 +123,10 @@ const HeroSection = ({
           <div className="absolute inset-0 bg-black/30 z-10" />
           <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-background)] via-transparent to-transparent z-10 lg:block hidden" />
           <img
-            src="https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?q=80&w=2670&auto=format&fit=crop"
+            src={
+              getStrapiMediaURL(heroImage?.file) ??
+              "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?q=80&w=2670&auto=format&fit=crop"
+            }
             alt="Clean Energy Impact"
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
@@ -237,7 +242,11 @@ const ImpactBodySection = ({
   body,
   methodologyLink,
   stats,
+  accentImage,
 }: ImpactBodySectionData) => {
+  const accentImageUrl =
+    getStrapiMediaURL(accentImage?.file) ??
+    "https://images.unsplash.com/photo-1545459720-aac8509eb02c?q=80&w=1000&auto=format&fit=crop";
   return (
     <section className="py-24 lg:py-32 bg-white text-[#0A1224] relative z-20">
       <div className="max-w-7xl mx-auto px-6">
@@ -296,7 +305,10 @@ const ImpactBodySection = ({
                   variants={itemVariants}
                   className="group relative bg-[var(--color-background)] border border-[#1A2644] p-8 flex flex-col justify-between min-h-[260px] overflow-hidden transition-all duration-500 hover:border-blue-400/60 hover:-translate-y-0.5"
                 >
-                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1545459720-aac8509eb02c?q=80&w=1000&auto=format&fit=crop')] opacity-10 bg-cover mix-blend-overlay pointer-events-none" />
+                  <div
+                    className="absolute inset-0 opacity-10 bg-cover mix-blend-overlay pointer-events-none"
+                    style={{ backgroundImage: `url('${accentImageUrl}')` }}
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-background)] to-transparent opacity-90 z-0" />
                   <div className="relative z-10 flex flex-col h-full justify-between">
                     <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50 mb-6">
@@ -426,13 +438,16 @@ const CorePillarsSection = ({ heading, description, pillars }: CorePillarsSectio
   );
 };
 
-const CaseStudySpotlight = ({ badge, heading, body, stats, ctaLabel }: CaseStudySpotlightSectionData) => {
+const CaseStudySpotlight = ({ badge, heading, body, stats, ctaLabel, spotlightImage }: CaseStudySpotlightSectionData) => {
   return (
     <section className="bg-[#050A15] border-t border-white/10 text-white flex flex-col lg:flex-row min-h-[600px] relative z-20">
       {/* Left Image (50%) */}
       <div className="w-full lg:w-1/2 min-h-[400px] lg:min-h-full relative overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1584281720894-3ee1d5750fc2?q=80&w=2000&auto=format&fit=crop"
+          src={
+            getStrapiMediaURL(spotlightImage?.file) ??
+            "https://images.unsplash.com/photo-1584281720894-3ee1d5750fc2?q=80&w=2000&auto=format&fit=crop"
+          }
           alt="Solar impact on community"
           className="absolute inset-0 w-full h-full object-cover"
           referrerPolicy="no-referrer"

@@ -10,10 +10,12 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import Breadcrumbs from "../components/Breadcrumbs";
-import { cn } from "../lib/utils";
-import { TransactionPartiesGrid } from "../components/TransactionParties";
-import { getStrapiURL } from "../lib/strapi";
+import Breadcrumbs from '../components/Breadcrumbs';
+import { cn } from '../lib/utils';
+import { GradientCard } from '../components/GradientCard';
+import { TransactionPartiesGrid } from '../components/TransactionParties';
+import { getStrapiMediaURL } from '../lib/strapi';
+import type { TransactionPartyItem } from '../types/about';
 import type {
   GovernancePageSection,
   HeroSection as HeroSectionData,
@@ -22,7 +24,16 @@ import type {
   FundManagersSection as FundManagersSectionData,
   InvestmentStrategySection as InvestmentStrategySectionData,
   GovernanceImpactSection as GovernanceImpactSectionData,
-} from "../types/governance";
+} from '../types/governance';
+
+const FUND_MANAGER_PARTIES: TransactionPartyItem[] = [
+  { id: 1, partyName: 'KPMG', roleHighlight: 'Auditors', roleRest: 'to the Fund', logo: 'https://upload.wikimedia.org/wikipedia/commons/d/db/KPMG_blue_logo.svg', logo_alt_text: 'KPMG' },
+  { id: 2, partyName: 'Olaniwun Ajayi', roleHighlight: 'Solicitors', roleRest: 'to The Fund' },
+  { id: 3, partyName: 'Africa Prudential', roleHighlight: 'Registrar', roleRest: 'to the Fund' },
+  { id: 4, partyName: 'UBA', roleHighlight: 'Custodian', roleRest: 'to The Fund', logo: 'https://www.ubagroup.com/wp-content/uploads/2025/03/UBA-58567.svg', logo_alt_text: 'UBA' },
+  { id: 5, partyName: 'Stanbic IBTC', roleHighlight: 'Trustee', roleRest: 'to The Fund' },
+  { id: 6, partyName: 'FSDH Capital', roleHighlight: 'Fund Adviser /', roleRest: 'Issuing House' },
+];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -224,7 +235,7 @@ const InvestmentCommitteeSection = ({
             const nameParts = member.name.split(" ");
             const firstName = nameParts.slice(0, -1).join(" ");
             const lastName = nameParts[nameParts.length - 1];
-            const photoSrc = member.photo ? getStrapiURL(member.photo.url) : "";
+            const photoSrc = getStrapiMediaURL(member.photo) ?? "";
 
             return (
               <motion.div
@@ -957,7 +968,8 @@ const FundManagersSection = ({
           </div>
         </div>
 
-        <TransactionPartiesGrid />
+        <TransactionPartiesGrid parties={FUND_MANAGER_PARTIES} />
+
       </div>
     </section>
   );
