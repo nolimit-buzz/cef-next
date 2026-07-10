@@ -679,7 +679,7 @@ const DistributionHistorySection = ({ data }: { data?: DistributionHistorySectio
                   </div>
                 )}
 
-                <div className="hidden md:grid grid-cols-12 gap-4 py-4 border-b border-gray-300 mb-4 px-4">
+                <div className="flex justify-between md:grid md:grid-cols-12 gap-2 md:gap-4 py-3 md:py-4 border-b border-gray-300 mb-4 px-2 md:px-4">
                   <div className="col-span-2 text-xs font-bold uppercase tracking-widest text-gray-400">{data?.holdingsColLogo}</div>
                   <div className="col-span-7 text-xs font-bold uppercase tracking-widest text-gray-400">{data?.holdingsColInvestorName}</div>
                   <div className="col-span-3 text-xs font-bold uppercase tracking-widest text-gray-400 text-right">{data?.holdingsColHolding}</div>
@@ -687,20 +687,19 @@ const DistributionHistorySection = ({ data }: { data?: DistributionHistorySectio
 
                 <div className="flex flex-col gap-2">
                   {holdingsForSeries.map((investor, idx) => (
-                    <div key={investor.id ?? idx} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center py-4 px-4 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
+                    <div key={investor.id ?? idx} className="flex justify-between md:grid md:grid-cols-12 gap-2 md:gap-4 items-center py-3 md:py-4 px-2 md:px-4 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
                       <div className="col-span-2 flex items-center h-12">
                         {investor.logo ? (
-                          <img src={getStrapiMediaURL(investor.logo)} alt={investor.name} className="h-10 w-16 object-contain" referrerPolicy="no-referrer" />
+                          <img src={getStrapiMediaURL(investor.logo)} alt={investor.name} className="h-8 w-12 md:h-10 md:w-16 object-contain" referrerPolicy="no-referrer" />
                         ) : (
-                          <div className="w-16 h-10 bg-gray-200 rounded flex items-center justify-center text-[10px] text-gray-400 uppercase tracking-wider font-bold">{data?.holdingsColLogo}</div>
+                          <div className="w-12 h-8 md:w-16 md:h-10 bg-gray-200 rounded flex items-center justify-center text-[10px] text-gray-400 uppercase tracking-wider font-bold">{data?.holdingsColLogo}</div>
                         )}
                       </div>
-                      <div className="col-span-7">
-                        <span className="text-lg font-medium text-[#0A1224]">{investor.name}</span>
+                      <div className="col-span-7 flex-1 min-w-0 md:flex-none">
+                        <span className="text-sm md:text-lg font-medium text-[#0A1224]">{investor.name}</span>
                       </div>
-                      <div className="col-span-3 md:text-right">
-                        <span className="md:hidden text-xs font-bold uppercase tracking-widest text-gray-400 mr-2">{data?.holdingsColHoldingMobile}</span>
-                        <span className="text-lg font-mono font-medium text-[var(--color-accent-green)]">{investor.holding}</span>
+                      <div className="col-span-3 text-right">
+                        <span className="text-sm md:text-lg font-mono font-medium text-[var(--color-accent-green)]">{investor.holding}</span>
                       </div>
                     </div>
                   ))}
