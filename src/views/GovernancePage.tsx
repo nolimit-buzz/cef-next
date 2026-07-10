@@ -27,12 +27,12 @@ import type {
 } from '../types/governance';
 
 const FUND_MANAGER_PARTIES: TransactionPartyItem[] = [
-  { id: 1, partyName: 'KPMG', roleHighlight: 'Auditors', roleRest: 'to the Fund', logo: 'https://upload.wikimedia.org/wikipedia/commons/d/db/KPMG_blue_logo.svg', logo_alt_text: 'KPMG' },
-  { id: 2, partyName: 'Olaniwun Ajayi', roleHighlight: 'Solicitors', roleRest: 'to The Fund' },
-  { id: 3, partyName: 'Africa Prudential', roleHighlight: 'Registrar', roleRest: 'to the Fund' },
-  { id: 4, partyName: 'UBA', roleHighlight: 'Custodian', roleRest: 'to The Fund', logo: 'https://www.ubagroup.com/wp-content/uploads/2025/03/UBA-58567.svg', logo_alt_text: 'UBA' },
-  { id: 5, partyName: 'Stanbic IBTC', roleHighlight: 'Trustee', roleRest: 'to The Fund' },
-  { id: 6, partyName: 'FSDH Capital', roleHighlight: 'Fund Adviser /', roleRest: 'Issuing House' },
+  { id: 1, partyName: 'KPMG', roleHighlight: 'Auditors', roleRest: 'to the Fund', logo: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/about-page/transaction-party-kpmg-logo.svg', logo_alt_text: 'KPMG' },
+  { id: 2, partyName: 'Olaniwun Ajayi', roleHighlight: 'Solicitors', roleRest: 'to The Fund', logo: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/about-page/transaction-party-olaniwun-ajayi-logo.png', logo_alt_text: 'Olaniwun Ajayi' },
+  { id: 3, partyName: 'Africa Prudential', roleHighlight: 'Registrar', roleRest: 'to the Fund', logo: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/about-page/transaction-party-africa-prudential-logo.png', logo_alt_text: 'Africa Prudential' },
+  { id: 4, partyName: 'UBA', roleHighlight: 'Custodian', roleRest: 'to The Fund', logo: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/about-page/transaction-party-uba-logo.svg', logo_alt_text: 'UBA' },
+  { id: 5, partyName: 'Stanbic IBTC', roleHighlight: 'Trustee', roleRest: 'to The Fund', logo: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/about-page/transaction-party-stanbic-ibtc-logo.png', logo_alt_text: 'Stanbic IBTC' },
+  { id: 6, partyName: 'FSDH Capital', roleHighlight: 'Fund Adviser /', roleRest: 'Issuing House', logo: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/about-page/transaction-party-fsdh-capital-logo.png', logo_alt_text: 'FSDH Capital' },
 ];
 
 const fadeUp = {
