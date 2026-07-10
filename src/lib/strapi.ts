@@ -25,6 +25,18 @@ export function getStrapiMediaURL(url?: string | null): string | undefined {
   return url.startsWith("http") ? url : getStrapiURL(url);
 }
 
+// Inserts a Cloudinary transformation segment so images are delivered at
+// retina density instead of whatever size was uploaded; non-Cloudinary URLs
+// pass through untouched.
+export function getCloudinaryTransformedURL(
+  url: string | undefined,
+  transform = "w_600,dpr_2,q_auto:best,f_auto",
+): string | undefined {
+  if (!url) return undefined;
+  if (!url.includes("res.cloudinary.com") || !url.includes("/upload/")) return url;
+  return url.replace("/upload/", `/upload/${transform}/`);
+}
+
 async function fetchAPI<T>(path: string, query = ""): Promise<T> {
   const url = getStrapiURL(`/api${path}${query ? `?${query}` : ""}`);
   const res = await fetch(url, { next: { revalidate: 60 } });

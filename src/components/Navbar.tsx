@@ -155,7 +155,10 @@ export const Navbar = () => {
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center z-50 shrink-0"
+          className={cn(
+            "flex items-center z-50 shrink-0",
+            mobileMenuOpen && "invisible lg:visible",
+          )}
           onClick={closeMegaMenu}
         >
           <img
@@ -355,6 +358,7 @@ export const Navbar = () => {
           className={cn(
             "lg:hidden z-50 transition-colors p-2",
             useDarkText ? "text-black" : "text-white",
+            mobileMenuOpen && "fixed top-6 right-6 text-white",
           )}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
@@ -660,7 +664,7 @@ export const Navbar = () => {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-2xl font-medium tracking-widest uppercase text-white hover:text-[var(--color-accent-green)] transition-colors"
+                className="text-base md:text-xl font-medium tracking-widest uppercase text-white hover:text-[var(--color-accent-green)] transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.label}
@@ -691,7 +695,7 @@ export const Navbar = () => {
 
             <Link
               href="/contact"
-              className="text-2xl font-medium tracking-widest uppercase text-white hover:text-[var(--color-accent-green)] transition-colors"
+              className="text-base md:text-xl font-medium tracking-widest uppercase text-white hover:text-[var(--color-accent-green)] transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               Contact
@@ -706,10 +710,6 @@ export const Navbar = () => {
                 className="text-white bg-white/10 p-3 border border-white hover:bg-white/20 transition-colors"
               >
                 <Search className="w-5 h-5" />
-              </button>
-              {/* FIX 5: bg-electric-blue now resolves from --color-electric-blue token */}
-              <button className="flex items-center gap-2 px-6 py-3 bg-electric-blue text-black border-2 border-black font-bold shadow-[4px_4px_0_0_#ffffff]">
-                <Lock className="w-4 h-4" /> Login
               </button>
             </div>
           </motion.div>
@@ -845,7 +845,7 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
   const heroY = useTransform(scrollY, [0, 600], [0, 100]);
 
   return (
-    <section className="relative h-[100dvh] min-h-[600px] lg:min-h-[800px] flex flex-col justify-end pb-16 overflow-hidden bg-obsidian text-white">
+    <section className="relative min-h-dvh lg:min-h-[800px] flex flex-col justify-end pt-28 pb-10 lg:pb-16 overflow-hidden bg-obsidian text-white">
 
       {/* Video Background */}
       <motion.div style={{ opacity: 1 }} className="absolute inset-0 z-0 bg-obsidian">
@@ -875,7 +875,7 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
       {/* FIX 6: Replaced max-w-7xl mx-auto px-6 with container-responsive */}
       <motion.div
         style={{ opacity: heroOpacity, y: heroY }}
-        className="relative z-20 w-full container-responsive flex flex-col xl:flex-row justify-between xl:items-center items-start gap-12 mb-12"
+        className="relative z-20 w-full container-responsive flex flex-col xl:flex-row justify-between xl:items-center items-start gap-8 xl:gap-12 mb-8 lg:mb-12"
       >
         {/* Left Content */}
         <motion.div
@@ -887,21 +887,21 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
           {/* FIX 7: Replaced raw responsive font classes with text-display utility */}
           <motion.h1
             variants={fadeUp}
-            className="text-display font-medium text-white mb-6"
+            className="text-display font-medium text-white mb-4 md:mb-6"
           >
             {hero?.headline ?? "Powering a Resilient Future"}
           </motion.h1>
 
           <motion.p
             variants={fadeUp}
-            className="text-body text-white/80 max-w-xl mb-10 leading-relaxed font-light md:text-xl"
+            className="text-body text-white/80 max-w-xl mb-6 md:mb-10 leading-relaxed font-light md:text-xl"
           >
             {hero?.description ?? "Providing local currency funding to climate-aligned, sustainable, and inclusive clean energy infrastructure across Nigeria."}
           </motion.p>
 
           <motion.div
             variants={fadeUp}
-            className="flex flex-col sm:flex-row gap-8 items-start sm:items-center"
+            className="flex flex-col sm:flex-row gap-4 sm:gap-8 items-start sm:items-center"
           >
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -926,7 +926,7 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.8 }}
-          className="w-full sm:w-[300px] xl:w-80 h-[160px] bg-obsidian/30 backdrop-blur-sm border border-white/20 border-l-2 border-l-electric-blue relative rounded-sm mt-8 xl:mt-0"
+          className="w-full sm:w-[300px] xl:w-80 h-[140px] sm:h-[160px] bg-obsidian/30 backdrop-blur-sm border border-white/20 border-l-2 border-l-electric-blue relative rounded-sm"
         >
           <AnimatePresence mode="wait">
             <motion.div

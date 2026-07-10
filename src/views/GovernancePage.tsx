@@ -14,7 +14,8 @@ import Breadcrumbs from '../components/Breadcrumbs';
 import { cn } from '../lib/utils';
 import { GradientCard } from '../components/GradientCard';
 import { TransactionPartiesGrid } from '../components/TransactionParties';
-import { getStrapiMediaURL } from '../lib/strapi';
+import Image from 'next/image';
+import { getCloudinaryTransformedURL, getStrapiMediaURL } from '../lib/strapi';
 import type { TransactionPartyItem } from '../types/about';
 import type {
   GovernancePageSection,
@@ -235,7 +236,7 @@ const InvestmentCommitteeSection = ({
             const nameParts = member.name.split(" ");
             const firstName = nameParts.slice(0, -1).join(" ");
             const lastName = nameParts[nameParts.length - 1];
-            const photoSrc = getStrapiMediaURL(member.photo) ?? "";
+            const photoSrc = getCloudinaryTransformedURL(getStrapiMediaURL(member.photo)) ?? "";
 
             return (
               <motion.div
@@ -247,12 +248,16 @@ const InvestmentCommitteeSection = ({
                 className={`group relative rounded-[8px] overflow-hidden h-[360px] cursor-pointer items-center justify-center`}
               >
                 {/* Background Image */}
-                <img
-                  src={photoSrc}
-                  alt={member.name}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale"
-                  referrerPolicy="no-referrer"
-                />
+                {photoSrc && (
+                  <Image
+                    src={photoSrc}
+                    alt={member.name}
+                    fill
+                    quality={100}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105 grayscale"
+                  />
+                )}
                 {/* Dark Overlay */}
                 <div className="absolute inset-0 bg-[#050A15]/40 group-hover:bg-[#050A15]/80 transition-colors duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050A15] via-transparent to-transparent opacity-90" />

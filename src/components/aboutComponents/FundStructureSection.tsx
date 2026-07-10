@@ -154,7 +154,7 @@ export const FundStructureSection = ({ sectionLabel, headingPrimary, headingSeco
           </div>
 
           {/* Right Column: Flowchart (White Background) */}
-          <div className="w-full xl:w-[65%] bg-white p-10 lg:p-16 flex items-center justify-center">
+          <div className="w-full xl:w-[65%] bg-white p-10 lg:p-16 hidden md:flex items-center justify-center">
             <div className="w-full overflow-x-auto pb-8 no-scrollbar">
               <div className="min-w-[750px] w-full flex flex-col items-center font-sans">
 

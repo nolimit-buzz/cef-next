@@ -100,19 +100,19 @@ export const Portfolio = ({ cms }: { cms?: PortfolioSection }) => {
         </div>
 
         <div className="flex flex-col lg:flex-row lg:items-center gap-6 mb-12">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-white/40 mr-2">{cms?.filter_label ?? "Sector:"}</span>
-            <button 
+          <div className="grid grid-cols-6 gap-2 sm:flex sm:flex-wrap sm:items-center">
+            <span className="hidden sm:inline text-[10px] font-bold uppercase tracking-widest text-white/40 mr-2">{cms?.filter_label ?? "Sector:"}</span>
+            <button
               onClick={() => setSelectedSector(null)}
-              className={`px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${!selectedSector ? 'bg-white text-black' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
+              className={`col-span-2 sm:col-auto px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${!selectedSector ? 'bg-white text-black' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
             >
               {cms?.all_filter_label ?? "All"}
             </button>
-            {uniqueSectors.map(sector => (
-              <button 
+            {uniqueSectors.map((sector, idx) => (
+              <button
                 key={sector}
                 onClick={() => setSelectedSector(sector)}
-                className={`px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${selectedSector === sector ? 'bg-white text-black' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
+                className={`${idx < 2 ? 'col-span-2' : 'col-span-3'} sm:col-auto px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all ${selectedSector === sector ? 'bg-white text-black' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
               >
                 {sector}
               </button>
