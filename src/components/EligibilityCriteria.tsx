@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
 import type { EligibilitySection } from '../types/home';
@@ -44,6 +44,15 @@ const DEFAULT_SECTORS = [
 
 export const EligibilityCriteria = ({ cms }: { cms?: EligibilitySection }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [visibleCards, setVisibleCards] = useState(2);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 640px)");
+    const update = () => setVisibleCards(mq.matches ? 2 : 1);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   const sectors = cms?.sectors?.length
     ? cms.sectors.map(s => ({
@@ -60,8 +69,14 @@ export const EligibilityCriteria = ({ cms }: { cms?: EligibilitySection }) => {
   const ticketLabel = cms?.ticket_size_label ?? "Ticket Size";
   const riskLabel = cms?.risk_profile_label ?? "Risk Profile";
 
+  const maxIndex = Math.max(sectors.length - visibleCards, 0);
+
+  useEffect(() => {
+    setCurrentIndex((prev) => Math.min(prev, maxIndex));
+  }, [maxIndex]);
+
   const nextSlide = () => {
-    setCurrentIndex((prev) => Math.min(prev + 1, sectors.length - 2));
+    setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
   };
 
   const prevSlide = () => {
@@ -112,14 +127,14 @@ export const EligibilityCriteria = ({ cms }: { cms?: EligibilitySection }) => {
             viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] as const }}
           >
-            <div className="relative w-full overflow-hidden px-12">
+            <div className="relative w-full overflow-hidden px-0 sm:px-12">
               <motion.div
                 className="flex gap-6"
-                animate={{ x: `calc(-${currentIndex * 50}% - ${currentIndex * 12}px)` }}
+                animate={{ x: `calc(-${currentIndex * (100 / visibleCards)}% - ${currentIndex * (24 / visibleCards)}px)` }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] as const }}
               >
                 {sectors.map((sector, idx) => (
-                  <div key={idx} className="min-w-[calc(50%-12px)] h-[260px] relative rounded-lg overflow-hidden shadow-xl group">
+                  <div key={idx} className="min-w-full sm:min-w-[calc(50%-12px)] h-[260px] relative rounded-md sm:rounded-lg overflow-hidden shadow-xl group">
                     <img
                       src={sector.image}
                       alt={sector.title}
@@ -175,7 +190,7 @@ export const EligibilityCriteria = ({ cms }: { cms?: EligibilitySection }) => {
               <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10">
                 <button
                   onClick={nextSlide}
-                  disabled={currentIndex >= sectors.length - 2}
+                  disabled={currentIndex >= maxIndex}
                   className="w-10 h-10 rounded-full bg-white shadow-xl border border-slate-100 flex items-center justify-center text-slate-900 hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <ChevronRight className="w-5 h-5" />

@@ -14,7 +14,8 @@ import Breadcrumbs from '../components/Breadcrumbs';
 import { cn } from '../lib/utils';
 import { GradientCard } from '../components/GradientCard';
 import { TransactionPartiesGrid } from '../components/TransactionParties';
-import { getStrapiMediaURL } from '../lib/strapi';
+import Image from 'next/image';
+import { getCloudinaryTransformedURL, getStrapiMediaURL } from '../lib/strapi';
 import type { TransactionPartyItem } from '../types/about';
 import type {
   GovernancePageSection,
@@ -27,12 +28,12 @@ import type {
 } from '../types/governance';
 
 const FUND_MANAGER_PARTIES: TransactionPartyItem[] = [
-  { id: 1, partyName: 'KPMG', roleHighlight: 'Auditors', roleRest: 'to the Fund', logo: 'https://upload.wikimedia.org/wikipedia/commons/d/db/KPMG_blue_logo.svg', logo_alt_text: 'KPMG' },
-  { id: 2, partyName: 'Olaniwun Ajayi', roleHighlight: 'Solicitors', roleRest: 'to The Fund' },
-  { id: 3, partyName: 'Africa Prudential', roleHighlight: 'Registrar', roleRest: 'to the Fund' },
-  { id: 4, partyName: 'UBA', roleHighlight: 'Custodian', roleRest: 'to The Fund', logo: 'https://www.ubagroup.com/wp-content/uploads/2025/03/UBA-58567.svg', logo_alt_text: 'UBA' },
-  { id: 5, partyName: 'Stanbic IBTC', roleHighlight: 'Trustee', roleRest: 'to The Fund' },
-  { id: 6, partyName: 'FSDH Capital', roleHighlight: 'Fund Adviser /', roleRest: 'Issuing House' },
+  { id: 1, partyName: 'KPMG', roleHighlight: 'Auditors', roleRest: 'to the Fund', logo: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/about-page/transaction-party-kpmg-logo.svg', logo_alt_text: 'KPMG' },
+  { id: 2, partyName: 'Olaniwun Ajayi', roleHighlight: 'Solicitors', roleRest: 'to The Fund', logo: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/about-page/transaction-party-olaniwun-ajayi-logo.png', logo_alt_text: 'Olaniwun Ajayi' },
+  { id: 3, partyName: 'Africa Prudential', roleHighlight: 'Registrar', roleRest: 'to the Fund', logo: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/about-page/transaction-party-africa-prudential-logo.png', logo_alt_text: 'Africa Prudential' },
+  { id: 4, partyName: 'UBA', roleHighlight: 'Custodian', roleRest: 'to The Fund', logo: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/about-page/transaction-party-uba-logo.svg', logo_alt_text: 'UBA' },
+  { id: 5, partyName: 'Stanbic IBTC', roleHighlight: 'Trustee', roleRest: 'to The Fund', logo: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/about-page/transaction-party-stanbic-ibtc-logo.png', logo_alt_text: 'Stanbic IBTC' },
+  { id: 6, partyName: 'FSDH Capital', roleHighlight: 'Fund Adviser /', roleRest: 'Issuing House', logo: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/about-page/transaction-party-fsdh-capital-logo.png', logo_alt_text: 'FSDH Capital' },
 ];
 
 const fadeUp = {
@@ -235,7 +236,7 @@ const InvestmentCommitteeSection = ({
             const nameParts = member.name.split(" ");
             const firstName = nameParts.slice(0, -1).join(" ");
             const lastName = nameParts[nameParts.length - 1];
-            const photoSrc = getStrapiMediaURL(member.photo) ?? "";
+            const photoSrc = getCloudinaryTransformedURL(getStrapiMediaURL(member.photo)) ?? "";
 
             return (
               <motion.div
@@ -247,12 +248,16 @@ const InvestmentCommitteeSection = ({
                 className={`group relative rounded-[8px] overflow-hidden h-[360px] cursor-pointer items-center justify-center`}
               >
                 {/* Background Image */}
-                <img
-                  src={photoSrc}
-                  alt={member.name}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale"
-                  referrerPolicy="no-referrer"
-                />
+                {photoSrc && (
+                  <Image
+                    src={photoSrc}
+                    alt={member.name}
+                    fill
+                    quality={100}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105 grayscale"
+                  />
+                )}
                 {/* Dark Overlay */}
                 <div className="absolute inset-0 bg-[#050A15]/40 group-hover:bg-[#050A15]/80 transition-colors duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050A15] via-transparent to-transparent opacity-90" />
