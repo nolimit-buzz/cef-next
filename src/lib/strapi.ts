@@ -30,7 +30,10 @@ async function fetchAPI<T>(path: string, query = ""): Promise<T> {
   const res = await fetch(url, { next: { revalidate: 60 } });
 
   if (!res.ok) {
-    throw new Error(`Strapi request failed: ${res.status} ${res.statusText} (${url})`);
+    const body = await res.text().catch(() => "");
+    throw new Error(
+      `Strapi request failed: ${res.status} ${res.statusText} (${url}) ${body.slice(0, 500)}`
+    );
   }
 
   const json: StrapiResponse<T> = await res.json();
