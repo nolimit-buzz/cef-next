@@ -1,6 +1,7 @@
 "use client";
 import { motion } from 'framer-motion';
-import { getStrapiMediaURL } from '../../lib/strapi';
+import Image from 'next/image';
+import { getCloudinaryTransformedURL, getStrapiMediaURL } from '../../lib/strapi';
 import { TransactionPartiesGrid } from '../TransactionParties';
 import type { TeamSection as TeamSectionData } from '../../types/about';
 import { fadeUp } from './shared';
@@ -45,7 +46,7 @@ export const TeamSection = ({ sectionLabel, headingPrimary, headingSecondary, bo
             const nameParts = member.name.split(' ');
             const firstName = nameParts.slice(0, -1).join(' ');
             const lastName = nameParts[nameParts.length - 1];
-            const photoUrl = getStrapiMediaURL(member.photo);
+            const photoUrl = getCloudinaryTransformedURL(getStrapiMediaURL(member.photo));
 
             return (
               <motion.div
@@ -56,13 +57,15 @@ export const TeamSection = ({ sectionLabel, headingPrimary, headingSecondary, bo
                 transition={{ delay: i * 0.1 }}
                 className="group cursor-pointer"
               >
-                <div className="aspect-[4/5] rounded-[8px] overflow-hidden mb-4 bg-black/5">
+                <div className="relative aspect-[4/5] rounded-[8px] overflow-hidden mb-4 bg-black/5">
                   {photoUrl && (
-                    <img
+                    <Image
                       src={photoUrl}
                       alt={member.photo_alt_text || member.name}
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                      referrerPolicy="no-referrer"
+                      fill
+                      quality={100}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
+                      className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                     />
                   )}
                 </div>

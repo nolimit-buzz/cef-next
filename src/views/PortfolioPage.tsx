@@ -274,12 +274,12 @@ const PerformanceSection = ({
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-8 border-b border-gray-200 mb-12 overflow-x-auto no-scrollbar px-6 -mx-6 sm:px-0 sm:mx-0 pt-2">
+        <div className="flex justify-between sm:justify-start gap-6 sm:gap-8 border-b border-gray-200 mb-12 overflow-x-auto no-scrollbar -mx-6 px-2 sm:mx-0 sm:px-0 pt-2">
           {tabs.map(tab => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all relative whitespace-nowrap ${
+              className={`pb-4 text-[10px] sm:text-sm font-bold uppercase tracking-wide sm:tracking-widest transition-all relative whitespace-nowrap ${
                 activeTab === tab.key ? "text-[var(--color-accent)]" : "text-gray-400 hover:text-gray-600"
               }`}
             >
