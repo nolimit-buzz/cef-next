@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence, useInView, useMotionValueEvent } from 'framer-motion';
 import { ArrowUpRight, Sun, ShieldCheck, Users, Globe2, Zap, Building2, Coins, TrendingUp, Leaf } from 'lucide-react';
 import { CountUp } from './CountUp';
+import type { AboutFundSection, ApproachSection } from '../types/home';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -332,17 +333,26 @@ const TimelineStep = ({ item, i, isLast, setLastActive }: { key?: React.Key, ite
   );
 };
 
-export const AboutFund = () => {
+export const AboutFund = ({
+  aboutFund,
+  approach,
+}: {
+  aboutFund?: AboutFundSection;
+  approach?: ApproachSection;
+}) => {
   const sectionRef = useRef<HTMLElement>(null);
   const [isLastCardActive, setIsLastCardActive] = useState(false);
   const [isHowWorksLastActive, setIsHowWorksLastActive] = useState(false);
   const [activeTab, setActiveTab] = useState('Why CeF');
   const [credentialIndex, setCredentialIndex] = useState(0);
 
-  const credentials = [
-    "Certified under the Climate Bonds Standard, ensuring investments align with sustainability benchmarks.",
-    "Assigned an investment-grade national scale rating, reflecting robust governance and portfolio quality."
-  ];
+  const card3 = aboutFund?.bento_cards?.[3];
+  const credentials = card3?.credential_1 && card3?.credential_2
+    ? [card3.credential_1, card3.credential_2]
+    : [
+        "Certified under the Climate Bonds Standard, ensuring investments align with sustainability benchmarks.",
+        "Assigned an investment-grade national scale rating, reflecting robust governance and portfolio quality.",
+      ];
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -358,7 +368,15 @@ export const AboutFund = () => {
 
   const opacity = useTransform(scrollYProgress, [0, 0.1, 0.9, 1], [0, 1, 1, 0]);
 
-  const tabs = ['Why CeF', 'Fund Aims', 'How CeF Works'];
+  const tabs = [
+    { key: 'Why CeF', label: approach?.tab_why_cef ?? 'Why CeF' },
+    { key: 'Fund Aims', label: approach?.tab_fund_aims ?? 'Fund Aims' },
+    { key: 'How CeF Works', label: approach?.tab_how_cef ?? 'How CeF Works' },
+  ];
+
+  const activePartners = aboutFund?.partners?.length
+    ? aboutFund.partners.map(p => ({ name: p.name, src: p.logo_url ?? null }))
+    : partners.map(p => ({ name: p.name, src: p.type === 'logo' ? (p as any).src : null }));
 
   return (
     <motion.section
@@ -380,96 +398,106 @@ export const AboutFund = () => {
               <motion.div variants={fadeUp} className="flex items-center gap-3 mb-8">
                 <div className="w-2 h-2 rounded-full bg-[var(--color-accent-green)]" />
                 <span className="text-xs font-medium uppercase tracking-[0.3em] text-[var(--color-text-tertiary)]">
-                  Our Mandate
+                  {aboutFund?.eyebrow ?? "Our Mandate"}
                 </span>
               </motion.div>
 
               <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-medium leading-[1.2] sm:leading-[1.15] tracking-tight text-[var(--color-text-primary)] mb-8 sm:mb-12">
-                We provide local currency funding from domestic institutional investors to small and medium sized climate compliant energy projects.
+                {aboutFund?.headline ?? "We provide local currency funding from domestic institutional investors to small and medium sized climate compliant energy projects."}
               </motion.h2>
 
               <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8 items-start sm:items-center">
                 <button className="bg-white text-black hover:bg-[var(--color-accent-green)] hover:text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-2 shadow-lg w-full sm:w-auto">
-                  Download Fact Sheet <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
+                  {aboutFund?.primary_cta ?? "Download Fact Sheet"} <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
                 </button>
                 <button className="text-white/80 px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-2 hover:text-white w-full sm:w-auto">
-                  Discover Fund <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
+                  {aboutFund?.secondary_cta ?? "Discover Fund"} <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
                 </button>
               </motion.div>
             </div>
 
             {/* Bento Grid (5 Boxes) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              <FocusCard
-                icon={Sun}
-                headline="Energy Transition"
-                statement="Decarbonizing the National Grid with Renewable Infrastructure."
-                proof="500MW Pipeline"
-                tags={["SDG 7", "ESG"]}
-                tooltipText="Clean Energy Focus"
-                image="https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=800&auto=format&fit=crop"
-              />
-              <FocusCard
-                icon={ShieldCheck}
-                headline="Financial Resilience"
-                statement="Eliminating FX Risk through Local Currency Funding."
-                proof="₦1.2B AUM"
-                tags={["Risk Mitigated"]}
-                tooltipText="Risk Management"
-                image="https://images.unsplash.com/photo-1545459720-aac8509eb02c?q=80&w=800&auto=format&fit=crop"
-              />
-              <FocusCard
-                icon={Users}
-                headline="Social Equity"
-                statement="Bridging the Energy Gap for Underserved Communities."
-                proof="2,400+ Jobs"
-                tags={["Impact"]}
-                tooltipText="Community Impact"
-                image="https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?q=80&w=800&auto=format&fit=crop"
-              />
+            {(() => {
+              const cards = aboutFund?.bento_cards ?? [];
+              const c0 = cards[0];
+              const c1 = cards[1];
+              const c2 = cards[2];
+              const c3 = cards[3];
+              const c4 = cards[4];
+              return (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  <FocusCard
+                    icon={Sun}
+                    headline={c0?.eyebrow ?? "Energy Transition"}
+                    statement={c0?.statement ?? "Decarbonizing the National Grid with Renewable Infrastructure."}
+                    proof={c0?.proof ?? "500MW Pipeline"}
+                    tags={(c0?.tags as string[] | null) ?? ["SDG 7", "ESG"]}
+                    tooltipText="Clean Energy Focus"
+                    image={c0?.image ?? "https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=800&auto=format&fit=crop"}
+                  />
+                  <FocusCard
+                    icon={ShieldCheck}
+                    headline={c1?.eyebrow ?? "Financial Resilience"}
+                    statement={c1?.statement ?? "Eliminating FX Risk through Local Currency Funding."}
+                    proof={c1?.proof ?? "₦1.2B AUM"}
+                    tags={(c1?.tags as string[] | null) ?? ["Risk Mitigated"]}
+                    tooltipText="Risk Management"
+                    image={c1?.image ?? "https://images.unsplash.com/photo-1545459720-aac8509eb02c?q=80&w=800&auto=format&fit=crop"}
+                  />
+                  <FocusCard
+                    icon={Users}
+                    headline={c2?.eyebrow ?? "Social Equity"}
+                    statement={c2?.statement ?? "Bridging the Energy Gap for Underserved Communities."}
+                    proof={c2?.proof ?? "2,400+ Jobs"}
+                    tags={(c2?.tags as string[] | null) ?? ["Impact"]}
+                    tooltipText="Community Impact"
+                    image={c2?.image ?? "https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?q=80&w=800&auto=format&fit=crop"}
+                  />
 
-              {/* Box 4: Wide Image Box with Slider */}
-              <FocusCard
-                icon={Globe2}
-                headline="Fund Credentials"
-                isWide={true}
-                image="https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2670&auto=format&fit=crop"
-                tooltipText="Global Standards"
-                forceHover={true}
-              >
-                <div className="relative h-28 overflow-hidden">
-                  <AnimatePresence mode="wait">
-                    <motion.h3
-                      key={credentialIndex}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.4, ease: "easeOut" as const }}
-                      className="text-3xl font-medium leading-tight text-white absolute inset-0"
-                    >
-                      {credentials[credentialIndex]}
-                    </motion.h3>
-                  </AnimatePresence>
+                  {/* Box 4: Wide Image Box with Slider */}
+                  <FocusCard
+                    icon={Globe2}
+                    headline={c3?.eyebrow ?? "Fund Credentials"}
+                    isWide={true}
+                    image={c3?.image ?? "https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2670&auto=format&fit=crop"}
+                    tooltipText="Global Standards"
+                    forceHover={true}
+                  >
+                    <div className="relative h-28 overflow-hidden">
+                      <AnimatePresence mode="wait">
+                        <motion.h3
+                          key={credentialIndex}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ duration: 0.4, ease: "easeOut" as const }}
+                          className="text-3xl font-medium leading-tight text-white absolute inset-0"
+                        >
+                          {credentials[credentialIndex]}
+                        </motion.h3>
+                      </AnimatePresence>
+                    </div>
+                  </FocusCard>
+
+                  {/* Box 5: Gender Spotlight */}
+                  <FocusCard
+                    icon={Globe2}
+                    headline={c4?.eyebrow ?? "Strategic Priority"}
+                    statement={c4?.statement ?? "Gender & Impact Lens: Driving inclusive growth through targeted climate investments."}
+                    accentColor="#EF4444"
+                    tooltipText="SDG 5 Alignment"
+                    image={c4?.image ?? "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=800&auto=format&fit=crop"}
+                  />
                 </div>
-              </FocusCard>
-
-              {/* Box 5: Gender Spotlight */}
-              <FocusCard
-                icon={Globe2} // Using Globe2 as placeholder for Venus/Gender
-                headline="Strategic Priority"
-                statement="Gender & Impact Lens: Driving inclusive growth through targeted climate investments."
-                accentColor="#EF4444" // Red for SDG 5
-                tooltipText="SDG 5 Alignment"
-                image="https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=800&auto=format&fit=crop"
-              />
-            </div>
+              );
+            })()}
 
             {/* Strategic Partners Strip */}
 
             <div className="py-12 border-t border-[var(--color-border)]">
               <div className="flex flex-col items-center">
                 <span className="text-[10px] font-medium uppercase tracking-[0.4em] text-[var(--color-text-tertiary)] mb-8">
-                  Strategic Partners & Funders
+                  {aboutFund?.strategic_partners_label ?? "Strategic Partners & Funders"}
                 </span>
 
                 <div className="w-full overflow-hidden relative">
@@ -482,10 +510,10 @@ export const AboutFund = () => {
                     className="flex items-center gap-16 md:gap-24 whitespace-nowrap w-max px-12"
                   >
                     {[
-                      ...partners,
-                      ...partners, // duplicate for seamless loop
+                      ...activePartners,
+                      ...activePartners,
                     ].map((partner, i) =>
-                      partner.type === "text" ? (
+                      !partner.src ? (
                         <span
                           key={i}
                           className="text-lg md:text-2xl font-sans italic tracking-tight text-[var(--color-text-secondary)]/30 hover:text-[var(--color-text-secondary)] transition-colors cursor-default"
@@ -519,8 +547,10 @@ export const AboutFund = () => {
       <div className="bg-[#F8FAFC] py-32 text-slate-900 border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-medium leading-[1.2] sm:leading-[1.15] tracking-tight mb-8 sm:mb-12 lg:mb-16">
-            <span className="text-slate-900">Our Approach & </span>
-            <span className="text-slate-400">Rationale</span>
+            <span className="text-slate-900">{approach?.heading_part1 ?? "Our Approach & "} </span>
+            {(approach?.heading_part2 ?? "Rationale") && (
+              <span className="text-slate-400">{approach?.heading_part2 ?? "Rationale"}</span>
+            )}
           </h2>
 
           {/* Tabs */}
@@ -528,13 +558,13 @@ export const AboutFund = () => {
             <div className="flex gap-6 sm:gap-8 md:gap-12 border-b border-slate-200 overflow-x-auto no-scrollbar px-6 -mx-6 sm:px-0 sm:mx-0 pt-2">
               {tabs.map(tab => (
                 <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`pb-3 sm:pb-4 text-xs sm:text-sm font-bold uppercase tracking-widest transition-all relative whitespace-nowrap min-w-max ${activeTab === tab ? "text-[var(--color-accent-light)]" : "text-slate-400 hover:text-slate-600"
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`pb-3 sm:pb-4 text-xs sm:text-sm font-bold uppercase tracking-widest transition-all relative whitespace-nowrap min-w-max ${activeTab === tab.key ? "text-[var(--color-accent-light)]" : "text-slate-400 hover:text-slate-600"
                     }`}
                 >
-                  {tab}
-                  {activeTab === tab && (
+                  {tab.label}
+                  {activeTab === tab.key && (
                     <motion.div
                       layoutId="activeTab"
                       className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--color-accent-light)]"
@@ -558,9 +588,11 @@ export const AboutFund = () => {
                 >
                   {/* Row 1: Big Title (3/4 width) */}
                   <div className="lg:w-3/4">
-                    <span className="text-[10px] sm:text-xs font-bold text-[var(--color-accent-light)] uppercase tracking-widest mb-4 sm:mb-6 block">/ Fund Rationale</span>
+                    <span className="text-[10px] sm:text-xs font-bold text-[var(--color-accent-light)] uppercase tracking-widest mb-4 sm:mb-6 block">
+                      {approach?.why_cef_eyebrow ?? "/ Fund Rationale"}
+                    </span>
                     <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-medium leading-[1.3] md:leading-[1.2] tracking-tight text-slate-900">
-                      <TextReveal text="Commercial financing in Nigeria often does not provide long-term local currency funding for infrastructure projects due to FX risk, tenor limitations, and perceived credit risks." />
+                      <TextReveal text={approach?.why_cef_headline ?? "Commercial financing in Nigeria often does not provide long-term local currency funding for infrastructure projects due to FX risk, tenor limitations, and perceived credit risks."} />
                     </h3>
                   </div>
 
@@ -570,7 +602,7 @@ export const AboutFund = () => {
                     <div className="lg:col-span-5">
                       <div className="lg:sticky lg:top-32">
                         <p className="text-base sm:text-lg md:text-xl text-slate-600 font-light leading-relaxed max-w-md">
-                          CeF addresses this gap by structuring investments that combine credit enhancement, blended finance, and institutional capital mobilisation.
+                          {approach?.why_cef_body ?? "CeF addresses this gap by structuring investments that combine credit enhancement, blended finance, and institutional capital mobilisation."}
                         </p>
 
                         <AnimatePresence>
@@ -583,10 +615,10 @@ export const AboutFund = () => {
                               className="mt-8 sm:mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6"
                             >
                               <button className="bg-slate-900 text-white hover:bg-[var(--color-accent-light)] hover:text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-2 shadow-lg w-full sm:w-fit whitespace-nowrap">
-                                Download Fund Rationale <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
+                                {approach?.why_cef_primary_cta ?? "Download Fund Rationale"} <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
                               </button>
                               <a href="#structure" className="text-slate-600 hover:text-slate-900 px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap w-full sm:w-fit">
-                                View Fund Structure <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
+                                {approach?.why_cef_secondary_cta ?? "View Fund Structure"} <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
                               </a>
                             </motion.div>
                           )}
@@ -596,32 +628,20 @@ export const AboutFund = () => {
 
                     {/* Scrolling Right Column with Stacking Interaction */}
                     <div className="lg:col-span-7 pb-16 sm:pb-24 lg:pb-32 relative">
-                      {[
-                        {
-                          title: "Addressing the Energy Deficit",
-                          content: "Nigeria faces a significant energy gap, with millions lacking reliable access. CeF prioritizes projects that bridge this divide through sustainable, decentralized solutions.",
-                          color: "0, 133, 202", // Light Blue
-                          icon: Zap
-                        },
-                        {
-                          title: "Mitigating Currency Volatility",
-                          content: "By providing funding in Naira, we eliminate the devastating impact of FX fluctuations on project viability, ensuring long-term financial stability for developers.",
-                          color: "242, 125, 38", // Orange
-                          icon: TrendingUp
-                        },
-                        {
-                          title: "Unlocking Institutional Capital",
-                          content: "We create investment-grade opportunities that allow pension funds and insurance companies to safely deploy capital into the real economy and infrastructure.",
-                          color: "80, 184, 72", // Green
-                          icon: Building2
-                        },
-                        {
-                          title: "Catalyzing the Energy Transition",
-                          content: "CeF serves as a bridge to a low-carbon future, de-risking early-stage renewable technologies and supporting the national decarbonization mandate.",
-                          color: "32, 58, 143", // Dark Blue
-                          icon: Leaf
-                        }
-                      ].map((item, i, arr) => (
+                      {(approach?.why_cef_cards?.length
+                        ? approach.why_cef_cards.map((card, i) => ({
+                            title: card.title,
+                            content: card.content,
+                            color: ["0, 133, 202", "242, 125, 38", "80, 184, 72", "32, 58, 143"][i] ?? "0, 133, 202",
+                            icon: [Zap, TrendingUp, Building2, Leaf][i] ?? Zap,
+                          }))
+                        : [
+                            { title: "Addressing the Energy Deficit", content: "Nigeria faces a significant energy gap, with millions lacking reliable access. CeF prioritizes projects that bridge this divide through sustainable, decentralized solutions.", color: "0, 133, 202", icon: Zap },
+                            { title: "Mitigating Currency Volatility", content: "By providing funding in Naira, we eliminate the devastating impact of FX fluctuations on project viability, ensuring long-term financial stability for developers.", color: "242, 125, 38", icon: TrendingUp },
+                            { title: "Unlocking Institutional Capital", content: "We create investment-grade opportunities that allow pension funds and insurance companies to safely deploy capital into the real economy and infrastructure.", color: "80, 184, 72", icon: Building2 },
+                            { title: "Catalyzing the Energy Transition", content: "CeF serves as a bridge to a low-carbon future, de-risking early-stage renewable technologies and supporting the national decarbonization mandate.", color: "32, 58, 143", icon: Leaf },
+                          ]
+                      ).map((item, i, arr) => (
                         <StickyCard
                           key={i}
                           item={item}
@@ -643,14 +663,28 @@ export const AboutFund = () => {
                   exit={{ opacity: 0, y: -20 }}
                   className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                 >
-                  {[
-                    { title: "Climate Mitigation", desc: "Provide long-term funding to climate-aligned projects reducing carbon footprints.", img: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=2670&auto=format&fit=crop" },
-                    { title: "Clean Generation", desc: "Support small-scale clean energy generation and distribution networks.", img: "https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2670&auto=format&fit=crop" },
-                    { title: "Low-Carbon Infra", desc: "Finance infrastructure that inherently supports a low-carbon economy.", img: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=2670&auto=format&fit=crop" },
-                    { title: "Alternative Energy", desc: "Back innovative alternative clean energy solutions and technologies.", img: "https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?q=80&w=2670&auto=format&fit=crop" },
-                    { title: "Reduce FX Exposure", desc: "Provide long-term local currency financing to eliminate exchange rate risks.", img: "https://images.unsplash.com/photo-1611974717484-1490b30ee4c2?q=80&w=2670&auto=format&fit=crop" },
-                    { title: "Integrated Portfolio", desc: "Create a diversified portfolio managing collective risk across value chains.", img: "https://images.unsplash.com/photo-1454165833767-027ff33027ef?q=80&w=2670&auto=format&fit=crop" }
-                  ].map((item, i) => (
+                  {(approach?.fund_aims?.length
+                    ? approach.fund_aims.map((aim, i) => ({
+                        title: aim.title,
+                        desc: aim.description,
+                        img: aim.image ?? [
+                          "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=2670&auto=format&fit=crop",
+                          "https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2670&auto=format&fit=crop",
+                          "https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=2670&auto=format&fit=crop",
+                          "https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?q=80&w=2670&auto=format&fit=crop",
+                          "https://images.unsplash.com/photo-1611974717484-1490b30ee4c2?q=80&w=2670&auto=format&fit=crop",
+                          "https://images.unsplash.com/photo-1454165833767-027ff33027ef?q=80&w=2670&auto=format&fit=crop",
+                        ][i] ?? "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=2670&auto=format&fit=crop",
+                      }))
+                    : [
+                        { title: "Climate Mitigation", desc: "Provide long-term funding to climate-aligned projects reducing carbon footprints.", img: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=2670&auto=format&fit=crop" },
+                        { title: "Clean Generation", desc: "Support small-scale clean energy generation and distribution networks.", img: "https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2670&auto=format&fit=crop" },
+                        { title: "Low-Carbon Infra", desc: "Finance infrastructure that inherently supports a low-carbon economy.", img: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=2670&auto=format&fit=crop" },
+                        { title: "Alternative Energy", desc: "Back innovative alternative clean energy solutions and technologies.", img: "https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?q=80&w=2670&auto=format&fit=crop" },
+                        { title: "Reduce FX Exposure", desc: "Provide long-term local currency financing to eliminate exchange rate risks.", img: "https://images.unsplash.com/photo-1611974717484-1490b30ee4c2?q=80&w=2670&auto=format&fit=crop" },
+                        { title: "Integrated Portfolio", desc: "Create a diversified portfolio managing collective risk across value chains.", img: "https://images.unsplash.com/photo-1454165833767-027ff33027ef?q=80&w=2670&auto=format&fit=crop" },
+                      ]
+                  ).map((item, i) => (
                     <div key={i} className="group relative h-[320px] rounded-lg overflow-hidden bg-slate-900">
                       <img
                         src={item.img}
@@ -689,9 +723,11 @@ export const AboutFund = () => {
                     {/* Sticky Left Column */}
                     <div className="lg:col-span-5">
                       <div className="lg:sticky lg:top-32">
-                        <span className="text-xs font-bold text-[var(--color-accent-light)] uppercase tracking-widest mb-4 block">/ How CeF Works</span>
+                        <span className="text-xs font-bold text-[var(--color-accent-light)] uppercase tracking-widest mb-4 block">
+                          {approach?.how_cef_eyebrow ?? "/ How CeF Works"}
+                        </span>
                         <h3 className="text-2xl font-medium leading-tight mb-8 text-slate-900">
-                          Our operating model is designed to unlock scalable, local currency financing for clean energy projects through strategic partnerships and blended finance.
+                          {approach?.how_cef_headline ?? "Our operating model is designed to unlock scalable, local currency financing for clean energy projects through strategic partnerships and blended finance."}
                         </h3>
 
                         <AnimatePresence>
@@ -704,7 +740,7 @@ export const AboutFund = () => {
                               className="mt-12"
                             >
                               <button className="bg-slate-900 text-white hover:bg-[var(--color-accent-light)] hover:text-white px-8 py-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 shadow-lg w-fit whitespace-nowrap">
-                                View Eligibility Criteria <ArrowUpRight className="w-4 h-4" />
+                                {approach?.how_cef_cta ?? "View Eligibility Criteria"} <ArrowUpRight className="w-4 h-4" />
                               </button>
                             </motion.div>
                           )}
@@ -714,28 +750,19 @@ export const AboutFund = () => {
 
                     {/* Scrolling Right Column - Timeline Reveal */}
                     <div className="lg:col-span-7 pb-12">
-                      {[
-                        {
-                          title: "Credit\nEnhancement",
-                          content: "InfraCredit provides AAA-rated guarantees to de-risk investments.",
-                          color: "0, 133, 202" // Light Blue
-                        },
-                        {
-                          title: "Catalytic\nCapital",
-                          content: "CeF provides subordinated or bridge capital to optimize capital structures.",
-                          color: "242, 125, 38" // Orange
-                        },
-                        {
-                          title: "Institutional\nInvestment",
-                          content: "Pension funds and insurance companies provide senior debt financing.",
-                          color: "80, 184, 72" // Green
-                        },
-                        {
-                          title: "Scalable\nImpact",
-                          content: "The model unlocks scalable local currency financing for clean energy projects.",
-                          color: "32, 58, 143" // Dark Blue
-                        }
-                      ].map((item, i, arr) => (
+                      {(approach?.how_cef_steps?.length
+                        ? approach.how_cef_steps.map((step, i) => ({
+                            title: step.title,
+                            content: step.content,
+                            color: ["0, 133, 202", "242, 125, 38", "80, 184, 72", "32, 58, 143"][i] ?? "0, 133, 202",
+                          }))
+                        : [
+                            { title: "Credit\nEnhancement", content: "InfraCredit provides AAA-rated guarantees to de-risk investments.", color: "0, 133, 202" },
+                            { title: "Catalytic\nCapital", content: "CeF provides subordinated or bridge capital to optimize capital structures.", color: "242, 125, 38" },
+                            { title: "Institutional\nInvestment", content: "Pension funds and insurance companies provide senior debt financing.", color: "80, 184, 72" },
+                            { title: "Scalable\nImpact", content: "The model unlocks scalable local currency financing for clean energy projects.", color: "32, 58, 143" },
+                          ]
+                      ).map((item, i, arr) => (
                         <TimelineStep
                           key={i}
                           item={item}

@@ -1,2 +1,7 @@
 import { ImpactPage } from "../../views/ImpactPage";
-export default function Page() { return <ImpactPage />; }
+import { getImpactPage } from "../../lib/strapi";
+
+export default async function Page() {
+  const data = await getImpactPage();
+  return <ImpactPage sections={data.sections} />;
+}

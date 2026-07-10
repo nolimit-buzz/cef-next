@@ -161,8 +161,8 @@ export const Navbar = () => {
           <img
             src={
               useDarkText
-                ? "https://reverse.cleanenergyfund.ng/wp-content/uploads/2023/03/Clean-Energy-Logo-1.svg"
-                : "https://reverse.cleanenergyfund.ng/wp-content/uploads/2023/09/Clean-Energy-Logo-1-2.svg"
+                ? "/Logo1.svg"
+                : "/Logo.svg"
             }
             alt="Clean Energy Local Currency Fund"
             className="h-10 w-auto transition-opacity duration-500"
@@ -250,7 +250,7 @@ export const Navbar = () => {
             Eligibility Criteria
           </Link>
 
-          {/* Media Center — hover on desktop, click-toggle on tablet */}
+          {/* Media Center — hidden
           <div
             className="group h-full flex items-center"
             onMouseEnter={() => setActiveMegaMenu("news")}
@@ -268,6 +268,7 @@ export const Navbar = () => {
               Media Center
             </Link>
           </div>
+          */}
 
           <Link
             href="/contact"
@@ -563,7 +564,7 @@ export const Navbar = () => {
               </div>
             )}
 
-            {/* News / Media Center */}
+            {/* News / Media Center — hidden
             {activeMegaMenu === "news" && (
               <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-12 text-left">
                 <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -634,6 +635,7 @@ export const Navbar = () => {
                 </motion.div>
               </div>
             )}
+            */}
           </motion.div>
         )}
       </AnimatePresence>
@@ -665,6 +667,7 @@ export const Navbar = () => {
               </Link>
             ))}
 
+            {/* News & Resources mobile links — hidden
             <div className="flex flex-col items-center gap-4">
               <span className="text-2xl font-medium tracking-widest uppercase text-white/50">
                 News & Resources
@@ -684,6 +687,7 @@ export const Navbar = () => {
                 Resources
               </Link>
             </div>
+            */}
 
             <Link
               href="/contact"
@@ -794,22 +798,34 @@ export const Navbar = () => {
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 
-export const Hero = () => {
+import type { HeroSection, HeroStatItem } from "../types/home";
+import { getStrapiMediaURL } from "../lib/strapi";
+
+const DEFAULT_SLIDES = [
+  {
+    label: "Fund Highlight",
+    value: "Series 2 Capital Raise Now Open for Institutional Investors",
+    link: "Read Announcement",
+    isMetric: false,
+  },
+  { label: "Total Dividends Paid", value: "₦730M", link: "Across two distributions", isMetric: true },
+  { label: "Series 1 Investors", value: "8", link: "100% Subscribed", isMetric: true },
+  { label: "Fund Rating", value: "BBB(IM)", link: "Investment Grade / Stable", isMetric: true },
+  { label: "Green Certification", value: "Active", link: "Climate Bonds Initiative", isMetric: true },
+];
+
+export const Hero = ({ hero }: { hero?: HeroSection }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const slides = [
-    {
-      label: "Fund Highlight",
-      value: "Series 2 Capital Raise Now Open for Institutional Investors",
-      link: "Read Announcement",
-      isMetric: false,
-    },
-    { label: "Total Dividends Paid", value: "₦730M", link: "Across two distributions", isMetric: true },
-    { label: "Series 1 Investors", value: "8", link: "100% Subscribed", isMetric: true },
-    { label: "Fund Rating", value: "BBB(IM)", link: "Investment Grade / Stable", isMetric: true },
-    { label: "Green Certification", value: "Active", link: "Climate Bonds Initiative", isMetric: true },
-  ];
+  const slides = hero?.sliding_card?.length
+    ? hero.sliding_card.map((card, i) => ({
+        label: card.subtitle,
+        value: card.title,
+        link: card.CTA,
+        isMetric: i > 0,
+      }))
+    : DEFAULT_SLIDES;
 
   useEffect(() => {
     if (videoRef.current) {
@@ -839,10 +855,19 @@ export const Hero = () => {
           loop
           muted
           playsInline
-          poster="https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2672&auto=format&fit=crop"
+          poster={
+            getStrapiMediaURL(hero?.poster_image) ??
+            "https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2672&auto=format&fit=crop"
+          }
           className="absolute inset-0 w-full h-full object-cover -z-10"
         >
-          <source src="https://nolimitlms.com/wp-content/uploads/2026/04/solar_p.mp4" type="video/mp4" />
+          <source
+            src={
+              getStrapiMediaURL(hero?.hero_video) ??
+              "https://nolimitlms.com/wp-content/uploads/2026/04/solar_p.mp4"
+            }
+            type="video/mp4"
+          />
         </video>
         <div className="absolute inset-0 bg-[#050A15]/80 z-10" />
       </motion.div>
@@ -864,16 +889,14 @@ export const Hero = () => {
             variants={fadeUp}
             className="text-display font-medium text-white mb-6"
           >
-            Powering a <br className="hidden md:block" />
-            Resilient Future
+            {hero?.headline ?? "Powering a Resilient Future"}
           </motion.h1>
 
           <motion.p
             variants={fadeUp}
             className="text-body text-white/80 max-w-xl mb-10 leading-relaxed font-light md:text-xl"
           >
-            Providing local currency funding to climate-aligned, sustainable,
-            and inclusive clean energy infrastructure across Nigeria.
+            {hero?.description ?? "Providing local currency funding to climate-aligned, sustainable, and inclusive clean energy infrastructure across Nigeria."}
           </motion.p>
 
           <motion.div
@@ -885,14 +908,14 @@ export const Hero = () => {
               whileTap={{ scale: 0.98 }}
               className="bg-white text-black font-bold px-8 py-4 rounded-sm text-sm transition-colors flex items-center justify-center gap-2 shadow-lg hover:bg-[var(--color-accent-green)] hover:text-white"
             >
-              Explore Funding Options <ArrowUpRight className="w-4 h-4" />
+              {hero?.primary_cta ?? "Explore Funding Options"} <ArrowUpRight className="w-4 h-4" />
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="bg-transparent text-white px-8 py-4 rounded-sm text-sm font-medium transition-colors flex items-center justify-center gap-2 hover:text-white/80"
             >
-              View Investor Relations <ArrowUpRight className="w-4 h-4" />
+              {hero?.secondary_cta ?? "View Investor Relations"} <ArrowUpRight className="w-4 h-4" />
             </motion.button>
           </motion.div>
         </motion.div>
@@ -964,7 +987,7 @@ export const Hero = () => {
         className="relative z-20 w-full container-responsive border-t border-white/20 pt-6 flex justify-between items-center"
       >
         <div className="text-[10px] md:text-xs font-medium tracking-widest uppercase text-white/60">
-          Nigeria&apos;s First Certified Green Fund
+          {hero?.down_text ?? "Nigeria’s First Certified Green Fund"}
         </div>
         <div className="text-[10px] md:text-xs font-medium tracking-widest uppercase text-white/60">
           Scroll to Explore
@@ -976,13 +999,15 @@ export const Hero = () => {
 
 // ─── ImpactStats ──────────────────────────────────────────────────────────────
 
-export const ImpactStats = () => {
-  const stats = [
-    { value: "5,324+", label: "New Energy Connections" },
-    { value: "21,197", label: "Tonnes CO₂ Avoided" },
-    { value: "226+", label: "Jobs Created" },
-    { value: "217+", label: "SMEs Supported" },
-  ];
+const DEFAULT_STATS = [
+  { value: "5,324+", label: "New Energy Connections" },
+  { value: "21,197", label: "Tonnes CO₂ Avoided" },
+  { value: "226+", label: "Jobs Created" },
+  { value: "217+", label: "SMEs Supported" },
+];
+
+export const ImpactStats = ({ stats: cmStats }: { stats?: HeroStatItem[] }) => {
+  const stats = cmStats?.length ? cmStats : DEFAULT_STATS;
 
   return (
     // FIX 10: section-padding replaces py-24; container-responsive replaces max-w-7xl mx-auto px-6

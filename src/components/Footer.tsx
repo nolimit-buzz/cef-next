@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TrendingUp, Building2, Globe, ArrowUpRight, Linkedin, Youtube, Instagram, X } from 'lucide-react';
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const partners = [
@@ -267,9 +268,15 @@ export const Footer = () => {
             <div className="lg:col-span-2">
               <h4 className="text-white font-medium mb-8 text-sm">About us</h4>
               <ul className="space-y-5">
-                {['Our mission', 'Our Institutional Framework', 'History', 'Leadership and governance', 'Our Impact'].map(link => (
-                  <li key={link}>
-                    <a href="#" className="text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors">{link}</a>
+                {[
+                  { label: 'Our mission', href: '/about' },
+                  { label: 'Our Institutional Framework', href: '/governance' },
+                  { label: 'History', href: '/about' },
+                  { label: 'Leadership and governance', href: '/governance' },
+                  { label: 'Our Impact', href: '/impact' },
+                ].map(({ label, href }) => (
+                  <li key={label}>
+                    <Link href={href} className="text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors">{label}</Link>
                   </li>
                 ))}
               </ul>
@@ -278,9 +285,17 @@ export const Footer = () => {
             <div className="lg:col-span-2">
               <h4 className="text-white font-medium mb-8 text-sm">Quick Links</h4>
               <ul className="space-y-5">
-                {['Home', 'About', 'Governance', 'Investor Relations', 'Impact', 'Pipeline & Eligibility', 'Contact'].map(link => (
-                  <li key={link}>
-                    <a href="#" className="text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors">{link}</a>
+                {[
+                  { label: 'Home', href: '/' },
+                  { label: 'About', href: '/about' },
+                  { label: 'Governance', href: '/governance' },
+                  { label: 'Investor Relations', href: '/investor-relations' },
+                  { label: 'Impact', href: '/impact' },
+                  { label: 'Pipeline & Eligibility', href: '/eligibility' },
+                  { label: 'Contact', href: '/contact' },
+                ].map(({ label, href }) => (
+                  <li key={label}>
+                    <Link href={href} className="text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors">{label}</Link>
                   </li>
                 ))}
               </ul>
@@ -291,7 +306,7 @@ export const Footer = () => {
               <div className="space-y-5 text-sm text-[var(--color-text-secondary)]">
                 <p><a href="mailto:info@cleanenergyfund.ng" className="hover:text-white transition-colors">info@cleanenergyfund.ng</a></p>
                 <p className="leading-relaxed">
-                  6th Floor Landmark Towers, 5B Water Corporation Way Oniru, Victoria Island, Lagos.
+                  12 Clean Energy Way, Victoria Island, Lagos, Nigeria.
                 </p>
               </div>
             </div>
@@ -309,7 +324,7 @@ export const Footer = () => {
                 FundCo is authorised and registered by the Nigeria Securities & Exchange Commission to act as fund manager for the Clean Energy Local Currency Fund
               </p>
 
-              <div className="mb-6">
+              {/* <div className="mb-6">
                 <img
                   src="https://reverse.cleanenergyfund.ng/wp-content/uploads/2023/09/ren-cap-01-1.svg"
                   alt="Renaissance Capital"
@@ -318,8 +333,8 @@ export const Footer = () => {
                 />
               </div>
               <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed">
-                Renaissance Securities (Nigeria) Limited is acting as the Issuing Housing and Financial Adviser to the Clean Energy Local Currency Fund
-              </p>
+                Renaissance Securities (Nigeria) Limited is acting as the Issuing House and Financial Adviser to the Clean Energy Local Currency Fund
+              </p> */}
             </div>
 
           </div>
@@ -339,7 +354,7 @@ export const Footer = () => {
             </div>
             <div className="text-xs text-[var(--color-text-secondary)] flex flex-row items-center gap-2 justify-center">
             < div className="inline items-center gap-2">
-             <a href="#" className="hover:text-white transition-colors">Privacy Policy & Terms of Service</a>
+             <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy & Terms of Service</Link>
               <span className="opacity-50 px-2">•</span>
               <span>© 2026 Clean Energy Fund Facility</span>
             </div>

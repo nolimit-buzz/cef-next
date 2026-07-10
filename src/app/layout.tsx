@@ -12,6 +12,13 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   title: "Clean Energy Fund",
+  description:
+    "Nigeria's first dedicated local-currency clean energy fund, mobilising domestic capital for renewable energy and climate infrastructure across Africa.",
+  icons: {
+    icon: "https://reverse.cleanenergyfund.ng/wp-content/uploads/2023/03/Clean-Energy-Logo-1.svg",
+    shortcut: "https://reverse.cleanenergyfund.ng/wp-content/uploads/2023/03/Clean-Energy-Logo-1.svg",
+    apple: "https://reverse.cleanenergyfund.ng/wp-content/uploads/2023/03/Clean-Energy-Logo-1.svg",
+  },
 };
 
 export const viewport: Viewport = {

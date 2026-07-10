@@ -4,6 +4,7 @@ import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-
 import { ArrowUpRight } from 'lucide-react';
 import Link from "next/link";
 import { articles } from '../data/articles';
+import type { NewsSection } from '../types/home';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -91,7 +92,7 @@ const BlogArticle = ({ article, index, isLast, setLastActive }: { key?: React.Ke
   );
 };
 
-export const Blog = () => {
+export const Blog = ({ cms }: { cms?: NewsSection }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLastActive, setIsLastActive] = useState(false);
 
@@ -112,17 +113,19 @@ export const Blog = () => {
                 <motion.div variants={fadeUp} className="flex items-center gap-3 mb-8">
                   <div className="w-2 h-2 rounded-full bg-[var(--color-accent-light)]" />
                   <span className="text-xs font-medium uppercase tracking-[0.3em] text-slate-500">
-                    News & Insights
+                    {cms?.eyebrow ?? "News & Insights"}
                   </span>
                 </motion.div>
                 
                 <motion.h2 variants={fadeUp} className="text-3xl md:text-[42px] font-medium leading-[1.15] tracking-tight mb-8">
-                  <span className="text-slate-900">Perspectives on</span> <br className="hidden lg:block" />
-                  <span className="text-slate-500">Clean Energy & Finance.</span>
+                  <span className="text-slate-900">{cms?.headline_part1 ?? "Perspectives on"}</span>
+                  {(cms?.headline_part2 ?? "Clean Energy & Finance.") && (
+                    <><br className="hidden lg:block" /><span className="text-slate-500">{cms?.headline_part2 ?? "Clean Energy & Finance."}</span></>
+                  )}
                 </motion.h2>
-                
+
                 <motion.p variants={fadeUp} className="text-lg text-slate-600 font-light leading-relaxed max-w-md mb-12">
-                  Explore our latest thinking on sustainable infrastructure, local currency financing, and the transition to a low-carbon economy.
+                  {cms?.body ?? "Explore our latest thinking on sustainable infrastructure, local currency financing, and the transition to a low-carbon economy."}
                 </motion.p>
               </motion.div>
 
@@ -137,7 +140,7 @@ export const Blog = () => {
                     className="mt-4 hidden lg:block"
                   >
                     <Link href="/news" className="bg-slate-900 text-white hover:bg-[var(--color-accent-light)] hover:text-white px-8 py-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 shadow-lg w-fit whitespace-nowrap">
-                      View All Articles <ArrowUpRight className="w-4 h-4" />
+                      {cms?.view_all_button ?? "View All Articles"} <ArrowUpRight className="w-4 h-4" />
                     </Link>
                   </motion.div>
                 )}
@@ -162,7 +165,7 @@ export const Blog = () => {
             {/* Mobile CTA */}
             <div className="mt-8 lg:hidden flex justify-start">
               <Link href="/news" className="bg-slate-900 text-white hover:bg-[var(--color-accent-light)] hover:text-white px-8 py-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 shadow-lg w-fit whitespace-nowrap">
-                View All Articles <ArrowUpRight className="w-4 h-4" />
+                {cms?.view_all_button ?? "View All Articles"} <ArrowUpRight className="w-4 h-4" />
               </Link>
             </div>
           </div>

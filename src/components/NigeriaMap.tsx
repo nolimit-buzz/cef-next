@@ -5,81 +5,63 @@ import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 import Link from "next/link";
 import { ArrowUpRight } from 'lucide-react';
 
-import { portfolioData } from '../data/projects';
+import { sdgColors, sdgTitles } from '../lib/sdgMeta';
+import type { StateItem, ResolvedProject } from '../types/portfolio';
 
 const geoUrl = "https://unpkg.com/world-atlas@2.0.2/countries-110m.json";
 
-// Project interface for map interaction
-interface Project {
-  id: string;
-  name: string;
-  sector: string;
+export interface NigeriaMapProps {
+  eyebrow: string;
+  headingPrimary: string;
+  headingSecondary: string;
   description: string;
-  sdgs: { id: number; color: string; label: string; }[];
+  mapRegionLabel: string;
+  apiConnectedLabel: string;
+  apiConnectedStatus: string;
+  emptyStateHeading: string;
+  emptyStateBody: string;
+  regionalImpactLabel: string;
+  currentProjectsLabel: string;
+  aggregatedSdgLabel: string;
+  noProjectsText: string;
+  futureEvaluationText: string;
+  states: StateItem[];
+  projects: ResolvedProject[];
 }
 
-// Data mapping states to projects
-const stateData: Record<string, { projects: Project[], description: string }> = {
-  "Nigeria": {
-    projects: portfolioData,
-    description: "Driving clean energy transition across Nigeria — from solar installations to sustainable mobility and industrial decarbonization."
-  },
-  "Lagos": { 
-    projects: [portfolioData[0]], 
-    description: "Hub for sustainable urban mobility and clean transport infrastructure." 
-  },
-  "Kano": { 
-    projects: [portfolioData[1]], 
-    description: "Industrial renewable energy projects supporting manufacturing and local production." 
-  },
-  "Rivers": { 
-    projects: [portfolioData[2]], 
-    description: "Clean energy transition for maritime and industrial operations." 
-  },
-  "Abuja Federal Capital Territory": { 
-    projects: [portfolioData[4]], 
-    description: "Strategic commercial solar installations and energy efficiency in the capital." 
-  },
-  "Oyo": { 
-    projects: [portfolioData[3]], 
-    description: "Solar-powered agricultural processing and resilient rural energy systems." 
-  },
-  "Kaduna": { 
-    projects: [portfolioData[2]], 
-    description: "Expanding telecommunications connectivity through hybrid renewable power." 
-  },
-  "Ogun": {
-    projects: [portfolioData[0]],
-    description: "Logistics and e-mobility corridor support for cross-state transit."
-  }
-};
-
-const sdgColors: Record<number, string> = {
-  7: "#FCC30B", // Affordable and Clean Energy
-  8: "#A21942", // Decent Work and Economic Growth
-  9: "#FD6925", // Industry, Innovation and Infrastructure
-  11: "#FD9D24", // Sustainable Cities and Communities
-  13: "#3F7E44", // Climate Action
-  1: "#E5243B", // No Poverty
-  2: "#DDA63A", // Zero Hunger
-};
-
-const sdgTitles: Record<number, string> = {
-  7: "Affordable & Clean Energy",
-  8: "Decent Work & Economic Growth",
-  9: "Industry, Innovation & Infrastructure",
-  11: "Sustainable Cities & Communities",
-  13: "Climate Action",
-  1: "No Poverty",
-  2: "Zero Hunger",
-};
-
-export const NigeriaMap = () => {
+export const NigeriaMap = ({
+  eyebrow,
+  headingPrimary,
+  headingSecondary,
+  description,
+  mapRegionLabel,
+  apiConnectedLabel,
+  apiConnectedStatus,
+  emptyStateHeading,
+  emptyStateBody,
+  regionalImpactLabel,
+  currentProjectsLabel,
+  aggregatedSdgLabel,
+  noProjectsText,
+  futureEvaluationText,
+  states,
+  projects,
+}: NigeriaMapProps) => {
   const [activeState, setActiveState] = useState<string | null>(null);
 
   const handleStateClick = (stateName: string) => {
     setActiveState(activeState === stateName ? null : stateName);
   };
+
+  const stateData: Record<string, { projects: ResolvedProject[]; description: string }> = {};
+  for (const state of states) {
+    stateData[state.stateName] = {
+      description: state.description,
+      projects: state.projectRefs
+        .map((ref) => projects.find((p) => p.id === ref.projectId))
+        .filter((p): p is ResolvedProject => Boolean(p)),
+    };
+  }
 
   const activeData = activeState && stateData[activeState] ? stateData[activeState] : null;
 
@@ -96,14 +78,14 @@ export const NigeriaMap = () => {
           <div className="flex items-center gap-3 mb-4">
             <div className="w-2 h-2 rounded-full bg-[var(--color-accent-green)]" />
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/50">
-              National Impact Footprint
+              {eyebrow}
             </span>
           </div>
           <h2 className="text-4xl md:text-5xl font-medium leading-[1.15] tracking-tight mb-4">
-            <span className="text-white">Driving Impact Across</span> <span className="text-white/40">Nigeria</span>
+            <span className="text-white">{headingPrimary}</span> <span className="text-white/40">{headingSecondary}</span>
           </h2>
           <p className="text-lg text-white/60 leading-relaxed max-w-2xl">
-            Interactive visualization of our project locations and their specific alignment to the Sustainable Development Goals per state.
+            {description}
           </p>
         </motion.div>
 
@@ -154,11 +136,11 @@ export const NigeriaMap = () => {
             <div className="absolute bottom-6 left-6 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg p-4 pointer-events-none">
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 rounded-full bg-[#1E3A8A] animate-pulse" />
-                <span className="text-sm font-medium text-white">Active Region: Nigeria</span>
+                <span className="text-sm font-medium text-white">{mapRegionLabel}</span>
               </div>
             </div>
             <div className="absolute top-4 right-4 bg-white/5 backdrop-blur-md p-2 rounded text-[10px] text-white/50 border border-white/10">
-              API Connected: <span className="text-green-500 font-bold">LIVE</span>
+              {apiConnectedLabel} <span className="text-green-500 font-bold">{apiConnectedStatus}</span>
             </div>
           </div>
 
@@ -175,8 +157,8 @@ export const NigeriaMap = () => {
                     transition={{ duration: 0.2 }}
                   >
                     <h3 className="text-2xl font-bold text-white mb-1">{activeState} State</h3>
-                    <div className="text-sm font-medium text-[var(--color-accent-green)] mb-6">Regional Impact Profile</div>
-                    
+                    <div className="text-sm font-medium text-[var(--color-accent-green)] mb-6">{regionalImpactLabel}</div>
+
                     {activeData ? (
                       <div className="space-y-8">
                         <div>
@@ -185,7 +167,7 @@ export const NigeriaMap = () => {
                           </p>
                           <div className="space-y-6">
                             <h4 className="text-xs font-bold text-white uppercase tracking-widest border-l-2 border-[var(--color-accent-green)] pl-3">
-                              Current Projects ({activeData.projects.length})
+                              {currentProjectsLabel} ({activeData.projects.length})
                             </h4>
                             {activeData.projects.map((proj, idx) => (
                               <div key={idx} className="bg-white/5 rounded-lg p-5 border border-white/10 group">
@@ -215,7 +197,7 @@ export const NigeriaMap = () => {
 
                         <div>
                           <h4 className="text-xs font-bold text-white uppercase tracking-widest border-l-2 border-white/20 pl-3 mb-4">
-                            Aggregated SDG Impact
+                            {aggregatedSdgLabel}
                           </h4>
                           <div className="grid grid-cols-2 gap-3">
                             {Array.from(new Set(activeData.projects.flatMap(p => p.sdgs.map(s => s.id)))).map(sdgId => (
@@ -234,8 +216,8 @@ export const NigeriaMap = () => {
                       </div>
                     ) : (
                       <div className="py-8 text-center text-white/50">
-                        <p>No active operational projects in this state currently.</p>
-                        <p className="text-sm mt-2 text-white/40">Future pipeline under evaluation.</p>
+                        <p>{noProjectsText}</p>
+                        <p className="text-sm mt-2 text-white/40">{futureEvaluationText}</p>
                       </div>
                     )}
                   </motion.div>
@@ -253,9 +235,9 @@ export const NigeriaMap = () => {
                         <circle cx="12" cy="10" r="3"></circle>
                       </svg>
                     </div>
-                    <p className="text-lg font-medium text-white mb-2">Select a State</p>
+                    <p className="text-lg font-medium text-white mb-2">{emptyStateHeading}</p>
                     <p className="text-sm text-white/50 leading-relaxed max-w-[200px] mx-auto">
-                      Click on any highlighted state on the map to view regional project impact and specific SDG contributions.
+                      {emptyStateBody}
                     </p>
                   </motion.div>
                 )}

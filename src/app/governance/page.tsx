@@ -1,2 +1,7 @@
 import { GovernancePage } from "../../views/GovernancePage";
-export default function Page() { return <GovernancePage />; }
+import { getGovernancePage } from "../../lib/strapi";
+
+export default async function Page() {
+  const data = await getGovernancePage();
+  return <GovernancePage sections={data.sections} />;
+}
