@@ -54,12 +54,12 @@ export const PerformanceSection = ({ sectionLabel, headingPrimary, headingSecond
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-8 border-b border-gray-200 mb-12 overflow-x-auto no-scrollbar px-6 -mx-6 sm:px-0 sm:mx-0 pt-2">
+        <div className="flex gap-6 sm:gap-8 border-b border-gray-200 mb-12 overflow-x-auto no-scrollbar pt-2">
           {([{ key: 'sdg' as const, label: tabSdgLabel }, { key: 'financial' as const, label: tabFinancialLabel }]).map(tab => (
             <button
               key={tab.key}
               onClick={() => setActivePerfTab(tab.key)}
-              className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all relative whitespace-nowrap ${
+              className={`pb-4 text-xs sm:text-sm font-bold uppercase tracking-widest transition-all relative whitespace-nowrap ${
                 activePerfTab === tab.key ? "text-[var(--color-accent)]" : "text-gray-400 hover:text-gray-600"
               }`}
             >

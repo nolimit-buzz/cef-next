@@ -10,7 +10,9 @@ import { fadeUp, staggerContainer, itemVariants, getMetricIcon, getSdgStyle } fr
 export const ProjectsSection = ({ sectionLabel, headingPrimary, headingSecondary, filterLabel, locationLabel, statusLabel, sdgImpactLabel, readMoreLabel, readLessLabel, viewCaseStudyLabel, fullCaseStudyLabel, projects }: ProjectsSectionData) => {
   const [activeFilter, setActiveFilter] = useState('All');
   const [expandedTextId, setExpandedTextId] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'accordion' | 'card'>('accordion');
+  const [viewMode, setViewMode] = useState<'accordion' | 'card'>(() =>
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches ? 'card' : 'accordion'
+  );
   const [expandedAccordionId, setExpandedAccordionId] = useState<string | null>(projects[0]?.projectId ?? null);
 
   const filters = ['All', ...Array.from(new Set(projects.map(item => item.sector)))];
@@ -48,16 +50,16 @@ export const ProjectsSection = ({ sectionLabel, headingPrimary, headingSecondary
 
           {/* Filters and View Toggle */}
           <motion.div variants={fadeUp} className="flex flex-col md:flex-row md:items-center justify-between mb-16 gap-6">
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-white/40 mr-2 shrink-0">{filterLabel}</span>
-              {filters.map((filter) => (
+            <div className="grid grid-cols-6 gap-2 sm:flex sm:flex-wrap sm:items-center">
+              <span className="hidden sm:inline text-[10px] font-bold uppercase tracking-widest text-white/40 mr-2">{filterLabel}</span>
+              {filters.map((filter, idx) => (
                 <button
                   key={filter}
                   onClick={() => setActiveFilter(filter)}
-                  className={`px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${
+                  className={`${idx < 3 ? 'col-span-2' : 'col-span-3'} sm:col-auto px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all duration-300 ${
                     activeFilter === filter
                       ? 'bg-white text-[#0A1224]'
-                      : 'bg-transparent text-white/60 hover:bg-white/10 border border-white/10'
+                      : 'bg-white/5 text-white/60 hover:bg-white/10'
                   }`}
                 >
                   {filter}
@@ -66,7 +68,7 @@ export const ProjectsSection = ({ sectionLabel, headingPrimary, headingSecondary
             </div>
 
             {/* View Mode Toggle */}
-            <div className="flex items-center gap-2 bg-white/5 p-1 rounded-lg shrink-0">
+            <div className="flex items-center gap-2 bg-white/5 p-1 rounded-lg shrink-0 self-end md:self-auto">
               <button
                 onClick={() => setViewMode('accordion')}
                 className={`p-2 rounded-md transition-colors ${viewMode === 'accordion' ? 'bg-white shadow-sm text-[#0A1224]' : 'text-white/40 hover:text-white'}`}
