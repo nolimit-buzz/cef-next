@@ -57,7 +57,10 @@ const HeroSection = ({ cms }: { cms?: EligibilityHeroSection }) => {
   const badges = (cms?.heroBadges ?? []).map((b) => b.label);
 
   return (
-<section className="relative bg-[var(--color-background)] flex flex-col  lg:h-screen lg:min-h-[700px] lg:max-h-[1080px]">      {/* Top Tier: Split Hero */}
+    // min-h (not a fixed h-screen) so the bottom tier can never overflow the
+    // section and end up painted over by the next one.
+    <section className="relative bg-[var(--color-background)] flex flex-col lg:min-h-screen">
+      {/* Top Tier: Split Hero */}
       <div className="flex flex-col lg:flex-row w-full lg:flex-1 pt-24 lg:pt-28">
         {/* Left Column: Dark Background */}
         <div className="w-full lg:w-[55%] bg-[var(--color-background)] flex flex-col justify-center px-6 lg:pl-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] lg:pr-12 py-12 lg:py-0 relative z-20">
@@ -186,6 +189,7 @@ const EligibilityStatementSection = ({ cms }: { cms?: EligibilityStatementSectio
               {cms?.body}
             </p>
 
+            {/* Parked for now — the CMS still supplies these labels; uncomment to restore.
             <div className="flex flex-col sm:flex-row gap-4">
               <a
                 href="#apply"
@@ -200,6 +204,7 @@ const EligibilityStatementSection = ({ cms }: { cms?: EligibilityStatementSectio
                 {cms?.ctaSecondary}
               </a>
             </div>
+            */}
           </motion.div>
         </div>
       </div>

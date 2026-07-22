@@ -394,8 +394,8 @@ const ContactBodySection = () => {
                   Lagos Hub
                 </h3>
                 <address className="not-italic text-gray-600 leading-relaxed pl-7">
-                  12 Clean Energy Way,<br />
-                  Victoria Island, Lagos, Nigeria
+                  Plot 1610 Adeola Hopewell street,<br />
+                  Victoria Island
                 </address>
               </div>
 

@@ -270,9 +270,9 @@ export const Footer = () => {
               <ul className="space-y-5">
                 {[
                   { label: 'Our mission', href: '/about' },
-                  { label: 'Our Institutional Framework', href: '/governance' },
+                  // { label: 'Our Institutional Framework', href: '/governance' },
                   { label: 'History', href: '/about' },
-                  { label: 'Leadership and governance', href: '/governance' },
+                  // { label: 'Leadership and governance', href: '/governance' },
                   { label: 'Our Impact', href: '/impact' },
                 ].map(({ label, href }) => (
                   <li key={label}>
@@ -288,7 +288,7 @@ export const Footer = () => {
                 {[
                   { label: 'Home', href: '/' },
                   { label: 'About', href: '/about' },
-                  { label: 'Governance', href: '/governance' },
+                  // { label: 'Governance', href: '/governance' },
                   { label: 'Investor Relations', href: '/investor-relations' },
                   { label: 'Impact', href: '/impact' },
                   { label: 'Pipeline & Eligibility', href: '/eligibility' },
@@ -304,9 +304,9 @@ export const Footer = () => {
             <div className="lg:col-span-2">
               <h4 className="text-white font-medium mb-8 text-sm">Contact</h4>
               <div className="space-y-5 text-sm text-[var(--color-text-secondary)]">
-                <p><a href="mailto:info@cleanenergyfund.ng" className="hover:text-white transition-colors">info@cleanenergyfund.ng</a></p>
+                <p><a href="mailto:support@cleanenergyfund.ng" className="hover:text-white transition-colors">support@cleanenergyfund.ng</a></p>
                 <p className="leading-relaxed">
-                  12 Clean Energy Way, Victoria Island, Lagos, Nigeria.
+                  Plot 1610 Adeola Hopewell street, Victoria Island.
                 </p>
               </div>
             </div>

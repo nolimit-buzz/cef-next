@@ -79,13 +79,21 @@ export interface HeroSection {
   poster_image_alt_text?: string;
 }
 
+// Shared CTA component: a label plus an optional document to download on click.
+// The media field arrives as an object when populated, but this CMS also stores
+// some media as plain URL strings — handle both.
+export interface CtaItem {
+  id?: number;
+  cta_text?: string;
+  cta_document?: { url?: string; name?: string } | string | null;
+}
+
 export interface AboutFundSection {
   __component: "home-page.about-fund-section";
   id: number;
   eyebrow: string;
   headline: string;
-  primary_cta: string;
-  secondary_cta: string;
+  cta?: CtaItem[];
   strategic_partners_label: string;
   bento_cards: BentoCard[];
   partners?: PartnerItem[];
@@ -175,7 +183,7 @@ export interface EligibilitySection {
   headline_part1: string;
   headline_part2: string | null;
   body: string;
-  cta_button: string;
+  cta?: CtaItem;
   card_default_label: string;
   focus_label: string;
   ticket_size_label: string;

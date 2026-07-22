@@ -1,12 +1,11 @@
 "use client";
 import { motion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
-import Link from "next/link";
 import { cn } from '../../lib/utils';
+import { getCtaHref } from '../../lib/strapi';
 import type { FundOverviewSection as FundOverviewSectionData } from '../../types/about';
 import { Multiline } from './shared';
 
-export const FundOverviewSection = ({ sectionLabel, heading, body, ctaPrimary, ctaSecondary, items }: FundOverviewSectionData) => {
+export const FundOverviewSection = ({ sectionLabel, heading, body, cta, items }: FundOverviewSectionData) => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -49,12 +48,18 @@ export const FundOverviewSection = ({ sectionLabel, heading, body, ctaPrimary, c
             {body}
           </p>
           <div className="flex flex-col sm:flex-row items-center gap-6">
-            <button className="w-full sm:w-auto bg-white text-[#050A15] hover:bg-gray-100 px-8 py-4 rounded text-sm font-medium transition-colors">
-              {ctaPrimary}
-            </button>
-            <Link href="/fund" className="text-white hover:text-[var(--color-accent-green)] text-sm font-medium transition-colors flex items-center gap-2">
-              {ctaSecondary} <ArrowUpRight className="w-4 h-4" />
-            </Link>
+            {(() => {
+              const ctaClassName = "w-full sm:w-auto bg-white text-[#050A15] hover:bg-gray-100 px-8 py-4 rounded text-sm font-medium transition-colors";
+              const label = cta?.cta_text ?? "Download Fact Sheet";
+              const href = getCtaHref(cta);
+              return href ? (
+                <a href={href} rel="noopener noreferrer" download className={ctaClassName}>
+                  {label}
+                </a>
+              ) : (
+                <button className={ctaClassName}>{label}</button>
+              );
+            })()}
           </div>
         </motion.div>
 

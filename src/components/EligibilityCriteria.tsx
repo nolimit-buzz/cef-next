@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
 import type { EligibilitySection } from '../types/home';
+import { getCtaHref } from '../lib/strapi';
 
 const DEFAULT_SECTORS = [
   {
@@ -114,9 +115,22 @@ export const EligibilityCriteria = ({ cms }: { cms?: EligibilitySection }) => {
               {cms?.body ?? "We focus on high-impact, climate-aligned infrastructure projects within our priority sectors. Discover if your initiative aligns with our investment mandate."}
             </p>
 
-            <button className="bg-slate-900 text-white hover:bg-[var(--color-accent-light)] hover:text-white px-8 py-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 shadow-lg w-fit">
-              {cms?.cta_button ?? "View Eligibility Criteria"} <ArrowUpRight className="w-4 h-4" />
-            </button>
+            {(() => {
+              const ctaClassName = "bg-slate-900 text-white hover:bg-[var(--color-accent-light)] hover:text-white px-8 py-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 shadow-lg w-fit";
+              const label = (
+                <>
+                  {cms?.cta?.cta_text ?? "View Eligibility Criteria"} <ArrowUpRight className="w-4 h-4" />
+                </>
+              );
+              const href = getCtaHref(cms?.cta);
+              return href ? (
+                <a href={href} rel="noopener noreferrer" download className={ctaClassName}>
+                  {label}
+                </a>
+              ) : (
+                <button className={ctaClassName}>{label}</button>
+              );
+            })()}
           </motion.div>
 
           {/* Right Carousel */}
