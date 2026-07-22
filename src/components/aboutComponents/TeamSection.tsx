@@ -32,12 +32,14 @@ export const TeamSection = ({ sectionLabel, headingPrimary, headingSecondary, bo
               {body}
             </p>
           </motion.div>
+          {/* Parked for now — the CMS `cta` field is untouched, so uncomment to restore.
           <motion.button
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: false }}
             className="px-6 py-3 border border-gray-300 rounded-[8px] text-sm font-medium text-[#0A1224] hover:bg-gray-100 hover:border-gray-400 transition-colors whitespace-nowrap bg-white shadow-sm"
           >
             {cta}
           </motion.button>
+          */}
         </div>
 
         {/* Investment Committee Grid */}
@@ -65,7 +67,7 @@ export const TeamSection = ({ sectionLabel, headingPrimary, headingSecondary, bo
                       fill
                       quality={100}
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
-                      className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                      className="object-cover"
                     />
                   )}
                 </div>

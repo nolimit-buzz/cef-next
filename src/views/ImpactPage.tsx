@@ -84,7 +84,10 @@ const HeroSection = ({
   heroImage,
 }: HeroSectionData) => {
   return (
-<section className="relative bg-[var(--color-background)] flex flex-col  lg:h-screen lg:min-h-[700px] lg:max-h-[1080px]">      {/* Top Tier: Split Hero */}
+    // min-h (not a fixed h-screen) so the bottom tier can never overflow the
+    // section and end up painted over by the next one.
+    <section className="relative bg-[var(--color-background)] flex flex-col lg:min-h-screen">
+      {/* Top Tier: Split Hero */}
       <div className="flex flex-col lg:flex-row w-full lg:flex-1 pt-24 lg:pt-28">
         {/* Left Column: Dark Background */}
         <div className="w-full lg:w-[55%] bg-[var(--color-background)] flex flex-col justify-center px-6 lg:pl-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] lg:pr-12 py-12 lg:py-0 relative z-20">
@@ -135,7 +138,7 @@ const HeroSection = ({
       </div>
 
       {/* Bottom Tier: 3-Column Content Grid */}
-      <div className="w-full grid grid-cols-1 lg:grid-cols-4 z-20 relative shrink-0 mb-40">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-4 z-20 relative shrink-0">
         {/* Column 1: Sub-headline */}
         <div className="lg:col-span-2 bg-white p-8 lg:py-12 xl:py-14 lg:pl-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] lg:pr-12 border-t border-r border-gray-200 flex items-center">
           <motion.p
@@ -214,6 +217,7 @@ const ImpactStatementSection = ({
               {body}
             </p>
 
+            {/* Parked for now — the CMS still supplies these labels; uncomment to restore.
             <div className="flex flex-col sm:flex-row gap-4">
               <a
                 href="#report"
@@ -228,6 +232,7 @@ const ImpactStatementSection = ({
                 {ctaSecondary}
               </a>
             </div>
+            */}
           </motion.div>
         </div>
       </div>
@@ -278,12 +283,14 @@ const ImpactBodySection = ({
             <p className="text-lg text-gray-600 leading-relaxed mb-8">
               {body}
             </p>
+            {/* Parked for now — the CMS still supplies this label; uncomment to restore.
             <a
               href="#methodology"
               className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-[var(--color-accent)] hover:text-blue-800 transition-colors border-b-2 border-transparent hover:border-blue-800 pb-1"
             >
               {methodologyLink} <ArrowUpRight className="w-4 h-4" />
             </a>
+            */}
           </motion.div>
         </div>
 

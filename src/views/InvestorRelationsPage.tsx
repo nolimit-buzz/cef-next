@@ -302,9 +302,11 @@ const PerformanceHighlightsSection = ({ data }: { data?: PerformanceHighlightsSe
               <p className="text-lg text-gray-600 leading-relaxed max-w-md md:text-right">
                 {data?.body}
               </p>
+              {/* Parked for now — the CMS still supplies this label; uncomment to restore.
               <a href="#downloads" className="inline-flex items-center gap-2 px-6 py-3 border border-gray-200 rounded text-sm font-medium text-[#0A1224] hover:border-gray-300 hover:bg-gray-50 transition-colors w-max">
                 {data?.viewAllLink} <ArrowUpRight className="w-4 h-4" />
               </a>
+              */}
             </div>
           </motion.div>
         </div>

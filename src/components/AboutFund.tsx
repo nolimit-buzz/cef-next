@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform, AnimatePresence, useInView, useMotionV
 import { ArrowUpRight, Sun, ShieldCheck, Users, Globe2, Zap, Building2, Coins, TrendingUp, Leaf } from 'lucide-react';
 import { CountUp } from './CountUp';
 import type { AboutFundSection, ApproachSection } from '../types/home';
+import { getCtaHref } from '../lib/strapi';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -407,12 +408,36 @@ export const AboutFund = ({
               </motion.h2>
 
               <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8 items-start sm:items-center">
-                <button className="bg-white text-black hover:bg-[var(--color-accent-green)] hover:text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-2 shadow-lg w-full sm:w-auto">
-                  {aboutFund?.primary_cta ?? "Download Fact Sheet"} <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
-                </button>
-                <button className="text-white/80 px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-2 hover:text-white w-full sm:w-auto">
-                  {aboutFund?.secondary_cta ?? "Discover Fund"} <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
-                </button>
+                {(aboutFund?.cta?.length
+                  ? aboutFund.cta
+                  : [{ cta_text: "Download Fact Sheet" }]
+                ).map((item, i) => {
+                  // First CTA is the solid primary, any extras are ghost buttons.
+                  const className = i === 0
+                    ? "bg-white text-black hover:bg-[var(--color-accent-green)] hover:text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-2 shadow-lg w-full sm:w-auto"
+                    : "text-white/80 px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-2 hover:text-white w-full sm:w-auto";
+                  const label = (
+                    <>
+                      {item.cta_text} <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
+                    </>
+                  );
+                  const href = getCtaHref(item);
+                  return href ? (
+                    <a
+                      key={item.id ?? i}
+                      href={href}
+                      rel="noopener noreferrer"
+                      download
+                      className={className}
+                    >
+                      {label}
+                    </a>
+                  ) : (
+                    <button key={item.id ?? i} className={className}>
+                      {label}
+                    </button>
+                  );
+                })}
               </motion.div>
             </div>
 
@@ -605,7 +630,7 @@ export const AboutFund = ({
                           {approach?.why_cef_body ?? "CeF addresses this gap by structuring investments that combine credit enhancement, blended finance, and institutional capital mobilisation."}
                         </p>
 
-                        <AnimatePresence>
+                        {/* <AnimatePresence>
                           {isLastCardActive && (
                             <motion.div
                               initial={{ opacity: 0, y: 20 }}
@@ -622,7 +647,7 @@ export const AboutFund = ({
                               </a>
                             </motion.div>
                           )}
-                        </AnimatePresence>
+                        </AnimatePresence> */}
                       </div>
                     </div>
 
