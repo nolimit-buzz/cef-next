@@ -4,17 +4,40 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Minus, ArrowUpRight, Globe2, Zap, Users, Leaf, DollarSign } from 'lucide-react';
 
 import Link from "next/link";
-import { portfolioData, PortfolioItem } from '../data/projects';
+import { portfolioData } from '../data/projects';
+import { getStrapiMediaURL } from '../lib/strapi';
 import type { PortfolioSection } from '../types/home';
 
+// CMS card metrics carry no icon name — rotate through a fixed set.
+const METRIC_ICONS = [Zap, Leaf, Users, DollarSign];
+
 export const Portfolio = ({ cms }: { cms?: PortfolioSection }) => {
-  const [expandedId, setExpandedId] = useState<string | null>(portfolioData[0].id);
+  // Prefer CMS cards; fall back to the static list if the CMS returns none.
+  const items = cms?.cards?.length
+    ? cms.cards.map((card) => ({
+        id: card.project_id ?? String(card.id),
+        name: card.name,
+        sector: card.sector ?? '',
+        location: card.location ?? '',
+        status: card.status ?? '',
+        description: card.description ?? '',
+        metrics: (card.metrics ?? []).map((m, i) => ({
+          ...m,
+          icon: METRIC_ICONS[i % METRIC_ICONS.length],
+        })),
+        sdgs: card.sdgs ?? [],
+        image: getStrapiMediaURL(card.image) ?? '',
+        imageAlt: card.image_alt_text || card.name,
+      }))
+    : portfolioData.map((item) => ({ ...item, imageAlt: item.name }));
+
+  const [expandedId, setExpandedId] = useState<string | null>(items[0]?.id ?? null);
   const [expandedTextId, setExpandedTextId] = useState<string | null>(null);
   const [selectedSector, setSelectedSector] = useState<string | null>(null);
 
-  const uniqueSectors = Array.from(new Set(portfolioData.map(item => item.sector)));
+  const uniqueSectors = Array.from(new Set(items.map(item => item.sector)));
 
-  const filteredData = portfolioData.filter(item => {
+  const filteredData = items.filter(item => {
     const matchSector = selectedSector ? item.sector === selectedSector : true;
     return matchSector;
   }).slice(0, 4);
@@ -77,19 +100,19 @@ export const Portfolio = ({ cms }: { cms?: PortfolioSection }) => {
         </div>
 
         <div className="flex flex-col lg:flex-row lg:items-center gap-6 mb-12">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-white/40 mr-2">{cms?.filter_label ?? "Sector:"}</span>
-            <button 
+          <div className="grid grid-cols-6 gap-2 sm:flex sm:flex-wrap sm:items-center">
+            <span className="hidden sm:inline text-[10px] font-bold uppercase tracking-widest text-white/40 mr-2">{cms?.filter_label ?? "Sector:"}</span>
+            <button
               onClick={() => setSelectedSector(null)}
-              className={`px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${!selectedSector ? 'bg-white text-black' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
+              className={`col-span-2 sm:col-auto px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${!selectedSector ? 'bg-white text-black' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
             >
               {cms?.all_filter_label ?? "All"}
             </button>
-            {uniqueSectors.map(sector => (
-              <button 
+            {uniqueSectors.map((sector, idx) => (
+              <button
                 key={sector}
                 onClick={() => setSelectedSector(sector)}
-                className={`px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${selectedSector === sector ? 'bg-white text-black' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
+                className={`${idx < 2 ? 'col-span-2' : 'col-span-3'} sm:col-auto px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all ${selectedSector === sector ? 'bg-white text-black' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
               >
                 {sector}
               </button>
@@ -245,9 +268,9 @@ export const Portfolio = ({ cms }: { cms?: PortfolioSection }) => {
 
                       <div className="lg:col-span-5">
                         <div className="aspect-[4/3] rounded-lg overflow-hidden relative group/img">
-                          <img 
-                            src={item.image} 
-                            alt={item.name} 
+                          <img
+                            src={item.image}
+                            alt={item.imageAlt}
                             className="w-full h-full object-cover transition-transform duration-1000 group-hover/img:scale-110"
                             referrerPolicy="no-referrer"
                           />

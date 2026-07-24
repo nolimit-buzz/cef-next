@@ -274,12 +274,12 @@ const PerformanceSection = ({
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-8 border-b border-gray-200 mb-12 overflow-x-auto no-scrollbar px-6 -mx-6 sm:px-0 sm:mx-0 pt-2">
+        <div className="flex justify-start gap-6 sm:gap-8 border-b border-gray-200 mb-12 overflow-x-auto no-scrollbar pt-2">
           {tabs.map(tab => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all relative whitespace-nowrap ${
+              className={`pb-4 text-xs sm:text-sm font-bold uppercase tracking-wide sm:tracking-widest transition-all relative whitespace-nowrap ${
                 activeTab === tab.key ? "text-[var(--color-accent)]" : "text-gray-400 hover:text-gray-600"
               }`}
             >
@@ -386,7 +386,9 @@ const ProjectsSection = ({
 }: Omit<ProjectsSectionData, 'id' | '__component' | 'projects'> & { projects: ResolvedProject[] }) => {
   const [activeFilter, setActiveFilter] = useState('All');
   const [expandedTextId, setExpandedTextId] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'accordion' | 'card'>('accordion');
+  const [viewMode, setViewMode] = useState<'accordion' | 'card'>(() =>
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches ? 'card' : 'accordion'
+  );
   const [expandedAccordionId, setExpandedAccordionId] = useState<string | null>(projects[0]?.id ?? null);
 
   const filters = ['All', ...Array.from(new Set(projects.map(item => item.sector)))];
@@ -424,16 +426,16 @@ const ProjectsSection = ({
 
           {/* Filters and View Toggle */}
           <motion.div variants={fadeUp} className="flex flex-col md:flex-row md:items-center justify-between mb-16 gap-6">
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-white/40 mr-2 shrink-0">{filterLabel}</span>
-              {filters.map((filter) => (
+            <div className="grid grid-cols-6 gap-2 sm:flex sm:flex-wrap sm:items-center">
+              <span className="hidden sm:inline text-[10px] font-bold uppercase tracking-widest text-white/40 mr-2">{filterLabel}</span>
+              {filters.map((filter, idx) => (
                 <button
                   key={filter}
                   onClick={() => setActiveFilter(filter)}
-                  className={`px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${
+                  className={`${idx < 3 ? 'col-span-2' : 'col-span-3'} sm:col-auto px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all duration-300 ${
                     activeFilter === filter
                       ? 'bg-white text-[#0A1224]'
-                      : 'bg-transparent text-white/60 hover:bg-white/10 border border-white/10'
+                      : 'bg-white/5 text-white/60 hover:bg-white/10'
                   }`}
                 >
                   {filter}
@@ -442,7 +444,7 @@ const ProjectsSection = ({
             </div>
 
             {/* View Mode Toggle */}
-            <div className="flex items-center gap-2 bg-white/5 p-1 rounded-lg shrink-0">
+            <div className="flex items-center gap-2 bg-white/5 p-1 rounded-lg shrink-0 self-end md:self-auto">
               <button
                 onClick={() => setViewMode('accordion')}
                 className={`p-2 rounded-md transition-colors ${viewMode === 'accordion' ? 'bg-white shadow-sm text-[#0A1224]' : 'text-white/40 hover:text-white'}`}

@@ -9,7 +9,7 @@ import {
 import Link from "next/link";
 import Breadcrumbs from '../components/Breadcrumbs';
 import { cn } from '../lib/utils';
-import { getStrapiURL } from '../lib/strapi';
+import { getStrapiMediaURL } from '../lib/strapi';
 import { FundPerformanceChart } from '../components/FundPerformanceChart';
 import type {
   InvestorRelationsPageSection,
@@ -178,14 +178,26 @@ const HeroSection = ({ data }: { data?: HeroSectionData }) => {
               loop
               muted
               playsInline
-              poster="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2670&auto=format&fit=crop"
+              poster={
+                getStrapiMediaURL(data?.heroPoster?.file) ??
+                "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2670&auto=format&fit=crop"
+              }
               className="w-full h-full object-cover motion-reduce:hidden"
             >
-              <source src="https://cdn.coverr.co/videos/coverr-office-buildings-in-the-city-4344/1080p.mp4" type="video/mp4" />
+              <source
+                src={
+                  getStrapiMediaURL(data?.heroVideo?.file) ??
+                  "https://cdn.coverr.co/videos/coverr-office-buildings-in-the-city-4344/1080p.mp4"
+                }
+                type="video/mp4"
+              />
             </video>
             <img
-              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2670&auto=format&fit=crop"
-              alt="Institutional Data"
+              src={
+                getStrapiMediaURL(data?.heroFallbackImage?.file) ??
+                "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2670&auto=format&fit=crop"
+              }
+              alt={data?.heroFallbackImage_alt_text || "Institutional Data"}
               className="hidden motion-reduce:block absolute inset-0 w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-black/40 z-10" />
@@ -290,9 +302,11 @@ const PerformanceHighlightsSection = ({ data }: { data?: PerformanceHighlightsSe
               <p className="text-lg text-gray-600 leading-relaxed max-w-md md:text-right">
                 {data?.body}
               </p>
+              {/* Parked for now — the CMS still supplies this label; uncomment to restore.
               <a href="#downloads" className="inline-flex items-center gap-2 px-6 py-3 border border-gray-200 rounded text-sm font-medium text-[#0A1224] hover:border-gray-300 hover:bg-gray-50 transition-colors w-max">
                 {data?.viewAllLink} <ArrowUpRight className="w-4 h-4" />
               </a>
+              */}
             </div>
           </motion.div>
         </div>
@@ -522,7 +536,7 @@ const InvestorBaseSection = ({ data }: { data?: InvestorBaseSectionData }) => {
             return (
               <motion.div key={inv.id ?? idx} variants={fadeUp} className="group relative rounded-lg overflow-hidden h-[400px] cursor-pointer">
                 <img
-                  src={inv.image}
+                  src={getStrapiMediaURL(inv.image?.file)}
                   alt={inv.title}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -667,7 +681,7 @@ const DistributionHistorySection = ({ data }: { data?: DistributionHistorySectio
                   </div>
                 )}
 
-                <div className="hidden md:grid grid-cols-12 gap-4 py-4 border-b border-gray-300 mb-4 px-4">
+                <div className="flex justify-between md:grid md:grid-cols-12 gap-2 md:gap-4 py-3 md:py-4 border-b border-gray-300 mb-4 px-2 md:px-4">
                   <div className="col-span-2 text-xs font-bold uppercase tracking-widest text-gray-400">{data?.holdingsColLogo}</div>
                   <div className="col-span-7 text-xs font-bold uppercase tracking-widest text-gray-400">{data?.holdingsColInvestorName}</div>
                   <div className="col-span-3 text-xs font-bold uppercase tracking-widest text-gray-400 text-right">{data?.holdingsColHolding}</div>
@@ -675,20 +689,19 @@ const DistributionHistorySection = ({ data }: { data?: DistributionHistorySectio
 
                 <div className="flex flex-col gap-2">
                   {holdingsForSeries.map((investor, idx) => (
-                    <div key={investor.id ?? idx} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center py-4 px-4 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
+                    <div key={investor.id ?? idx} className="flex justify-between md:grid md:grid-cols-12 gap-2 md:gap-4 items-center py-3 md:py-4 px-2 md:px-4 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
                       <div className="col-span-2 flex items-center h-12">
-                        {investor.logo?.url ? (
-                          <img src={getStrapiURL(investor.logo.url)} alt={investor.logo.alternativeText ?? investor.name} className="h-10 w-16 object-contain" referrerPolicy="no-referrer" />
+                        {investor.logo ? (
+                          <img src={getStrapiMediaURL(investor.logo)} alt={investor.name} className="h-8 w-12 md:h-10 md:w-16 object-contain" referrerPolicy="no-referrer" />
                         ) : (
-                          <div className="w-16 h-10 bg-gray-200 rounded flex items-center justify-center text-[10px] text-gray-400 uppercase tracking-wider font-bold">{data?.holdingsColLogo}</div>
+                          <div className="w-12 h-8 md:w-16 md:h-10 bg-gray-200 rounded flex items-center justify-center text-[10px] text-gray-400 uppercase tracking-wider font-bold">{data?.holdingsColLogo}</div>
                         )}
                       </div>
-                      <div className="col-span-7">
-                        <span className="text-lg font-medium text-[#0A1224]">{investor.name}</span>
+                      <div className="col-span-7 flex-1 min-w-0 md:flex-none">
+                        <span className="text-sm md:text-lg font-medium text-[#0A1224]">{investor.name}</span>
                       </div>
-                      <div className="col-span-3 md:text-right">
-                        <span className="md:hidden text-xs font-bold uppercase tracking-widest text-gray-400 mr-2">{data?.holdingsColHoldingMobile}</span>
-                        <span className="text-lg font-mono font-medium text-[var(--color-accent-green)]">{investor.holding}</span>
+                      <div className="col-span-3 text-right">
+                        <span className="text-sm md:text-lg font-mono font-medium text-[var(--color-accent-green)]">{investor.holding}</span>
                       </div>
                     </div>
                   ))}
@@ -915,6 +928,62 @@ const DownloadsSection = ({ data }: { data?: DownloadsSectionData }) => {
 const InvestorEnquiriesSection = ({ data }: { data?: InvestorEnquiriesSectionData }) => {
   const subjectOptions = data?.subjectOptions ?? [];
 
+  const [fullName, setFullName] = useState('');
+  const [institution, setInstitution] = useState('');
+  const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [statusMessage, setStatusMessage] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!fullName || !institution || !email || !subject || !message) {
+      setStatus('error');
+      setStatusMessage('Please fill in all fields.');
+      return;
+    }
+
+    setStatus('submitting');
+    setStatusMessage('');
+
+    try {
+      const response = await fetch('/api/investor-enquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName,
+          institution,
+          email,
+          subject,
+          message,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setStatus('success');
+        setStatusMessage(result.message || 'Thank you! Your inquiry has been submitted.');
+        setFullName('');
+        setInstitution('');
+        setEmail('');
+        setSubject('');
+        setMessage('');
+      } else {
+        setStatus('error');
+        setStatusMessage(result.message || 'Something went wrong. Please try again.');
+      }
+    } catch (err) {
+      console.error(err);
+      setStatus('error');
+      setStatusMessage('Failed to connect to the server. Please check your internet connection.');
+    }
+  };
+
   return (
     <section id="enquiries" className="py-24 lg:py-32 bg-[#F4F4F6] text-[#0A1224] relative z-20">
       <div className="max-w-7xl mx-auto px-6">
@@ -1003,13 +1072,16 @@ const InvestorEnquiriesSection = ({ data }: { data?: InvestorEnquiriesSectionDat
             variants={fadeUp}
             className="bg-white p-8 md:p-12 rounded-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100"
           >
-            <form className="flex flex-col gap-6" onSubmit={(e) => e.preventDefault()}>
+            <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
                   <label htmlFor="fullName" className="text-xs font-bold uppercase tracking-widest text-gray-500">{data?.fullNameLabel}</label>
                   <input
                     type="text"
                     id="fullName"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    disabled={status === 'submitting'}
                     className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/20 focus:border-[var(--color-accent)] transition-all"
                     placeholder={data?.fullNamePlaceholder}
                   />
@@ -1019,6 +1091,9 @@ const InvestorEnquiriesSection = ({ data }: { data?: InvestorEnquiriesSectionDat
                   <input
                     type="text"
                     id="institution"
+                    value={institution}
+                    onChange={(e) => setInstitution(e.target.value)}
+                    disabled={status === 'submitting'}
                     className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/20 focus:border-[var(--color-accent)] transition-all"
                     placeholder={data?.institutionPlaceholder}
                   />
@@ -1030,6 +1105,9 @@ const InvestorEnquiriesSection = ({ data }: { data?: InvestorEnquiriesSectionDat
                 <input
                   type="email"
                   id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={status === 'submitting'}
                   className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/20 focus:border-[var(--color-accent)] transition-all"
                   placeholder={data?.workEmailPlaceholder}
                 />
@@ -1039,11 +1117,14 @@ const InvestorEnquiriesSection = ({ data }: { data?: InvestorEnquiriesSectionDat
                 <label htmlFor="subject" className="text-xs font-bold uppercase tracking-widest text-gray-500">{data?.subjectLabel}</label>
                 <select
                   id="subject"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  disabled={status === 'submitting'}
                   className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/20 focus:border-[var(--color-accent)] transition-all text-gray-700 appearance-none"
                 >
                   <option value="">{data?.subjectDefaultOption}</option>
                   {subjectOptions.map((opt) => (
-                    <option key={opt.id} value={opt.label.toLowerCase().replace(/\s+/g, '-')}>
+                    <option key={opt.id} value={opt.label}>
                       {opt.label}
                     </option>
                   ))}
@@ -1055,16 +1136,29 @@ const InvestorEnquiriesSection = ({ data }: { data?: InvestorEnquiriesSectionDat
                 <textarea
                   id="message"
                   rows={4}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  disabled={status === 'submitting'}
                   className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/20 focus:border-[var(--color-accent)] transition-all resize-none"
                   placeholder={data?.messagePlaceholder}
                 ></textarea>
               </div>
 
+              {statusMessage && (
+                <div className={cn(
+                  "p-4 rounded-lg text-sm transition-all",
+                  status === 'success' ? "bg-green-50 text-green-800 border border-green-200" : "bg-red-50 text-red-800 border border-red-200"
+                )}>
+                  {statusMessage}
+                </div>
+              )}
+
               <button
                 type="submit"
-                className="mt-4 w-full bg-[#0A1224] text-white rounded-lg px-6 py-4 text-sm font-medium hover:bg-[var(--color-accent)] transition-colors flex items-center justify-center gap-2 group"
+                disabled={status === 'submitting'}
+                className="mt-4 w-full bg-[#0A1224] text-white rounded-lg px-6 py-4 text-sm font-medium hover:bg-[var(--color-accent)] transition-colors flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {data?.submitLabel}
+                {status === 'submitting' ? 'Submitting...' : data?.submitLabel}
                 <Send className="w-4 h-4 text-white/70 group-hover:text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
               </button>
             </form>

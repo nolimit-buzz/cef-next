@@ -2,7 +2,7 @@ import type { FundPageData } from "../types/fund";
 import type { AboutPageData } from "../types/about";
 import type { EligibilityPageData } from "../types/eligibility";
 import type { GovernancePageData } from "../types/governance";
-import type { HomePageData } from "../types/home";
+import type { CtaItem, HomePageData } from "../types/home";
 import type { ImpactPageData } from "../types/impact";
 import type { InvestorRelationsPageData } from "../types/investor-relations";
 import type { PortfolioPageData } from "../types/portfolio";
@@ -18,12 +18,53 @@ export function getStrapiURL(path = ""): string {
   return `${baseUrl}${path}`;
 }
 
+// Media fields are plain URL strings in the CMS (usually absolute Cloudinary
+// URLs); relative paths are still resolved against the Strapi host.
+export function getStrapiMediaURL(url?: string | null): string | undefined {
+  if (!url) return undefined;
+  return url.startsWith("http") ? url : getStrapiURL(url);
+}
+
+// Resolves the document attached to a `home-page.cta` component into a href.
+// Returns undefined when no document is set, so callers can fall back to a
+// non-interactive button.
+export function getCtaHref(cta?: CtaItem | null): string | undefined {
+  const doc = cta?.cta_document;
+  if (!doc) return undefined;
+  return getCloudinaryDownloadURL(
+    getStrapiMediaURL(typeof doc === "string" ? doc : doc.url)
+  );
+}
+
+// Browsers ignore the `download` attribute cross-origin, so ask Cloudinary to
+// serve the asset as an attachment instead. Non-Cloudinary URLs pass through.
+export function getCloudinaryDownloadURL(url?: string): string | undefined {
+  if (!url) return undefined;
+  if (!url.includes("res.cloudinary.com") || !url.includes("/upload/")) return url;
+  return url.replace("/upload/", "/upload/fl_attachment/");
+}
+
+// Inserts a Cloudinary transformation segment so images are delivered at
+// retina density instead of whatever size was uploaded; non-Cloudinary URLs
+// pass through untouched.
+export function getCloudinaryTransformedURL(
+  url: string | undefined,
+  transform = "w_600,dpr_2,q_auto:best,f_auto",
+): string | undefined {
+  if (!url) return undefined;
+  if (!url.includes("res.cloudinary.com") || !url.includes("/upload/")) return url;
+  return url.replace("/upload/", `/upload/${transform}/`);
+}
+
 async function fetchAPI<T>(path: string, query = ""): Promise<T> {
   const url = getStrapiURL(`/api${path}${query ? `?${query}` : ""}`);
   const res = await fetch(url, { next: { revalidate: 60 } });
 
   if (!res.ok) {
-    throw new Error(`Strapi request failed: ${res.status} ${res.statusText} (${url})`);
+    const body = await res.text().catch(() => "");
+    throw new Error(
+      `Strapi request failed: ${res.status} ${res.statusText} (${url}) ${body.slice(0, 500)}`
+    );
   }
 
   const json: StrapiResponse<T> = await res.json();
@@ -34,10 +75,9 @@ const FUND_POPULATE_QUERY = [
   "populate[sections][on][fund-page.hero-section][populate]=*",
   "populate[sections][on][fund-page.sticky-sub-nav-section][populate][navItems][populate]=*",
   "populate[sections][on][fund-page.overview-section][populate][items][populate]=*",
-  "populate[sections][on][fund-page.challenge-section][populate][challengeImage][populate]=*",
   "populate[sections][on][fund-page.challenge-section][populate][challengeStats][populate]=*",
   "populate[sections][on][fund-page.investment-strategy-section][populate]=*",
-  "populate[sections][on][fund-page.aim-of-funds-section][populate][aimCards][populate][image][populate]=*",
+  "populate[sections][on][fund-page.aim-of-funds-section][populate][aimCards][populate]=*",
   "populate[sections][on][fund-page.impact-sdgs-section][populate][sdgCards][populate]=*",
 ].join("&");
 
@@ -52,13 +92,16 @@ const ABOUT_POPULATE_QUERY = [
   "populate[sections][on][about-page.sticky-nav-section][populate]=*",
   "populate[sections][on][about-page.about-fund-section][populate]=*",
   "populate[sections][on][about-page.macro-problem-section][populate]=*",
-  "populate[sections][on][about-page.fund-overview-section][populate]=*",
+  "populate[sections][on][about-page.fund-overview-section][populate][items][populate]=*",
+  "populate[sections][on][about-page.fund-overview-section][populate][cta][populate]=*",
   "populate[sections][on][about-page.fund-structure-section][populate]=*",
-  "populate[sections][on][about-page.technical-assistance-section][populate]=*",
+  "populate[sections][on][about-page.technical-assistance-section][populate][partners][populate]=*",
+  "populate[sections][on][about-page.technical-assistance-section][populate][ratingAgencies][populate]=*",
   "populate[sections][on][about-page.milestones-section][populate]=*",
-  "populate[sections][on][about-page.team-section][populate]=*",
+  "populate[sections][on][about-page.team-section][populate][members][populate]=*",
+  "populate[sections][on][about-page.team-section][populate][transactionParties][populate]=*",
   "populate[sections][on][about-page.values-and-impact-section][populate]=*",
-  "populate[sections][on][about-page.target-investors-section][populate]=*",
+  "populate[sections][on][about-page.target-investors-section][populate][investors][populate]=*",
 ].join("&");
 
 export function getAboutPage(): Promise<AboutPageData> {
@@ -78,7 +121,7 @@ export function getImpactPage(): Promise<ImpactPageData> {
 }
 
 const INVESTOR_RELATIONS_POPULATE_QUERY = [
-  "populate[sections][on][investor-relations-page.hero-section][populate][credentials][populate]=*",
+  "populate[sections][on][investor-relations-page.hero-section][populate]=*",
   "populate[sections][on][investor-relations-page.sticky-nav-section][populate][navItems][populate]=*",
   "populate[sections][on][investor-relations-page.performance-highlights-section][populate][highlights][populate]=*",
   "populate[sections][on][investor-relations-page.performance-reports-section][populate][reports][populate]=*",
@@ -96,14 +139,14 @@ export function getInvestorRelationsPage(): Promise<InvestorRelationsPageData> {
 
 const PORTFOLIO_POPULATE_QUERY = [
   "populate[sections][on][portfolio-page.hero-section][populate]=*",
-  "populate[sections][on][portfolio-page.performance-section][populate]=*",
+  "populate[sections][on][portfolio-page.performance-section][populate][sdgCards][populate]=*",
   "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][metrics][populate]=*",
   "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][sdgs][populate]=*",
   "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][overview][populate]=*",
+  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][challenge][populate][text][populate]=*",
   "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][solution][populate]=*",
   "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][impactMetrics][populate]=*",
   "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][galleryImages][populate]=*",
-  "populate[sections][on][portfolio-page.projects-section][populate][projects][populate][caseStudy][populate][challenge][populate][text][populate]=*",
   "populate[sections][on][portfolio-page.nigeria-map-section][populate][states][populate]=*",
 ].join("&");
 
@@ -118,6 +161,7 @@ const HOME_POPULATE_QUERY = [
   // About Fund — 5-box bento grid + scrolling partners strip
   "populate[sections][on][home-page.about-fund-section][populate][bento_cards][populate]=*",
   "populate[sections][on][home-page.about-fund-section][populate][partners][populate]=*",
+  "populate[sections][on][home-page.about-fund-section][populate][cta][populate]=*",
   // Approach — scalar fields come automatically; only arrays need explicit populate
   "populate[sections][on][home-page.approach-section][populate][why_cef_cards][populate]=*",
   "populate[sections][on][home-page.approach-section][populate][fund_aims][populate]=*",
@@ -130,6 +174,7 @@ const HOME_POPULATE_QUERY = [
   "populate[sections][on][home-page.news-section][populate]=*",
   // Eligibility — sector carousel cards
   "populate[sections][on][home-page.eligibility-section][populate][sectors][populate]=*",
+  "populate[sections][on][home-page.eligibility-section][populate][cta][populate]=*",
 ].join("&");
 
 export function getHomePage(): Promise<HomePageData> {

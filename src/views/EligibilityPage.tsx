@@ -3,6 +3,7 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import { Leaf, ArrowUpRight, ShieldCheck, TrendingUp, CheckCircle2, Building2, FileText, Settings, BarChart } from "lucide-react";
 import Breadcrumbs from "../components/Breadcrumbs";
+import { getStrapiMediaURL } from "../lib/strapi";
 import type {
   EligibilityPageSection,
   EligibilityHeroSection,
@@ -56,7 +57,10 @@ const HeroSection = ({ cms }: { cms?: EligibilityHeroSection }) => {
   const badges = (cms?.heroBadges ?? []).map((b) => b.label);
 
   return (
-<section className="relative bg-[var(--color-background)] flex flex-col  lg:h-screen lg:min-h-[700px] lg:max-h-[1080px]">      {/* Top Tier: Split Hero */}
+    // min-h (not a fixed h-screen) so the bottom tier can never overflow the
+    // section and end up painted over by the next one.
+    <section className="relative bg-[var(--color-background)] flex flex-col lg:min-h-screen">
+      {/* Top Tier: Split Hero */}
       <div className="flex flex-col lg:flex-row w-full lg:flex-1 pt-24 lg:pt-28">
         {/* Left Column: Dark Background */}
         <div className="w-full lg:w-[55%] bg-[var(--color-background)] flex flex-col justify-center px-6 lg:pl-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] lg:pr-12 py-12 lg:py-0 relative z-20">
@@ -99,8 +103,11 @@ const HeroSection = ({ cms }: { cms?: EligibilityHeroSection }) => {
           <div className="absolute inset-0 bg-black/30 z-10" />
           <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-background)] via-transparent to-transparent z-10 lg:block hidden" />
           <img
-            src="https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2670&auto=format&fit=crop"
-            alt="Eligibility Criteria"
+            src={
+              getStrapiMediaURL(cms?.hero_image) ??
+              "https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2670&auto=format&fit=crop"
+            }
+            alt={cms?.hero_image_alt_text || "Eligibility Criteria"}
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
           />
@@ -182,6 +189,7 @@ const EligibilityStatementSection = ({ cms }: { cms?: EligibilityStatementSectio
               {cms?.body}
             </p>
 
+            {/* Parked for now — the CMS still supplies these labels; uncomment to restore.
             <div className="flex flex-col sm:flex-row gap-4">
               <a
                 href="#apply"
@@ -196,6 +204,7 @@ const EligibilityStatementSection = ({ cms }: { cms?: EligibilityStatementSectio
                 {cms?.ctaSecondary}
               </a>
             </div>
+            */}
           </motion.div>
         </div>
       </div>

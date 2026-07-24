@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react';
 import { motion } from 'framer-motion';
 import { Users, TrendingUp, Lightbulb, ArrowUpRight } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { getStrapiMediaURL } from '../lib/strapi';
 import type { DevelopmentImpactSection } from '../types/home';
 
 const containerVariants = {
@@ -62,7 +63,7 @@ export const DevelopmentImpact = ({ cms }: { cms?: DevelopmentImpactSection }) =
               <p className="text-lg text-white/70 font-light leading-relaxed mb-8 max-w-xl">
                 {cms?.body ?? "We deliver impact by displacing fossil fuels, driving local economic growth, and building sustainable communities. Guided by a strong Gender & Impact Lens, we empower women-led enterprises and ensure equitable job creation across the green economy."}
               </p>
-              <a href="#" className="text-sm font-medium text-white hover:text-white/80 transition-colors flex items-center gap-1">
+              <a href="/impact" className="text-sm font-medium text-white hover:text-white/80 transition-colors flex items-center gap-1">
                 {cms?.learn_more_link ?? "Learn More"} <ArrowUpRight className="w-4 h-4" />
               </a>
             </motion.div>
@@ -132,9 +133,12 @@ export const DevelopmentImpact = ({ cms }: { cms?: DevelopmentImpactSection }) =
           >
             <div className="absolute inset-0 bg-[rgb(0,133,202)]/40 mix-blend-multiply z-10 group-hover:bg-[rgb(0,133,202)]/60 transition-colors duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-background)] via-transparent to-transparent z-10" />
-            <img 
-              src="https://images.unsplash.com/photo-1545459720-aac8509eb02c?q=80&w=2574&auto=format&fit=crop" 
-              alt="Clean Energy Infrastructure" 
+            <img
+              src={
+                getStrapiMediaURL(cms?.infrastructure_image) ??
+                "https://images.unsplash.com/photo-1545459720-aac8509eb02c?q=80&w=2574&auto=format&fit=crop"
+              }
+              alt={cms?.infrastructure_image_alt_text || "Clean Energy Infrastructure"}
               className="w-full h-full object-cover scale-100 group-hover:scale-105 transition-transform duration-700 ease-out grayscale-[30%]"
               referrerPolicy="no-referrer"
             />
@@ -235,9 +239,12 @@ export const DevelopmentImpact = ({ cms }: { cms?: DevelopmentImpactSection }) =
           >
             <div className="absolute inset-0 bg-[rgb(0,133,202)]/40 mix-blend-multiply z-10 group-hover:bg-[rgb(0,133,202)]/60 transition-colors duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-background)] via-transparent to-transparent z-10" />
-            <img 
-              src="https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=2669&auto=format&fit=crop" 
-              alt="Diverse Professional Team" 
+            <img
+              src={
+                getStrapiMediaURL(cms?.team_image) ??
+                "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=2669&auto=format&fit=crop"
+              }
+              alt={cms?.team_image_alt_text || "Diverse Professional Team"}
               className="w-full h-full object-cover scale-100 group-hover:scale-105 transition-transform duration-700 ease-out grayscale-[30%]"
               referrerPolicy="no-referrer"
             />

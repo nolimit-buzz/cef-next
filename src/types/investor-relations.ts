@@ -1,10 +1,11 @@
 // Types for the Strapi `investor-relations` singleType (cms/src/api/investor-relations + cms/src/components/investor-relations-page/*).
 
-export interface StrapiMedia {
+// Media fields are plain Cloudinary URL strings; `shared.media` wrapper fields
+// arrive as `{ file: string }` (see cms/src/components/shared/media.json).
+
+export interface SharedMedia {
   id: number;
-  url: string;
-  name: string;
-  alternativeText?: string | null;
+  file: string | null;
 }
 
 export interface CredentialItem {
@@ -37,7 +38,7 @@ export interface InvestorTypeItem {
   tag: string;
   title: string;
   description: string;
-  image: string;
+  image?: SharedMedia | null;
 }
 
 export interface DistributionRecordItem {
@@ -52,7 +53,7 @@ export interface InvestorHoldingItem {
   id: number;
   name: string;
   holding: string;
-  logo?: StrapiMedia | null;
+  logo?: string | null;
 }
 
 export interface DownloadDocumentItem {
@@ -82,6 +83,10 @@ export interface HeroSection {
   headingSecondary: string;
   subheadline: string;
   credentials: CredentialItem[];
+  heroVideo?: SharedMedia | null;
+  heroPoster?: SharedMedia | null;
+  heroFallbackImage?: SharedMedia | null;
+  heroFallbackImage_alt_text?: string;
 }
 
 export interface StickyNavSection {

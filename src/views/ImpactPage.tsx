@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "../lib/utils";
+import { getStrapiMediaURL } from "../lib/strapi";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { SDGMap } from "../components/SDGMap";
 import type {
@@ -80,9 +81,13 @@ const HeroSection = ({
   features,
   statLabel,
   statValue,
+  heroImage,
 }: HeroSectionData) => {
   return (
-<section className="relative bg-[var(--color-background)] flex flex-col  lg:h-screen lg:min-h-[700px] lg:max-h-[1080px]">      {/* Top Tier: Split Hero */}
+    // min-h (not a fixed h-screen) so the bottom tier can never overflow the
+    // section and end up painted over by the next one.
+    <section className="relative bg-[var(--color-background)] flex flex-col lg:min-h-screen">
+      {/* Top Tier: Split Hero */}
       <div className="flex flex-col lg:flex-row w-full lg:flex-1 pt-24 lg:pt-28">
         {/* Left Column: Dark Background */}
         <div className="w-full lg:w-[55%] bg-[var(--color-background)] flex flex-col justify-center px-6 lg:pl-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] lg:pr-12 py-12 lg:py-0 relative z-20">
@@ -121,7 +126,10 @@ const HeroSection = ({
           <div className="absolute inset-0 bg-black/30 z-10" />
           <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-background)] via-transparent to-transparent z-10 lg:block hidden" />
           <img
-            src="https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?q=80&w=2670&auto=format&fit=crop"
+            src={
+              getStrapiMediaURL(heroImage?.file) ??
+              "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?q=80&w=2670&auto=format&fit=crop"
+            }
             alt="Clean Energy Impact"
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
@@ -130,7 +138,7 @@ const HeroSection = ({
       </div>
 
       {/* Bottom Tier: 3-Column Content Grid */}
-      <div className="w-full grid grid-cols-1 lg:grid-cols-4 z-20 relative shrink-0 mb-40">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-4 z-20 relative shrink-0">
         {/* Column 1: Sub-headline */}
         <div className="lg:col-span-2 bg-white p-8 lg:py-12 xl:py-14 lg:pl-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] lg:pr-12 border-t border-r border-gray-200 flex items-center">
           <motion.p
@@ -209,6 +217,7 @@ const ImpactStatementSection = ({
               {body}
             </p>
 
+            {/* Parked for now — the CMS still supplies these labels; uncomment to restore.
             <div className="flex flex-col sm:flex-row gap-4">
               <a
                 href="#report"
@@ -223,6 +232,7 @@ const ImpactStatementSection = ({
                 {ctaSecondary}
               </a>
             </div>
+            */}
           </motion.div>
         </div>
       </div>
@@ -237,7 +247,11 @@ const ImpactBodySection = ({
   body,
   methodologyLink,
   stats,
+  accentImage,
 }: ImpactBodySectionData) => {
+  const accentImageUrl =
+    getStrapiMediaURL(accentImage?.file) ??
+    "https://images.unsplash.com/photo-1545459720-aac8509eb02c?q=80&w=1000&auto=format&fit=crop";
   return (
     <section className="py-24 lg:py-32 bg-white text-[#0A1224] relative z-20">
       <div className="max-w-7xl mx-auto px-6">
@@ -269,12 +283,14 @@ const ImpactBodySection = ({
             <p className="text-lg text-gray-600 leading-relaxed mb-8">
               {body}
             </p>
+            {/* Parked for now — the CMS still supplies this label; uncomment to restore.
             <a
               href="#methodology"
               className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-[var(--color-accent)] hover:text-blue-800 transition-colors border-b-2 border-transparent hover:border-blue-800 pb-1"
             >
               {methodologyLink} <ArrowUpRight className="w-4 h-4" />
             </a>
+            */}
           </motion.div>
         </div>
 
@@ -296,7 +312,10 @@ const ImpactBodySection = ({
                   variants={itemVariants}
                   className="group relative bg-[var(--color-background)] border border-[#1A2644] p-8 flex flex-col justify-between min-h-[260px] overflow-hidden transition-all duration-500 hover:border-blue-400/60 hover:-translate-y-0.5"
                 >
-                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1545459720-aac8509eb02c?q=80&w=1000&auto=format&fit=crop')] opacity-10 bg-cover mix-blend-overlay pointer-events-none" />
+                  <div
+                    className="absolute inset-0 opacity-10 bg-cover mix-blend-overlay pointer-events-none"
+                    style={{ backgroundImage: `url('${accentImageUrl}')` }}
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-background)] to-transparent opacity-90 z-0" />
                   <div className="relative z-10 flex flex-col h-full justify-between">
                     <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50 mb-6">
@@ -426,13 +445,16 @@ const CorePillarsSection = ({ heading, description, pillars }: CorePillarsSectio
   );
 };
 
-const CaseStudySpotlight = ({ badge, heading, body, stats, ctaLabel }: CaseStudySpotlightSectionData) => {
+const CaseStudySpotlight = ({ badge, heading, body, stats, ctaLabel, spotlightImage }: CaseStudySpotlightSectionData) => {
   return (
     <section className="bg-[#050A15] border-t border-white/10 text-white flex flex-col lg:flex-row min-h-[600px] relative z-20">
       {/* Left Image (50%) */}
       <div className="w-full lg:w-1/2 min-h-[400px] lg:min-h-full relative overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1584281720894-3ee1d5750fc2?q=80&w=2000&auto=format&fit=crop"
+          src={
+            getStrapiMediaURL(spotlightImage?.file) ??
+            "https://images.unsplash.com/photo-1584281720894-3ee1d5750fc2?q=80&w=2000&auto=format&fit=crop"
+          }
           alt="Solar impact on community"
           className="absolute inset-0 w-full h-full object-cover"
           referrerPolicy="no-referrer"

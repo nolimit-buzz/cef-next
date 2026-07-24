@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   motion,
   AnimatePresence,
@@ -19,6 +19,7 @@ import { cn } from "../lib/utils";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { portfolioData } from "../data/projects";
+import { useRouter } from "next/navigation";
 
 // ─── Animation Variants ───────────────────────────────────────────────────────
 
@@ -38,6 +39,8 @@ const staggerContainer = {
     transition: { staggerChildren: 0.1 },
   },
 };
+
+
 
 const megaMenuContainer = {
   hidden: { opacity: 0, y: -10, pointerEvents: "none" as const },
@@ -155,7 +158,10 @@ export const Navbar = () => {
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center z-50 shrink-0"
+          className={cn(
+            "flex items-center z-50 shrink-0",
+            mobileMenuOpen && "invisible lg:visible",
+          )}
           onClick={closeMegaMenu}
         >
           <img
@@ -173,11 +179,10 @@ export const Navbar = () => {
         {/* Desktop Nav — Center: lg (1024px+) only — prevents cramping on tablets */}
         <div className="hidden lg:flex items-center justify-center gap-8 flex-1">
 
-          {/* About — hover on desktop, click-toggle on tablet */}
+          {/* About — plain link, no mega menu; hovering closes any open tray */}
           <div
             className="group h-full flex items-center"
-            onMouseEnter={() => setActiveMegaMenu("about")}
-            onClick={() => toggleMegaMenu("about")}
+            onMouseEnter={closeMegaMenu}
           >
             {/* FIX 3: Added py-3 to ensure ≥44px tap target height */}
             <Link
@@ -355,6 +360,7 @@ export const Navbar = () => {
           className={cn(
             "lg:hidden z-50 transition-colors p-2",
             useDarkText ? "text-black" : "text-white",
+            mobileMenuOpen && "fixed top-6 right-6 text-white",
           )}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
@@ -374,7 +380,8 @@ export const Navbar = () => {
             className="absolute left-0 w-full bg-white border-t border-gray-100 shadow-xl z-[100] top-full"
           >
 
-            {/* About */}
+            {/* About — unreachable: the About nav item no longer opens a tray.
+                Kept so the panel can be restored without rebuilding it. */}
             {activeMegaMenu === "about" && (
               <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-4 gap-12 text-left">
                 <div className="col-span-1 lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -660,7 +667,7 @@ export const Navbar = () => {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-2xl font-medium tracking-widest uppercase text-white hover:text-[var(--color-accent-green)] transition-colors"
+                className="text-base md:text-xl font-medium tracking-widest uppercase text-white hover:text-[var(--color-accent-green)] transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.label}
@@ -691,7 +698,7 @@ export const Navbar = () => {
 
             <Link
               href="/contact"
-              className="text-2xl font-medium tracking-widest uppercase text-white hover:text-[var(--color-accent-green)] transition-colors"
+              className="text-base md:text-xl font-medium tracking-widest uppercase text-white hover:text-[var(--color-accent-green)] transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               Contact
@@ -706,10 +713,6 @@ export const Navbar = () => {
                 className="text-white bg-white/10 p-3 border border-white hover:bg-white/20 transition-colors"
               >
                 <Search className="w-5 h-5" />
-              </button>
-              {/* FIX 5: bg-electric-blue now resolves from --color-electric-blue token */}
-              <button className="flex items-center gap-2 px-6 py-3 bg-electric-blue text-black border-2 border-black font-bold shadow-[4px_4px_0_0_#ffffff]">
-                <Lock className="w-4 h-4" /> Login
               </button>
             </div>
           </motion.div>
@@ -799,6 +802,7 @@ export const Navbar = () => {
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 
 import type { HeroSection, HeroStatItem } from "../types/home";
+import { getStrapiMediaURL } from "../lib/strapi";
 
 const DEFAULT_SLIDES = [
   {
@@ -842,6 +846,7 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
   const { scrollY } = useScroll();
   const heroOpacity = useTransform(scrollY, [0, 600], [1, 0.25]);
   const heroY = useTransform(scrollY, [0, 600], [0, 100]);
+  const router = useRouter();
 
   return (
     <section className="relative h-[100dvh] min-h-[600px] lg:min-h-[800px] flex flex-col justify-end pb-16 overflow-hidden bg-obsidian text-white ">
@@ -854,10 +859,19 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
           loop
           muted
           playsInline
-          poster="https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2672&auto=format&fit=crop"
+          poster={
+            getStrapiMediaURL(hero?.poster_image) ??
+            "https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=2672&auto=format&fit=crop"
+          }
           className="absolute inset-0 w-full h-full object-cover -z-10"
         >
-          <source src="https://nolimitlms.com/wp-content/uploads/2026/04/solar_p.mp4" type="video/mp4" />
+          <source
+            src={
+              getStrapiMediaURL(hero?.hero_video) ??
+              "https://nolimitlms.com/wp-content/uploads/2026/04/solar_p.mp4"
+            }
+            type="video/mp4"
+          />
         </video>
         <div className="absolute inset-0 bg-[#050A15]/80 z-10" />
       </motion.div>
@@ -865,7 +879,7 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
       {/* FIX 6: Replaced max-w-7xl mx-auto px-6 with container-responsive */}
       <motion.div
         style={{ opacity: heroOpacity, y: heroY }}
-        className="relative z-20 w-full container-responsive flex flex-col xl:flex-row justify-between xl:items-center items-start gap-12 mb-12"
+        className="relative z-20 w-full container-responsive flex flex-col xl:flex-row justify-between xl:items-center items-start gap-8 xl:gap-12 mb-8 lg:mb-12"
       >
         {/* Left Content */}
         <motion.div
@@ -877,36 +891,37 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
           {/* FIX 7: Replaced raw responsive font classes with text-display utility */}
           <motion.h1
             variants={fadeUp}
-            className="text-display font-medium text-white mb-6"
+            className="text-display font-medium text-white mb-4 md:mb-6"
           >
             {hero?.headline ?? "Powering a Resilient Future"}
           </motion.h1>
 
           <motion.p
             variants={fadeUp}
-            className="text-body text-white/80 max-w-xl mb-10 leading-relaxed font-light md:text-xl"
+            className="text-body text-white/80 max-w-xl mb-6 md:mb-10 leading-relaxed font-light md:text-xl"
           >
             {hero?.description ?? "Providing local currency funding to climate-aligned, sustainable, and inclusive clean energy infrastructure across Nigeria."}
           </motion.p>
 
           <motion.div
             variants={fadeUp}
-            className="flex flex-col sm:flex-row gap-8 items-start sm:items-center"
+            className="flex flex-col sm:flex-row gap-4 sm:gap-8 items-start sm:items-center"
           >
             <motion.button
+            onClick={()=> router.push('/investor-relations')}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="bg-white text-black font-bold px-8 py-4 rounded-sm text-sm transition-colors flex items-center justify-center gap-2 shadow-lg hover:bg-[var(--color-accent-green)] hover:text-white"
             >
-              {hero?.primary_cta ?? "Explore Funding Options"} <ArrowUpRight className="w-4 h-4" />
+              {hero?.primary_cta ?? "View Investor Relations"} <ArrowUpRight className="w-4 h-4" />
             </motion.button>
-            <motion.button
+            {/* <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="bg-transparent text-white px-8 py-4 rounded-sm text-sm font-medium transition-colors flex items-center justify-center gap-2 hover:text-white/80"
             >
               {hero?.secondary_cta ?? "View Investor Relations"} <ArrowUpRight className="w-4 h-4" />
-            </motion.button>
+            </motion.button> */}
           </motion.div>
         </motion.div>
 
@@ -916,7 +931,7 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.8 }}
-          className="w-full sm:w-[300px] xl:w-80 h-[160px] bg-obsidian/30 backdrop-blur-sm border border-white/20 border-l-2 border-l-electric-blue relative rounded-sm mt-8 xl:mt-0"
+          className="w-full sm:w-[300px] xl:w-80 h-[140px] sm:h-[160px] bg-obsidian/30 backdrop-blur-sm border border-white/20 border-l-2 border-l-electric-blue relative rounded-sm"
         >
           <AnimatePresence mode="wait">
             <motion.div

@@ -74,6 +74,18 @@ export interface HeroSection {
   down_text: string;
   sliding_card: SlidingCard[];
   stats?: HeroStatItem[];
+  hero_video?: string | null;
+  poster_image?: string | null;
+  poster_image_alt_text?: string;
+}
+
+// Shared CTA component: a label plus an optional document to download on click.
+// The media field arrives as an object when populated, but this CMS also stores
+// some media as plain URL strings — handle both.
+export interface CtaItem {
+  id?: number;
+  cta_text?: string;
+  cta_document?: { url?: string; name?: string } | string | null;
 }
 
 export interface AboutFundSection {
@@ -81,8 +93,7 @@ export interface AboutFundSection {
   id: number;
   eyebrow: string;
   headline: string;
-  primary_cta: string;
-  secondary_cta: string;
+  cta?: CtaItem[];
   strategic_partners_label: string;
   bento_cards: BentoCard[];
   partners?: PartnerItem[];
@@ -109,6 +120,20 @@ export interface ApproachSection {
   how_cef_steps: HowCefStep[];
 }
 
+export interface PortfolioCardItem {
+  id: number;
+  project_id: string | null;
+  name: string;
+  sector: string | null;
+  location: string | null;
+  status: string | null;
+  description: string | null;
+  metrics: { label: string; value: string }[] | null;
+  sdgs: { id: number; color: string; label: string }[] | null;
+  image?: string | null;
+  image_alt_text?: string;
+}
+
 export interface PortfolioSection {
   __component: "home-page.portfolio-section";
   id: number;
@@ -123,6 +148,7 @@ export interface PortfolioSection {
   sdg_impact_label: string | null;
   case_study_link: string | null;
   view_all_link: string | null;
+  cards?: PortfolioCardItem[];
 }
 
 export interface DevelopmentImpactSection {
@@ -134,6 +160,10 @@ export interface DevelopmentImpactSection {
   body: string;
   learn_more_link: string;
   impact_cards: ImpactCard[];
+  infrastructure_image?: string | null;
+  infrastructure_image_alt_text?: string;
+  team_image?: string | null;
+  team_image_alt_text?: string;
 }
 
 export interface NewsSection {
@@ -153,7 +183,7 @@ export interface EligibilitySection {
   headline_part1: string;
   headline_part2: string | null;
   body: string;
-  cta_button: string;
+  cta?: CtaItem;
   card_default_label: string;
   focus_label: string;
   ticket_size_label: string;
