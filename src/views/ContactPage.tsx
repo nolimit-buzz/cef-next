@@ -1,13 +1,24 @@
 "use client";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { motion } from "framer-motion";
-import { Mail, MapPin, Building2, TrendingUp, Handshake, ArrowUpRight } from "lucide-react";
+import {
+  Mail,
+  MapPin,
+  Building2,
+  TrendingUp,
+  Handshake,
+  ArrowUpRight,
+} from "lucide-react";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { cn } from "../lib/utils";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" as const } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: "easeOut" as const },
+  },
 };
 
 const staggerContainer = {
@@ -104,30 +115,55 @@ const HeroSection = () => {
             variants={fadeUp}
             className="text-[#0A1224] text-lg leading-relaxed font-light"
           >
-            Connect directly with our specialized teams across Nigeria. Our management office in Lagos serves as the central hub for investor relations and national project coordination.
+            Connect directly with our specialized teams across Nigeria. Our Lagos management office serves as the central hub for investor relations and national project coordination. 
           </motion.p>
         </div>
 
         {/* Column 2: Brand Accent Block */}
         <div className="bg-[#0094da] p-8 lg:py-12 xl:py-14 lg:px-10 flex flex-col justify-center gap-6 border-t border-white/10">
-          <motion.div initial="hidden" animate="visible" variants={fadeUp} className="flex items-center gap-4">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
+            className="flex items-center gap-4"
+          >
             <Building2 className="w-8 h-8 text-white shrink-0" />
-            <span className="text-sm xl:text-base font-medium text-white uppercase tracking-wider leading-snug">Developer Inquiries<br />& Project Funding</span>
+            <span className="text-sm xl:text-base font-medium text-white uppercase tracking-wider leading-snug">
+              Developer Inquiries
+              <br />& Project Funding
+            </span>
           </motion.div>
           <div className="w-full h-px bg-white/20" />
-          <motion.div initial="hidden" animate="visible" variants={fadeUp} className="flex items-center gap-4">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
+            className="flex items-center gap-4"
+          >
             <TrendingUp className="w-8 h-8 text-white shrink-0" />
-            <span className="text-sm xl:text-base font-medium text-white uppercase tracking-wider leading-snug">Investor Relations<br />& Institutional Capital</span>
+            <span className="text-sm xl:text-base font-medium text-white uppercase tracking-wider leading-snug">
+              Investor Relations
+              <br />& Institutional Capital
+            </span>
           </motion.div>
         </div>
 
         {/* Column 3: Light Block */}
         <div className="bg-[#50B848] p-8 lg:py-12 xl:py-14 lg:pr-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] lg:pl-10 flex items-center border-t border-[#50B848]">
-          <motion.div initial="hidden" animate="visible" variants={fadeUp} className="flex items-center gap-4">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
+            className="flex items-center gap-4"
+          >
             <Handshake className="w-10 h-10 text-white shrink-0" />
             <div className="flex flex-col">
-              <span className="text-xs xl:text-sm font-bold text-white/80 uppercase tracking-widest mb-1">Media & Partnerships</span>
-              <span className="text-lg xl:text-xl font-bold text-white uppercase tracking-wide">Strategic Synergy</span>
+              <span className="text-xs xl:text-sm font-bold text-white/80 uppercase tracking-widest mb-1">
+                Media & Partnerships
+              </span>
+              {/* <span className="text-lg xl:text-xl font-bold text-white uppercase tracking-wide">
+                Strategic Synergy
+              </span> */}
             </div>
           </motion.div>
         </div>
@@ -149,7 +185,8 @@ const ContactStatementSection = () => {
             className="lg:w-1/2"
           >
             <h2 className="text-[32px] md:text-4xl lg:text-[40px] font-medium leading-[1.15] tracking-tight mb-8">
-              <span className="text-[#0A1224]">Let&apos;s Connect and</span><br />
+              <span className="text-[#0A1224]">Let&apos;s Connect and</span>
+              <br />
               <span className="text-gray-400">Scale Impact.</span>
             </h2>
           </motion.div>
@@ -162,7 +199,9 @@ const ContactStatementSection = () => {
             className="lg:w-1/2"
           >
             <p className="text-lg md:text-xl text-gray-600 leading-relaxed font-light mb-10">
-              Whether you are an institutional investor exploring our fund, a developer with pipeline projects, or seeking press resources, our team is ready to connect and explore strategic engagements.
+              Whether you&apos;re exploring our fund as an institutional
+              investor, bringing pipeline projects as a developer, or seeking
+              press resources, we&apos;re ready to connect.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -200,7 +239,9 @@ const ContactBodySection = () => {
   });
 
   const handleChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+    event: ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     const { name, value } = event.target;
 
@@ -224,12 +265,14 @@ const ContactBodySection = () => {
         body: JSON.stringify(formData),
       });
 
-      const payload = (await response.json().catch(() => null)) as
-        | { message?: string }
-        | null;
+      const payload = (await response.json().catch(() => null)) as {
+        message?: string;
+      } | null;
 
       if (!response.ok) {
-        throw new Error(payload?.message ?? "We could not send your inquiry right now.");
+        throw new Error(
+          payload?.message ?? "We could not send your inquiry right now.",
+        );
       }
 
       setFormData({
@@ -241,11 +284,15 @@ const ContactBodySection = () => {
       });
       setSubmission({
         status: "success",
-        message: payload?.message ?? "Thanks for reaching out. We will get back to you shortly.",
+        message:
+          payload?.message ??
+          "Thanks for reaching out. We will get back to you shortly.",
       });
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "Something went wrong while sending your message.";
+        error instanceof Error
+          ? error.message
+          : "Something went wrong while sending your message.";
 
       setSubmission({
         status: "error",
@@ -255,7 +302,10 @@ const ContactBodySection = () => {
   };
 
   return (
-    <section id="form" className="py-24 lg:py-32 bg-white text-[#0A1224] relative z-20">
+    <section
+      id="form"
+      className="py-24 lg:py-32 bg-white text-[#0A1224] relative z-20"
+    >
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
           <motion.div
@@ -276,7 +326,12 @@ const ContactBodySection = () => {
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-600 mb-2 uppercase tracking-wider text-xs">First Name</label>
+                  <label
+                    htmlFor="firstName"
+                    className="block text-sm font-medium text-gray-600 mb-2 uppercase tracking-wider text-xs"
+                  >
+                    First Name
+                  </label>
                   <input
                     type="text"
                     id="firstName"
@@ -289,7 +344,12 @@ const ContactBodySection = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-600 mb-2 uppercase tracking-wider text-xs">Last Name</label>
+                  <label
+                    htmlFor="lastName"
+                    className="block text-sm font-medium text-gray-600 mb-2 uppercase tracking-wider text-xs"
+                  >
+                    Last Name
+                  </label>
                   <input
                     type="text"
                     id="lastName"
@@ -304,7 +364,12 @@ const ContactBodySection = () => {
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-600 mb-2 uppercase tracking-wider text-xs">Work Email</label>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-600 mb-2 uppercase tracking-wider text-xs"
+                >
+                  Work Email
+                </label>
                 <input
                   type="email"
                   id="email"
@@ -318,7 +383,12 @@ const ContactBodySection = () => {
               </div>
 
               <div>
-                <label htmlFor="department" className="block text-sm font-medium text-gray-600 mb-2 uppercase tracking-wider text-xs">Inquiry Type</label>
+                <label
+                  htmlFor="department"
+                  className="block text-sm font-medium text-gray-600 mb-2 uppercase tracking-wider text-xs"
+                >
+                  Inquiry Type
+                </label>
                 <select
                   id="department"
                   name="department"
@@ -334,7 +404,12 @@ const ContactBodySection = () => {
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-600 mb-2 uppercase tracking-wider text-xs">Message</label>
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium text-gray-600 mb-2 uppercase tracking-wider text-xs"
+                >
+                  Message
+                </label>
                 <textarea
                   id="message"
                   name="message"
@@ -352,7 +427,10 @@ const ContactBodySection = () => {
                 disabled={submission.status === "loading"}
                 className="w-full bg-[#0A1224] text-white hover:bg-blue-900 disabled:opacity-70 disabled:cursor-not-allowed px-8 py-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 mt-4"
               >
-                {submission.status === "loading" ? "Sending..." : "Submit Inquiry"} <ArrowUpRight className="w-4 h-4" />
+                {submission.status === "loading"
+                  ? "Sending..."
+                  : "Submit Inquiry"}{" "}
+                <ArrowUpRight className="w-4 h-4" />
               </button>
 
               <div
@@ -384,7 +462,9 @@ const ContactBodySection = () => {
                 Our Offices.
               </h2>
               <p className="text-gray-600 leading-relaxed text-lg mb-10">
-                Operating directly from Nigeria&apos;s commercial capital to efficiently manage, evaluate, and fund clean infrastructure nationwide.
+                Operating from the heart of Nigeria&apos;s commercial capital, we
+                drive the efficient management, evaluation, and funding of clean
+                infrastructure nationwide.
               </p>
 
               {/* Lagos Office */}
@@ -394,7 +474,8 @@ const ContactBodySection = () => {
                   Lagos Hub
                 </h3>
                 <address className="not-italic text-gray-600 leading-relaxed pl-7">
-                  Plot 1610 Adeola Hopewell street,<br />
+                  Plot 1610 Adeola Hopewell street,
+                  <br />
                   Victoria Island
                 </address>
               </div>
@@ -410,8 +491,15 @@ const ContactBodySection = () => {
                     <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center mb-4 shadow-sm border border-gray-100">
                       <TrendingUp className="w-5 h-5 text-[#0094da]" />
                     </div>
-                    <h4 className="font-bold text-[#0A1224] mb-2">Investor Relations</h4>
-                    <a href="mailto:investors@cef.ng" className="text-blue-600 hover:text-blue-800 transition-colors text-sm font-medium">investors@cef.ng</a>
+                    <h4 className="font-bold text-[#0A1224] mb-2">
+                      Investor Relations
+                    </h4>
+                    <a
+                      href="mailto:support@cleanenergyfund.ng"
+                      className="text-blue-600 hover:text-blue-800 transition-colors text-sm font-medium"
+                    >
+                      support@cleanenergyfund.ng
+                    </a>
                   </div>
 
                   {/* Contact Card 2 */}
@@ -419,8 +507,13 @@ const ContactBodySection = () => {
                     <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center mb-4 shadow-sm border border-gray-100">
                       <Building2 className="w-5 h-5 text-[#50B848]" />
                     </div>
-                    <h4 className="font-bold text-[#0A1224] mb-2">Project Funding</h4>
-                    <a href="mailto:projects@cef.ng" className="text-blue-600 hover:text-blue-800 transition-colors text-sm font-medium">projects@cef.ng</a>
+                    <h4 className="font-bold text-[#0A1224] mb-2">
+                      Project Funding
+                    </h4>
+                    <a
+                      href="mailto:"
+                      className="text-blue-600 hover:text-blue-800 transition-colors text-sm font-medium"
+                    ></a>
                   </div>
                 </div>
               </div>
