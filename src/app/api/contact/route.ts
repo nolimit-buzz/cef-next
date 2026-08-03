@@ -1,5 +1,5 @@
-import { Resend } from "resend";
 import { NextResponse } from "next/server";
+import { escapeHtml, sendTransactionalEmail } from "../../../lib/email";
 
 export const runtime = "nodejs";
 
@@ -10,24 +10,6 @@ type ContactPayload = {
   department?: string;
   message?: string;
 };
-
-const CONTACT_TO =
-  process.env.CONTACT_TO_EMAIL ?? "projects@cleanenergyfund.ng";
-
-const CONTACT_FROM =
-  process.env.CONTACT_FROM_EMAIL ?? "onboarding@resend.dev";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-
-const escapeHtml = (value: string) =>
-  value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-
 
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as ContactPayload | null;
@@ -51,7 +33,7 @@ export async function POST(request: Request) {
   }
 
 
-  if (!process.env.RESEND_API_KEY) {
+  if (!process.env.BREVO_API_KEY) {
     return NextResponse.json(
       {
         message: "Email service is not configured.",
@@ -106,59 +88,36 @@ export async function POST(request: Request) {
   `;
 
 
-  try {
-    const { data, error } = await resend.emails.send({
-      from: `Clean Energy Fund <${CONTACT_FROM}>`,
-      to: CONTACT_TO,
-      replyTo: email,
-      subject,
-      text,
-      html,
-    });
+  const result = await sendTransactionalEmail({
+    subject,
+    text,
+    html,
+    replyTo: email,
+  });
 
 
-    if (error) {
-      console.error("Resend error:", error);
-
-      return NextResponse.json(
-        {
-          message: `Email delivery failed: ${error.message}`,
-        },
-        {
-          status: 502,
-        },
-      );
-    }
-
-
-    console.log("Email sent successfully:", data?.id);
-
-
+  if (!result.ok) {
     return NextResponse.json(
       {
-        message:
-          "Thanks for reaching out. Your inquiry has been sent successfully.",
-      },
-      {
-        status: 200,
-      },
-    );
-
-  } catch (error) {
-    console.error("Email sending failed:", error);
-
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "Unable to send email.";
-
-    return NextResponse.json(
-      {
-        message: `Email delivery failed: ${errorMessage}`,
+        message: "Email delivery failed. Please try again.",
       },
       {
         status: 502,
       },
     );
   }
+
+
+  console.log("Email sent successfully:", result.id);
+
+
+  return NextResponse.json(
+    {
+      message:
+        "Thanks for reaching out. Your inquiry has been sent successfully.",
+    },
+    {
+      status: 200,
+    },
+  );
 }
