@@ -16,6 +16,53 @@ export const escapeHtml = (value: string) =>
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 
+type BrevoSender = { email?: string; active?: boolean };
+
+type BrevoDomain = { domain_name?: string; authenticated?: boolean };
+
+// Brevo accepts POST /v3/smtp/email and returns a messageId *before* validating
+// the sender, then rejects asynchronously. Without this check an unverified
+// sender looks like a successful send. Advisory only — we still attempt the send.
+let senderCheck: Promise<boolean> | null = null;
+
+async function isSenderUsable(apiKey: string): Promise<boolean> {
+  const headers = { "api-key": apiKey, accept: "application/json" };
+
+  try {
+    const [sendersRes, domainsRes] = await Promise.all([
+      fetch("https://api.brevo.com/v3/senders", { headers }),
+      fetch("https://api.brevo.com/v3/senders/domains", { headers }),
+    ]);
+
+    if (!sendersRes.ok || !domainsRes.ok) {
+      return true;
+    }
+
+    const senders = (await sendersRes.json()) as { senders?: BrevoSender[] };
+    const domains = (await domainsRes.json()) as { domains?: BrevoDomain[] };
+
+    const from = FROM_EMAIL.toLowerCase();
+    const fromDomain = from.split("@")[1] ?? "";
+
+    const verifiedSender = senders.senders?.some(
+      (sender) => sender.active && sender.email?.toLowerCase() === from,
+    );
+
+    const authenticatedDomain = domains.domains?.some(
+      (domain) =>
+        domain.authenticated &&
+        domain.domain_name?.toLowerCase() === fromDomain,
+    );
+
+    return Boolean(verifiedSender || authenticatedDomain);
+  } catch (error) {
+    // A flaky check must never block real mail.
+    console.error("Brevo sender check failed:", error);
+
+    return true;
+  }
+}
+
 type SendArgs = {
   subject: string;
   text: string;
@@ -37,6 +84,14 @@ export async function sendTransactionalEmail({
 
   if (!apiKey) {
     return { ok: false, error: "not-configured" };
+  }
+
+  senderCheck ??= isSenderUsable(apiKey);
+
+  if (!(await senderCheck)) {
+    console.error(
+      `Brevo sender "${FROM_EMAIL}" is not verified and no authenticated domain covers it — mail will be rejected. Verify it at https://app.brevo.com/senders`,
+    );
   }
 
   try {
