@@ -1,3 +1,4 @@
+import type { GlobalData } from "../types/global";
 import type { FundPageData } from "../types/fund";
 import type { AboutPageData } from "../types/about";
 import type { EligibilityPageData } from "../types/eligibility";
@@ -214,4 +215,22 @@ const RESOURCES_POPULATE_QUERY = [
 
 export function getResourcesPage(): Promise<ResourcesPageData> {
   return fetchAPI<ResourcesPageData>("/resources-page", RESOURCES_POPULATE_QUERY);
+}
+
+const GLOBAL_POPULATE_QUERY = [
+  "populate[social_links][populate]=*",
+  "populate[footer_links][populate][links][populate]=*",
+  "populate[partner_cta_cards][populate]=*",
+].join("&");
+
+// Global backs the layout, so it is rendered on every route. Unlike the page
+// fetchers we swallow failures here: a CMS outage should fall back to the
+// hardcoded defaults in Footer rather than 500 the entire site.
+export async function getGlobal(): Promise<GlobalData | null> {
+  try {
+    return await fetchAPI<GlobalData>("/global", GLOBAL_POPULATE_QUERY);
+  } catch (error) {
+    console.error("Failed to load global settings:", error);
+    return null;
+  }
 }

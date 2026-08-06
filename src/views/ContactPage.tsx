@@ -11,6 +11,9 @@ import {
 } from "lucide-react";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { cn } from "../lib/utils";
+import type { GlobalData } from "../types/global";
+
+const DEFAULT_EMAIL = "support@cleanenergyfund.ng";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -43,12 +46,12 @@ type SubmissionState =
   | { status: "success"; message: string }
   | { status: "error"; message: string };
 
-export const ContactPage = () => {
+export const ContactPage = ({ global }: { global?: GlobalData | null }) => {
   return (
     <main className="bg-white">
       <HeroSection />
       <ContactStatementSection />
-      <ContactBodySection />
+      <ContactBodySection global={global} />
     </main>
   );
 };
@@ -225,7 +228,12 @@ const ContactStatementSection = () => {
   );
 };
 
-const ContactBodySection = () => {
+const ContactBodySection = ({ global }: { global?: GlobalData | null }) => {
+  const investorEmail =
+    global?.investor_email || global?.support_email || DEFAULT_EMAIL;
+  const projectFundingEmail =
+    global?.project_funding_email || global?.contact_email || DEFAULT_EMAIL;
+
   const [formData, setFormData] = useState<ContactFormState>({
     firstName: "",
     lastName: "",
@@ -495,10 +503,10 @@ const ContactBodySection = () => {
                       Investor Relations
                     </h4>
                     <a
-                      href="mailto:support@cleanenergyfund.ng"
+                      href={`mailto:${investorEmail}`}
                       className="text-blue-600 hover:text-blue-800 transition-colors text-sm font-medium"
                     >
-                      support@cleanenergyfund.ng
+                      {investorEmail}
                     </a>
                   </div>
 
@@ -511,9 +519,11 @@ const ContactBodySection = () => {
                       Project Funding
                     </h4>
                     <a
-                      href="mailto:"
+                      href={`mailto:${projectFundingEmail}`}
                       className="text-blue-600 hover:text-blue-800 transition-colors text-sm font-medium"
-                    ></a>
+                    >
+                      {projectFundingEmail}
+                    </a>
                   </div>
                 </div>
               </div>

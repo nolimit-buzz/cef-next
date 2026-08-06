@@ -184,13 +184,14 @@ const HeroSection = ({ data }: { data?: HeroSectionData }) => {
               }
               className="w-full h-full object-cover motion-reduce:hidden"
             >
-              <source
-                src={
-                  getStrapiMediaURL(data?.heroVideo?.file) ??
-                  "https://cdn.coverr.co/videos/coverr-office-buildings-in-the-city-4344/1080p.mp4"
-                }
-                type="video/mp4"
-              />
+              {/* No stock-footage fallback: the poster image stands in when the
+                  CMS has no hero video. */}
+              {getStrapiMediaURL(data?.heroVideo?.file) && (
+                <source
+                  src={getStrapiMediaURL(data?.heroVideo?.file)}
+                  type="video/mp4"
+                />
+              )}
             </video>
             <img
               src={
@@ -827,7 +828,9 @@ const DownloadsSection = ({ data }: { data?: DownloadsSectionData }) => {
             {categories.map((category, idx) => {
               const isExpanded = expandedCategory === category.categoryName;
               const isViewMore = viewMoreCategories[category.categoryName];
-              const docs = category.documents ?? [];
+              // Documents with no uploaded file used to render as href="#"
+              // download cards that did nothing when clicked. Drop them.
+              const docs = (category.documents ?? []).filter((doc) => doc.fileUrl);
               const visibleDocs = isViewMore ? docs : docs.slice(0, 3);
               const hasMore = docs.length > 3;
 
@@ -872,9 +875,9 @@ const DownloadsSection = ({ data }: { data?: DownloadsSectionData }) => {
                                   animate={{ opacity: 1, scale: 1 }}
                                   exit={{ opacity: 0, scale: 0.95 }}
                                   transition={{ duration: 0.3 }}
-                                  href={doc.fileUrl || '#'}
-                                  target={doc.fileUrl ? '_blank' : undefined}
-                                  rel={doc.fileUrl ? 'noopener noreferrer' : undefined}
+                                  href={doc.fileUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
                                   className="group flex flex-col p-6 rounded-lg bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-300 hover:-translate-y-1"
                                 >
                                   <div className="flex items-start justify-between mb-6">

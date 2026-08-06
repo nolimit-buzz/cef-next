@@ -3,6 +3,8 @@ export interface SlidingCard {
   subtitle: string;
   title: string;
   CTA: string;
+  /** Destination for the CTA. When absent the CTA renders as plain text. */
+  link?: string;
   down_text: string;
 }
 

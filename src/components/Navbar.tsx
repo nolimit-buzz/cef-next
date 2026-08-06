@@ -332,21 +332,27 @@ export const Navbar = () => {
                     transition={{ duration: 0.2 }}
                     className="absolute right-0 top-[calc(100%+12px)] w-48 z-[106] bg-white border border-gray-100 shadow-xl rounded-sm overflow-hidden"
                   >
+                    {/* No investor portal exists yet, so these are buttons
+                        rather than href="#" anchors — they must not look or
+                        behave like navigation until there is somewhere to go.
+                        Swap to <Link> once the portal routes land. */}
                     <div className="py-2 flex flex-col">
-                      <a
-                        href="#"
-                        onClick={() => setLoginOpen(false)}
-                        className="px-5 py-3 text-sm font-medium text-gray-800 hover:bg-gray-50 hover:text-[var(--color-accent)] transition-colors text-left flex items-center"
+                      <button
+                        type="button"
+                        disabled
+                        title="Investor portal coming soon"
+                        className="px-5 py-3 text-sm font-medium text-gray-400 cursor-not-allowed transition-colors text-left flex items-center"
                       >
                         Login
-                      </a>
-                      <a
-                        href="#"
-                        onClick={() => setLoginOpen(false)}
-                        className="px-5 py-3 text-sm font-medium text-gray-800 hover:bg-gray-50 hover:text-[var(--color-accent)] transition-colors text-left flex items-center"
+                      </button>
+                      <button
+                        type="button"
+                        disabled
+                        title="Investor portal coming soon"
+                        className="px-5 py-3 text-sm font-medium text-gray-400 cursor-not-allowed transition-colors text-left flex items-center"
                       >
                         Register
-                      </a>
+                      </button>
                     </div>
                   </motion.div>
                 </>
@@ -804,11 +810,14 @@ export const Navbar = () => {
 import type { HeroSection, HeroStatItem } from "../types/home";
 import { getStrapiMediaURL } from "../lib/strapi";
 
+// `link` is the CTA's label text; `href` is its destination. Non-metric slides
+// with no href render as plain text rather than a dead `#` anchor.
 const DEFAULT_SLIDES = [
   {
     label: "Fund Highlight",
     value: "Series 2 Capital Raise Now Open for Institutional Investors",
     link: "Read Announcement",
+    href: "/news",
     isMetric: false,
   },
   { label: "Total Dividends Paid", value: "₦730M", link: "Across two distributions", isMetric: true },
@@ -821,11 +830,18 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const slides = hero?.sliding_card?.length
+  const slides: {
+    label: string;
+    value: string;
+    link: string;
+    href?: string;
+    isMetric: boolean;
+  }[] = hero?.sliding_card?.length
     ? hero.sliding_card.map((card, i) => ({
         label: card.subtitle,
         value: card.title,
         link: card.CTA,
+        href: card.link,
         isMetric: i > 0,
       }))
     : DEFAULT_SLIDES;
@@ -841,7 +857,10 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+    // Depends on slides.length: without it the interval keeps the count it
+    // closed over on first render and skips or repeats slides once the CMS
+    // slides replace DEFAULT_SLIDES.
+  }, [slides.length]);
 
   const { scrollY } = useScroll();
   const heroOpacity = useTransform(scrollY, [0, 600], [1, 0.25]);
@@ -865,13 +884,12 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
           }
           className="absolute inset-0 w-full h-full object-cover -z-10"
         >
-          <source
-            src={
-              getStrapiMediaURL(hero?.hero_video) ??
-              "https://nolimitlms.com/wp-content/uploads/2026/04/solar_p.mp4"
-            }
-            type="video/mp4"
-          />
+          {/* No fallback URL: when the CMS has no hero video the poster image
+              stands in. The previous fallback pointed at an unrelated
+              third-party domain we do not control. */}
+          {getStrapiMediaURL(hero?.hero_video) && (
+            <source src={getStrapiMediaURL(hero?.hero_video)} type="video/mp4" />
+          )}
         </video>
         <div className="absolute inset-0 bg-[#050A15]/80 z-10" />
       </motion.div>
@@ -957,13 +975,13 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
                   {slides[currentSlide].value}
                 </p>
               </div>
-              {!slides[currentSlide].isMetric ? (
-                <a
-                  href="#"
+              {!slides[currentSlide].isMetric && slides[currentSlide].href ? (
+                <Link
+                  href={slides[currentSlide].href!}
                   className="text-xs font-medium text-white flex items-center gap-1 hover:opacity-80 transition-opacity"
                 >
                   {slides[currentSlide].link} <ArrowUpRight className="w-3 h-3" />
-                </a>
+                </Link>
               ) : (
                 <span className="text-xs font-medium text-white/60 uppercase tracking-wider">
                   {slides[currentSlide].link}

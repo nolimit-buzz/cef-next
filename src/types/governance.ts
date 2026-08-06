@@ -5,6 +5,8 @@ export interface CommitteeMemberItem {
   name: string;
   bio: string;
   photo: string | null;
+  /** Optional; the profile icon is hidden when absent. */
+  linkedin_url?: string | null;
 }
 
 export interface TransactionPartyItem {
