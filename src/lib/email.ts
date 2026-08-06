@@ -1,9 +1,9 @@
 const BREVO_ENDPOINT = "https://api.brevo.com/v3/smtp/email";
 
 const FROM_EMAIL =
-  process.env.BREVO_FROM_EMAIL ?? "support@cleanenergyfund.ng";
+  process.env.BREVO_FROM_EMAIL ?? "no-reply@cleanenergyfund.ng";
 
-const FROM_NAME = process.env.BREVO_FROM_NAME ?? "Clean Energy Fund";
+const FROM_NAME = process.env.BREVO_FROM_NAME ?? "Clean Energy Fund Website";
 
 const CONTACT_TO =
   process.env.CONTACT_TO_EMAIL ?? "support@cleanenergyfund.ng";
