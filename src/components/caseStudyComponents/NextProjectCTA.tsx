@@ -23,9 +23,12 @@ export const NextProjectCTA = () => {
           <Link href="/portfolio" className="bg-[var(--color-accent-green)] text-white hover:bg-[var(--color-accent)] px-8 py-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1 duration-300">
             View All Case Studies <ArrowUpRight className="w-4 h-4" />
           </Link>
-          <a href="mailto:contact@example.com" className="bg-white/10 text-white hover:bg-white/20 px-8 py-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 backdrop-blur-sm">
+          {/* Points at the contact page rather than a mailto: the page's form is
+              backed by a real API route and its addresses come from the CMS, so
+              there is no hardcoded address here to go stale. */}
+          <Link href="/contact" className="bg-white/10 text-white hover:bg-white/20 px-8 py-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 backdrop-blur-sm">
             Contact Our Team
-          </a>
+          </Link>
         </div>
       </div>
     </motion.section>

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   motion,
   AnimatePresence,
@@ -19,6 +19,7 @@ import { cn } from "../lib/utils";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { portfolioData } from "../data/projects";
+import { useRouter } from "next/navigation";
 
 // ─── Animation Variants ───────────────────────────────────────────────────────
 
@@ -38,6 +39,8 @@ const staggerContainer = {
     transition: { staggerChildren: 0.1 },
   },
 };
+
+
 
 const megaMenuContainer = {
   hidden: { opacity: 0, y: -10, pointerEvents: "none" as const },
@@ -176,11 +179,10 @@ export const Navbar = () => {
         {/* Desktop Nav — Center: lg (1024px+) only — prevents cramping on tablets */}
         <div className="hidden lg:flex items-center justify-center gap-8 flex-1">
 
-          {/* About — hover on desktop, click-toggle on tablet */}
+          {/* About — plain link, no mega menu; hovering closes any open tray */}
           <div
             className="group h-full flex items-center"
-            onMouseEnter={() => setActiveMegaMenu("about")}
-            onClick={() => toggleMegaMenu("about")}
+            onMouseEnter={closeMegaMenu}
           >
             {/* FIX 3: Added py-3 to ensure ≥44px tap target height */}
             <Link
@@ -330,21 +332,27 @@ export const Navbar = () => {
                     transition={{ duration: 0.2 }}
                     className="absolute right-0 top-[calc(100%+12px)] w-48 z-[106] bg-white border border-gray-100 shadow-xl rounded-sm overflow-hidden"
                   >
+                    {/* No investor portal exists yet, so these are buttons
+                        rather than href="#" anchors — they must not look or
+                        behave like navigation until there is somewhere to go.
+                        Swap to <Link> once the portal routes land. */}
                     <div className="py-2 flex flex-col">
-                      <a
-                        href="#"
-                        onClick={() => setLoginOpen(false)}
-                        className="px-5 py-3 text-sm font-medium text-gray-800 hover:bg-gray-50 hover:text-[var(--color-accent)] transition-colors text-left flex items-center"
+                      <button
+                        type="button"
+                        disabled
+                        title="Investor portal coming soon"
+                        className="px-5 py-3 text-sm font-medium text-gray-400 cursor-not-allowed transition-colors text-left flex items-center"
                       >
                         Login
-                      </a>
-                      <a
-                        href="#"
-                        onClick={() => setLoginOpen(false)}
-                        className="px-5 py-3 text-sm font-medium text-gray-800 hover:bg-gray-50 hover:text-[var(--color-accent)] transition-colors text-left flex items-center"
+                      </button>
+                      <button
+                        type="button"
+                        disabled
+                        title="Investor portal coming soon"
+                        className="px-5 py-3 text-sm font-medium text-gray-400 cursor-not-allowed transition-colors text-left flex items-center"
                       >
                         Register
-                      </a>
+                      </button>
                     </div>
                   </motion.div>
                 </>
@@ -378,7 +386,8 @@ export const Navbar = () => {
             className="absolute left-0 w-full bg-white border-t border-gray-100 shadow-xl z-[100] top-full"
           >
 
-            {/* About */}
+            {/* About — unreachable: the About nav item no longer opens a tray.
+                Kept so the panel can be restored without rebuilding it. */}
             {activeMegaMenu === "about" && (
               <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-4 gap-12 text-left">
                 <div className="col-span-1 lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -801,11 +810,14 @@ export const Navbar = () => {
 import type { HeroSection, HeroStatItem } from "../types/home";
 import { getStrapiMediaURL } from "../lib/strapi";
 
+// `link` is the CTA's label text; `href` is its destination. Non-metric slides
+// with no href render as plain text rather than a dead `#` anchor.
 const DEFAULT_SLIDES = [
   {
     label: "Fund Highlight",
     value: "Series 2 Capital Raise Now Open for Institutional Investors",
     link: "Read Announcement",
+    href: "/news",
     isMetric: false,
   },
   { label: "Total Dividends Paid", value: "₦730M", link: "Across two distributions", isMetric: true },
@@ -818,11 +830,18 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const slides = hero?.sliding_card?.length
+  const slides: {
+    label: string;
+    value: string;
+    link: string;
+    href?: string;
+    isMetric: boolean;
+  }[] = hero?.sliding_card?.length
     ? hero.sliding_card.map((card, i) => ({
         label: card.subtitle,
         value: card.title,
         link: card.CTA,
+        href: card.link,
         isMetric: i > 0,
       }))
     : DEFAULT_SLIDES;
@@ -838,14 +857,18 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+    // Depends on slides.length: without it the interval keeps the count it
+    // closed over on first render and skips or repeats slides once the CMS
+    // slides replace DEFAULT_SLIDES.
+  }, [slides.length]);
 
   const { scrollY } = useScroll();
   const heroOpacity = useTransform(scrollY, [0, 600], [1, 0.25]);
   const heroY = useTransform(scrollY, [0, 600], [0, 100]);
+  const router = useRouter();
 
   return (
-    <section className="relative min-h-dvh lg:min-h-[800px] flex flex-col justify-end pt-28 pb-10 lg:pb-16 overflow-hidden bg-obsidian text-white">
+    <section className="relative h-[100dvh] min-h-[600px] lg:min-h-[800px] flex flex-col justify-end pb-16 overflow-hidden bg-obsidian text-white ">
 
       {/* Video Background */}
       <motion.div style={{ opacity: 1 }} className="absolute inset-0 z-0 bg-obsidian">
@@ -861,13 +884,12 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
           }
           className="absolute inset-0 w-full h-full object-cover -z-10"
         >
-          <source
-            src={
-              getStrapiMediaURL(hero?.hero_video) ??
-              "https://nolimitlms.com/wp-content/uploads/2026/04/solar_p.mp4"
-            }
-            type="video/mp4"
-          />
+          {/* No fallback URL: when the CMS has no hero video the poster image
+              stands in. The previous fallback pointed at an unrelated
+              third-party domain we do not control. */}
+          {getStrapiMediaURL(hero?.hero_video) && (
+            <source src={getStrapiMediaURL(hero?.hero_video)} type="video/mp4" />
+          )}
         </video>
         <div className="absolute inset-0 bg-[#050A15]/80 z-10" />
       </motion.div>
@@ -904,19 +926,20 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
             className="flex flex-col sm:flex-row gap-4 sm:gap-8 items-start sm:items-center"
           >
             <motion.button
+            onClick={()=> router.push('/investor-relations')}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="bg-white text-black font-bold px-8 py-4 rounded-sm text-sm transition-colors flex items-center justify-center gap-2 shadow-lg hover:bg-[var(--color-accent-green)] hover:text-white"
             >
-              {hero?.primary_cta ?? "Explore Funding Options"} <ArrowUpRight className="w-4 h-4" />
+              {hero?.primary_cta ?? "View Investor Relations"} <ArrowUpRight className="w-4 h-4" />
             </motion.button>
-            <motion.button
+            {/* <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="bg-transparent text-white px-8 py-4 rounded-sm text-sm font-medium transition-colors flex items-center justify-center gap-2 hover:text-white/80"
             >
               {hero?.secondary_cta ?? "View Investor Relations"} <ArrowUpRight className="w-4 h-4" />
-            </motion.button>
+            </motion.button> */}
           </motion.div>
         </motion.div>
 
@@ -952,13 +975,13 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
                   {slides[currentSlide].value}
                 </p>
               </div>
-              {!slides[currentSlide].isMetric ? (
-                <a
-                  href="#"
+              {!slides[currentSlide].isMetric && slides[currentSlide].href ? (
+                <Link
+                  href={slides[currentSlide].href!}
                   className="text-xs font-medium text-white flex items-center gap-1 hover:opacity-80 transition-opacity"
                 >
                   {slides[currentSlide].link} <ArrowUpRight className="w-3 h-3" />
-                </a>
+                </Link>
               ) : (
                 <span className="text-xs font-medium text-white/60 uppercase tracking-wider">
                   {slides[currentSlide].link}

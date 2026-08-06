@@ -184,13 +184,14 @@ const HeroSection = ({ data }: { data?: HeroSectionData }) => {
               }
               className="w-full h-full object-cover motion-reduce:hidden"
             >
-              <source
-                src={
-                  getStrapiMediaURL(data?.heroVideo?.file) ??
-                  "https://cdn.coverr.co/videos/coverr-office-buildings-in-the-city-4344/1080p.mp4"
-                }
-                type="video/mp4"
-              />
+              {/* No stock-footage fallback: the poster image stands in when the
+                  CMS has no hero video. */}
+              {getStrapiMediaURL(data?.heroVideo?.file) && (
+                <source
+                  src={getStrapiMediaURL(data?.heroVideo?.file)}
+                  type="video/mp4"
+                />
+              )}
             </video>
             <img
               src={
@@ -302,9 +303,11 @@ const PerformanceHighlightsSection = ({ data }: { data?: PerformanceHighlightsSe
               <p className="text-lg text-gray-600 leading-relaxed max-w-md md:text-right">
                 {data?.body}
               </p>
+              {/* Parked for now — the CMS still supplies this label; uncomment to restore.
               <a href="#downloads" className="inline-flex items-center gap-2 px-6 py-3 border border-gray-200 rounded text-sm font-medium text-[#0A1224] hover:border-gray-300 hover:bg-gray-50 transition-colors w-max">
                 {data?.viewAllLink} <ArrowUpRight className="w-4 h-4" />
               </a>
+              */}
             </div>
           </motion.div>
         </div>
@@ -825,7 +828,9 @@ const DownloadsSection = ({ data }: { data?: DownloadsSectionData }) => {
             {categories.map((category, idx) => {
               const isExpanded = expandedCategory === category.categoryName;
               const isViewMore = viewMoreCategories[category.categoryName];
-              const docs = category.documents ?? [];
+              // Documents with no uploaded file used to render as href="#"
+              // download cards that did nothing when clicked. Drop them.
+              const docs = (category.documents ?? []).filter((doc) => doc.fileUrl);
               const visibleDocs = isViewMore ? docs : docs.slice(0, 3);
               const hasMore = docs.length > 3;
 
@@ -870,9 +875,9 @@ const DownloadsSection = ({ data }: { data?: DownloadsSectionData }) => {
                                   animate={{ opacity: 1, scale: 1 }}
                                   exit={{ opacity: 0, scale: 0.95 }}
                                   transition={{ duration: 0.3 }}
-                                  href={doc.fileUrl || '#'}
-                                  target={doc.fileUrl ? '_blank' : undefined}
-                                  rel={doc.fileUrl ? 'noopener noreferrer' : undefined}
+                                  href={doc.fileUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
                                   className="group flex flex-col p-6 rounded-lg bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-300 hover:-translate-y-1"
                                 >
                                   <div className="flex items-start justify-between mb-6">
@@ -925,6 +930,62 @@ const DownloadsSection = ({ data }: { data?: DownloadsSectionData }) => {
 
 const InvestorEnquiriesSection = ({ data }: { data?: InvestorEnquiriesSectionData }) => {
   const subjectOptions = data?.subjectOptions ?? [];
+
+  const [fullName, setFullName] = useState('');
+  const [institution, setInstitution] = useState('');
+  const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [statusMessage, setStatusMessage] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!fullName || !institution || !email || !subject || !message) {
+      setStatus('error');
+      setStatusMessage('Please fill in all fields.');
+      return;
+    }
+
+    setStatus('submitting');
+    setStatusMessage('');
+
+    try {
+      const response = await fetch('/api/investor-enquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName,
+          institution,
+          email,
+          subject,
+          message,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setStatus('success');
+        setStatusMessage(result.message || 'Thank you! Your inquiry has been submitted.');
+        setFullName('');
+        setInstitution('');
+        setEmail('');
+        setSubject('');
+        setMessage('');
+      } else {
+        setStatus('error');
+        setStatusMessage(result.message || 'Something went wrong. Please try again.');
+      }
+    } catch (err) {
+      console.error(err);
+      setStatus('error');
+      setStatusMessage('Failed to connect to the server. Please check your internet connection.');
+    }
+  };
 
   return (
     <section id="enquiries" className="py-24 lg:py-32 bg-[#F4F4F6] text-[#0A1224] relative z-20">
@@ -1014,13 +1075,16 @@ const InvestorEnquiriesSection = ({ data }: { data?: InvestorEnquiriesSectionDat
             variants={fadeUp}
             className="bg-white p-8 md:p-12 rounded-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100"
           >
-            <form className="flex flex-col gap-6" onSubmit={(e) => e.preventDefault()}>
+            <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
                   <label htmlFor="fullName" className="text-xs font-bold uppercase tracking-widest text-gray-500">{data?.fullNameLabel}</label>
                   <input
                     type="text"
                     id="fullName"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    disabled={status === 'submitting'}
                     className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/20 focus:border-[var(--color-accent)] transition-all"
                     placeholder={data?.fullNamePlaceholder}
                   />
@@ -1030,6 +1094,9 @@ const InvestorEnquiriesSection = ({ data }: { data?: InvestorEnquiriesSectionDat
                   <input
                     type="text"
                     id="institution"
+                    value={institution}
+                    onChange={(e) => setInstitution(e.target.value)}
+                    disabled={status === 'submitting'}
                     className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/20 focus:border-[var(--color-accent)] transition-all"
                     placeholder={data?.institutionPlaceholder}
                   />
@@ -1041,6 +1108,9 @@ const InvestorEnquiriesSection = ({ data }: { data?: InvestorEnquiriesSectionDat
                 <input
                   type="email"
                   id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={status === 'submitting'}
                   className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/20 focus:border-[var(--color-accent)] transition-all"
                   placeholder={data?.workEmailPlaceholder}
                 />
@@ -1050,11 +1120,14 @@ const InvestorEnquiriesSection = ({ data }: { data?: InvestorEnquiriesSectionDat
                 <label htmlFor="subject" className="text-xs font-bold uppercase tracking-widest text-gray-500">{data?.subjectLabel}</label>
                 <select
                   id="subject"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  disabled={status === 'submitting'}
                   className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/20 focus:border-[var(--color-accent)] transition-all text-gray-700 appearance-none"
                 >
                   <option value="">{data?.subjectDefaultOption}</option>
                   {subjectOptions.map((opt) => (
-                    <option key={opt.id} value={opt.label.toLowerCase().replace(/\s+/g, '-')}>
+                    <option key={opt.id} value={opt.label}>
                       {opt.label}
                     </option>
                   ))}
@@ -1066,16 +1139,29 @@ const InvestorEnquiriesSection = ({ data }: { data?: InvestorEnquiriesSectionDat
                 <textarea
                   id="message"
                   rows={4}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  disabled={status === 'submitting'}
                   className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/20 focus:border-[var(--color-accent)] transition-all resize-none"
                   placeholder={data?.messagePlaceholder}
                 ></textarea>
               </div>
 
+              {statusMessage && (
+                <div className={cn(
+                  "p-4 rounded-lg text-sm transition-all",
+                  status === 'success' ? "bg-green-50 text-green-800 border border-green-200" : "bg-red-50 text-red-800 border border-red-200"
+                )}>
+                  {statusMessage}
+                </div>
+              )}
+
               <button
                 type="submit"
-                className="mt-4 w-full bg-[#0A1224] text-white rounded-lg px-6 py-4 text-sm font-medium hover:bg-[var(--color-accent)] transition-colors flex items-center justify-center gap-2 group"
+                disabled={status === 'submitting'}
+                className="mt-4 w-full bg-[#0A1224] text-white rounded-lg px-6 py-4 text-sm font-medium hover:bg-[var(--color-accent)] transition-colors flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {data?.submitLabel}
+                {status === 'submitting' ? 'Submitting...' : data?.submitLabel}
                 <Send className="w-4 h-4 text-white/70 group-hover:text-white group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
               </button>
             </form>

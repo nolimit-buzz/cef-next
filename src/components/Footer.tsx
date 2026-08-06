@@ -1,51 +1,56 @@
 "use client";
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { TrendingUp, Building2, Globe, ArrowUpRight, Linkedin, Youtube, Instagram, X } from 'lucide-react';
+// `X` here is the close-button glyph. The X *platform* icon is aliased to
+// XIcon so it does not shadow it.
+import { TrendingUp, Building2, Globe, ArrowUpRight, Linkedin, Youtube, Instagram, X, Twitter as XIcon, Facebook } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { partners } from "../data/partners";
+import type { GlobalData, SocialPlatform } from "../types/global";
 
-const partners = [
-  {
-    type: "logo",
-    name: "NSIA",
-    src: "https://nsia.com.ng/wp-content/uploads/2022/08/NSIA-Logo.svg"
-  },
-  {
-    type: "logo",
-    name: "InfraCredit",
-    src: "https://infracredit.ng/update/wp-content/uploads/2020/10/InfraCredit.svg",
-  },
-  {
-    type: "logo",
-    name: "Shelter Afrique",
-    src: "/assets/shelter afrique.svg",
-  },
-  {
-    type: "text",
-    name: "All On",
-  },
-  {
-    type: "logo",
-    name: "Climate Bonds",
-    src: "https://www.climatebonds.net/assets/images/cb-logo.svg",
-  },
-  {
-    type: "logo",
-    name: "FMDQ",
-    src: "https://fmdqgroup.com/wp-content/uploads/2021/11/FMDQ-LOGO-November-2020.svg",
-  },
-  {
-    type: "logo",
-    name: "USAID",
-    src: "/assets/USAID.svg",
-  },
-  {
-    type: "logo",
-    name: "UK NIAF",
-    src: "/assets/UKNIAF_Logo-1.svg",
-  },
-] as const;
+// Sentinel href for the Project Sponsors card. The click handler intercepts it
+// and opens the modal; the value doubles as a real destination so the card
+// still works when JS has not hydrated (the old '#submit-project' pointed at an
+// element id that exists nowhere in the app).
+const SUBMIT_PROJECT_HREF = '/contact?type=project';
+
+const DEFAULT_CONTACT_EMAIL = 'support@cleanenergyfund.ng';
+const DEFAULT_OFFICE_ADDRESS = 'Plot 1610 Adeola Hopewell street, Victoria Island.';
+
+const CTA_ICONS: Record<string, LucideIcon> = {
+  'trending-up': TrendingUp,
+  building: Building2,
+  globe: Globe,
+};
+
+const SOCIAL_ICONS: Record<SocialPlatform, LucideIcon> = {
+  linkedin: Linkedin,
+  youtube: Youtube,
+  instagram: Instagram,
+  x: XIcon,
+  facebook: Facebook,
+};
+
+// Fixed render order. Every platform gets an icon whether or not the CMS has a
+// URL for it yet, so the row keeps its shape while the Global entry is filled
+// in; icons without a URL fall back to '#'.
+const SOCIAL_ORDER: SocialPlatform[] = [
+  'linkedin',
+  'youtube',
+  'instagram',
+  'x',
+  'facebook',
+];
+
+const SOCIAL_LABELS: Record<SocialPlatform, string> = {
+  linkedin: 'LinkedIn',
+  youtube: 'YouTube',
+  instagram: 'Instagram',
+  x: 'X',
+  facebook: 'Facebook',
+};
 
 const defaultCtaData = [
   {
@@ -53,7 +58,7 @@ const defaultCtaData = [
     title: 'Investors',
     description: 'Access institutional climate infrastructure opportunities',
     linkText: 'Learn More',
-    href: '#',
+    href: '/investor-relations',
     image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=800&auto=format&fit=crop'
   },
   {
@@ -61,7 +66,7 @@ const defaultCtaData = [
     title: 'Project Sponsors',
     description: 'Submit eligible projects for financing',
     linkText: 'Submit Project',
-    href: '#submit-project',
+    href: SUBMIT_PROJECT_HREF,
     image: 'https://images.unsplash.com/photo-1545459720-aac8509eb02c?q=80&w=800&auto=format&fit=crop'
   },
   {
@@ -69,9 +74,33 @@ const defaultCtaData = [
     title: 'DFIs',
     description: 'Partner on blended finance and climate impact',
     linkText: 'Get in Touch',
-    href: '#',
+    href: '/contact',
     image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop'
   }
+];
+
+const defaultFooterLinkGroups = [
+  {
+    heading: 'About us',
+    links: [
+      // Anchors match existing section ids on /about (AboutFundSection and
+      // MilestonesSection); both entries used to point at bare /about.
+      { label: 'Our mission', href: '/about#overview' },
+      { label: 'History', href: '/about#track-record' },
+      { label: 'Our Impact', href: '/impact' },
+    ],
+  },
+  {
+    heading: 'Quick Links',
+    links: [
+      { label: 'Home', href: '/' },
+      { label: 'About', href: '/about' },
+      { label: 'Investor Relations', href: '/investor-relations' },
+      { label: 'Impact', href: '/impact' },
+      { label: 'Pipeline & Eligibility', href: '/eligibility' },
+      { label: 'Contact', href: '/contact' },
+    ],
+  },
 ];
 
 const aboutCtaData = [
@@ -128,19 +157,93 @@ const governanceCtaData = [
   }
 ];
 
-export const Footer = () => {
+export const Footer = ({ global }: { global?: GlobalData | null }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [statusMessage, setStatusMessage] = useState('');
   const pathname = usePathname();
   const location = typeof window !== 'undefined' ? window.location : { hash: '', pathname };
   const isAboutPage = location.pathname === '/about';
   const isGovernancePage = location.pathname === '/governance';
 
-  const currentCtaData = isGovernancePage ? governanceCtaData : (isAboutPage ? aboutCtaData : defaultCtaData);
+  const contactEmail = global?.support_email || global?.contact_email || DEFAULT_CONTACT_EMAIL;
+  const officeAddress = global?.office_address || DEFAULT_OFFICE_ADDRESS;
+
+  // The About and Governance pages keep their own on-page CTA sets; only the
+  // site-wide "Partnering for impact" trio is CMS-editable.
+  const cmsCtaData = global?.partner_cta_cards?.length
+    ? global.partner_cta_cards.map((card) => ({
+      icon: CTA_ICONS[card.icon ?? 'globe'] ?? Globe,
+      title: card.title,
+      description: card.description ?? '',
+      linkText: card.cta_label ?? 'Learn More',
+      href: card.cta_href || SUBMIT_PROJECT_HREF,
+      image: card.background_image ?? defaultCtaData[0].image,
+    }))
+    : defaultCtaData;
+
+  const currentCtaData = isGovernancePage ? governanceCtaData : (isAboutPage ? aboutCtaData : cmsCtaData);
+
+  const footerLinkGroups = global?.footer_links?.length
+    ? global.footer_links.map((group) => ({
+      heading: group.heading,
+      links: group.links ?? [],
+    }))
+    : defaultFooterLinkGroups;
+
+  const socialUrl = (platform: SocialPlatform) =>
+    global?.social_links?.find((link) => link.platform === platform)?.url;
 
   const handleCtaClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href === '#submit-project') {
+    if (href === SUBMIT_PROJECT_HREF) {
       e.preventDefault();
-      setIsModalOpen(true);
+      openModal();
+    }
+  };
+
+  const openModal = () => {
+    setStatus('idle');
+    setStatusMessage('');
+    setIsModalOpen(true);
+  };
+
+  const handleProjectSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    setStatus('submitting');
+    setStatusMessage('');
+
+    try {
+      const res = await fetch('/api/submit-project', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projectName: data.get('projectName'),
+          sector: data.get('sector'),
+          description: data.get('description'),
+          impact: data.get('impact'),
+          contactName: data.get('contactName'),
+          email: data.get('email'),
+        }),
+      });
+
+      const payload = (await res.json().catch(() => null)) as { message?: string } | null;
+
+      if (!res.ok) {
+        setStatus('error');
+        setStatusMessage(payload?.message ?? 'Submission failed. Please try again.');
+        return;
+      }
+
+      form.reset();
+      setStatus('success');
+      setStatusMessage(payload?.message ?? 'Thanks — your project submission has been received.');
+    } catch {
+      setStatus('error');
+      setStatusMessage('Network error. Please check your connection and try again.');
     }
   };
 
@@ -216,7 +319,7 @@ export const Footer = () => {
                       ...partners,
                       ...partners, // duplicate for seamless loop
                     ].map((partner, i) =>
-                      partner.type === "text" ? (
+                      partner.type !== "logo" ? (
                         <span
                           key={i}
                           className="text-lg md:text-2xl font-sans italic tracking-tight text-[var(--color-text-secondary)]/30 hover:text-[var(--color-text-secondary)] transition-colors cursor-default"
@@ -265,48 +368,25 @@ export const Footer = () => {
             </div>
 
             {/* Links Columns */}
-            <div className="lg:col-span-2">
-              <h4 className="text-white font-medium mb-8 text-sm">About us</h4>
-              <ul className="space-y-5">
-                {[
-                  { label: 'Our mission', href: '/about' },
-                  { label: 'Our Institutional Framework', href: '/governance' },
-                  { label: 'History', href: '/about' },
-                  { label: 'Leadership and governance', href: '/governance' },
-                  { label: 'Our Impact', href: '/impact' },
-                ].map(({ label, href }) => (
-                  <li key={label}>
-                    <Link href={href} className="text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors">{label}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="lg:col-span-2">
-              <h4 className="text-white font-medium mb-8 text-sm">Quick Links</h4>
-              <ul className="space-y-5">
-                {[
-                  { label: 'Home', href: '/' },
-                  { label: 'About', href: '/about' },
-                  { label: 'Governance', href: '/governance' },
-                  { label: 'Investor Relations', href: '/investor-relations' },
-                  { label: 'Impact', href: '/impact' },
-                  { label: 'Pipeline & Eligibility', href: '/eligibility' },
-                  { label: 'Contact', href: '/contact' },
-                ].map(({ label, href }) => (
-                  <li key={label}>
-                    <Link href={href} className="text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors">{label}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {footerLinkGroups.map((group) => (
+              <div key={group.heading} className="lg:col-span-2">
+                <h4 className="text-white font-medium mb-8 text-sm">{group.heading}</h4>
+                <ul className="space-y-5">
+                  {group.links.map(({ label, href }) => (
+                    <li key={`${group.heading}-${label}`}>
+                      <Link href={href} className="text-[var(--color-text-secondary)] hover:text-white text-sm transition-colors">{label}</Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
 
             <div className="lg:col-span-2">
               <h4 className="text-white font-medium mb-8 text-sm">Contact</h4>
               <div className="space-y-5 text-sm text-[var(--color-text-secondary)]">
-                <p><a href="mailto:info@cleanenergyfund.ng" className="hover:text-white transition-colors">info@cleanenergyfund.ng</a></p>
+                <p><a href={`mailto:${contactEmail}`} className="hover:text-white transition-colors">{contactEmail}</a></p>
                 <p className="leading-relaxed">
-                  12 Clean Energy Way, Victoria Island, Lagos, Nigeria.
+                  {officeAddress}
                 </p>
               </div>
             </div>
@@ -342,15 +422,26 @@ export const Footer = () => {
           {/* Bottom Bar */}
           <div className="flex flex-col items-center justify-center pt-12 border-t border-[var(--color-border)]">
             <div className="flex gap-4 mb-8">
-              <a href="#" className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center hover:bg-white/5 hover:border-white/20 transition-all text-[var(--color-text-secondary)] hover:text-white">
-                <Linkedin className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center hover:bg-white/5 hover:border-white/20 transition-all text-[var(--color-text-secondary)] hover:text-white">
-                <Youtube className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center hover:bg-white/5 hover:border-white/20 transition-all text-[var(--color-text-secondary)] hover:text-white">
-                <Instagram className="w-4 h-4" />
-              </a>
+              {SOCIAL_ORDER.map((platform) => {
+                const Icon = SOCIAL_ICONS[platform];
+                const label = SOCIAL_LABELS[platform];
+                const url = socialUrl(platform);
+                return (
+                  <a
+                    key={platform}
+                    href={url ?? '#'}
+                    // Only open a new tab for a real destination — '_blank' on
+                    // '#' would open an empty tab.
+                    target={url ? '_blank' : undefined}
+                    rel={url ? 'noopener noreferrer' : undefined}
+                    aria-label={label}
+                    title={label}
+                    className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center hover:bg-white/5 hover:border-white/20 transition-all text-[var(--color-text-secondary)] hover:text-white"
+                  >
+                    <Icon className="w-4 h-4" aria-hidden="true" />
+                  </a>
+                );
+              })}
             </div>
             <div className="text-xs text-[var(--color-text-secondary)] flex flex-row items-center gap-2 justify-center">
             < div className="inline items-center gap-2">
@@ -392,12 +483,13 @@ export const Footer = () => {
               </div>
 
               <div className="p-6 overflow-y-auto">
-                <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); setIsModalOpen(false); }}>
+                <form className="space-y-6" onSubmit={handleProjectSubmit}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-white/80">Project Name</label>
                       <input
                         type="text"
+                        name="projectName"
                         required
                         className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-[var(--color-accent-green)] transition-colors"
                         placeholder="e.g. Solar Mini-Grid Phase 1"
@@ -406,10 +498,12 @@ export const Footer = () => {
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-white/80">Sector</label>
                       <select
+                        name="sector"
                         required
+                        defaultValue=""
                         className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[var(--color-accent-green)] transition-colors appearance-none"
                       >
-                        <option value="" disabled selected className="text-black">Select a sector</option>
+                        <option value="" disabled className="text-black">Select a sector</option>
                         <option value="solar" className="text-black">Solar / Mini-Grid</option>
                         <option value="wind" className="text-black">Wind Energy</option>
                         <option value="hydro" className="text-black">Hydro Power</option>
@@ -422,6 +516,7 @@ export const Footer = () => {
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-white/80">Project Description</label>
                     <textarea
+                      name="description"
                       required
                       rows={4}
                       className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-[var(--color-accent-green)] transition-colors resize-none"
@@ -432,6 +527,7 @@ export const Footer = () => {
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-white/80">Expected Impact</label>
                     <textarea
+                      name="impact"
                       required
                       rows={3}
                       className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-[var(--color-accent-green)] transition-colors resize-none"
@@ -444,6 +540,7 @@ export const Footer = () => {
                       <label className="text-sm font-medium text-white/80">Contact Name</label>
                       <input
                         type="text"
+                        name="contactName"
                         required
                         className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-[var(--color-accent-green)] transition-colors"
                         placeholder="Your full name"
@@ -453,6 +550,7 @@ export const Footer = () => {
                       <label className="text-sm font-medium text-white/80">Email Address</label>
                       <input
                         type="email"
+                        name="email"
                         required
                         className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-[var(--color-accent-green)] transition-colors"
                         placeholder="you@company.com"
@@ -460,19 +558,30 @@ export const Footer = () => {
                     </div>
                   </div>
 
+                  {statusMessage && (
+                    <p
+                      role="status"
+                      aria-live="polite"
+                      className={`text-sm ${status === 'error' ? 'text-red-400' : 'text-[var(--color-accent-green)]'}`}
+                    >
+                      {statusMessage}
+                    </p>
+                  )}
+
                   <div className="pt-4 flex justify-end gap-4">
                     <button
                       type="button"
                       onClick={() => setIsModalOpen(false)}
                       className="px-6 py-3 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/5 transition-colors"
                     >
-                      Cancel
+                      {status === 'success' ? 'Close' : 'Cancel'}
                     </button>
                     <button
                       type="submit"
-                      className="px-8 py-3 rounded-lg text-sm font-medium bg-[var(--color-accent-green)] text-white hover:bg-[var(--color-accent)] transition-colors shadow-lg"
+                      disabled={status === 'submitting'}
+                      className="px-8 py-3 rounded-lg text-sm font-medium bg-[var(--color-accent-green)] text-white hover:bg-[var(--color-accent)] transition-colors shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
                     >
-                      Submit Project
+                      {status === 'submitting' ? 'Submitting…' : 'Submit Project'}
                     </button>
                   </div>
                 </form>

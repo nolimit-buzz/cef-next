@@ -4,53 +4,13 @@ import { motion, useScroll, useTransform, AnimatePresence, useInView, useMotionV
 import { ArrowUpRight, Sun, ShieldCheck, Users, Globe2, Zap, Building2, Coins, TrendingUp, Leaf } from 'lucide-react';
 import { CountUp } from './CountUp';
 import type { AboutFundSection, ApproachSection } from '../types/home';
+import { getCtaHref } from '../lib/strapi';
+import { partners } from '../data/partners';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } }
 };
-
-const partners = [
-  {
-    type: "logo",
-    name: "NSIA",
-    src: "https://nsia.com.ng/wp-content/uploads/2022/08/NSIA-Logo.svg"
-  },
-  {
-    type: "logo",
-    name: "InfraCredit",
-    src: "https://infracredit.ng/update/wp-content/uploads/2020/10/InfraCredit.svg",
-  },
-  {
-    type: "logo",
-    name: "Shelter Afrique",
-    src: "/assets/shelter afrique.svg",
-  },
-  {
-    type: "text",
-    name: "All On",
-  },
-  {
-    type: "logo",
-    name: "Climate Bonds",
-    src: "https://www.climatebonds.net/assets/images/cb-logo.svg",
-  },
-  {
-    type: "logo",
-    name: "FMDQ",
-    src: "https://fmdqgroup.com/wp-content/uploads/2021/11/FMDQ-LOGO-November-2020.svg",
-  },
-  {
-    type: "logo",
-    name: "USAID",
-    src: "/assets/USAID.svg",
-  },
-  {
-    type: "logo",
-    name: "UK NIAF",
-    src: "/assets/UKNIAF_Logo-1.svg",
-  },
-] as const;
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -60,21 +20,28 @@ const staggerContainer = {
   }
 };
 
+// Words are animated individually, so each one is its own span. The container
+// must NOT be a flex row: flexbox discards whitespace-only text nodes between
+// items, which left the words visually run together whenever the `gap-x`
+// utility failed to apply, and always broke copy/paste and screen-reader
+// output. Normal inline flow with real spaces keeps the text intact.
 const TextReveal = ({ text }: { text: string }) => {
   const words = text.split(' ');
   return (
-    <div className="flex flex-wrap gap-x-[0.35em] gap-y-[0.1em]">
+    <div>
       {words.map((word, i) => (
-        <motion.span
-          key={i}
-          initial={{ opacity: 0.1, y: 2 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.5 }}
-          transition={{ duration: 0.4, delay: i * 0.015, ease: "easeOut" as const }}
-          className="inline-block"
-        >
-          {word}
-        </motion.span>
+        <span key={i}>
+          {i > 0 ? ' ' : null}
+          <motion.span
+            initial={{ opacity: 0.1, y: 2 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.5 }}
+            transition={{ duration: 0.4, delay: i * 0.015, ease: "easeOut" as const }}
+            className="inline-block"
+          >
+            {word}
+          </motion.span>
+        </span>
       ))}
     </div>
   );
@@ -214,17 +181,19 @@ const StickyCard = ({ item, i, isLast, setLastActive }: { key?: React.Key, item:
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
-          <h4 className="text-2xl font-medium text-slate-900 max-w-[220px] flex flex-wrap gap-x-[0.25em] leading-tight content-start">
+          <h4 className="text-2xl font-medium text-slate-900 max-w-[220px] leading-tight">
             {item.title.split(" ").map((word: string, idx: number) => (
-              <motion.span
-                key={idx}
-                initial={{ opacity: 0.1, y: 10 }}
-                animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.1, y: 10 }}
-                transition={{ duration: 0.5, delay: isActive ? idx * 0.08 : 0, ease: [0.16, 1, 0.3, 1] as const }}
-                className="inline-block"
-              >
-                {word}
-              </motion.span>
+              <span key={idx}>
+                {idx > 0 ? ' ' : null}
+                <motion.span
+                  initial={{ opacity: 0.1, y: 10 }}
+                  animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.1, y: 10 }}
+                  transition={{ duration: 0.5, delay: isActive ? idx * 0.08 : 0, ease: [0.16, 1, 0.3, 1] as const }}
+                  className="inline-block"
+                >
+                  {word}
+                </motion.span>
+              </span>
             ))}
           </h4>
           <div className={`text-slate-600 font-light leading-relaxed text-lg transition-all duration-700 ${isActive ? 'opacity-100 blur-none translate-y-0' : 'opacity-0 blur-[2px] translate-y-4'}`}>
@@ -314,17 +283,19 @@ const TimelineStep = ({ item, i, isLast, setLastActive }: { key?: React.Key, ite
               </motion.span>
             ))}
           </h4>
-          <div className="text-slate-600 font-light leading-relaxed text-lg flex flex-wrap gap-x-[0.25em] content-start">
+          <div className="text-slate-600 font-light leading-relaxed text-lg">
             {item.content.split(" ").map((word: string, idx: number) => (
-              <motion.span
-                key={idx}
-                initial={{ opacity: 0.1, y: 10 }}
-                animate={isActiveOrPast ? { opacity: 1, y: 0 } : { opacity: 0.1, y: 10 }}
-                transition={{ duration: 0.5, delay: isActiveOrPast ? idx * 0.02 : 0, ease: [0.16, 1, 0.3, 1] as const }}
-                className="inline-block"
-              >
-                {word}
-              </motion.span>
+              <span key={idx}>
+                {idx > 0 ? ' ' : null}
+                <motion.span
+                  initial={{ opacity: 0.1, y: 10 }}
+                  animate={isActiveOrPast ? { opacity: 1, y: 0 } : { opacity: 0.1, y: 10 }}
+                  transition={{ duration: 0.5, delay: isActiveOrPast ? idx * 0.02 : 0, ease: [0.16, 1, 0.3, 1] as const }}
+                  className="inline-block"
+                >
+                  {word}
+                </motion.span>
+              </span>
             ))}
           </div>
         </div>
@@ -407,12 +378,36 @@ export const AboutFund = ({
               </motion.h2>
 
               <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8 items-start sm:items-center">
-                <button className="bg-white text-black hover:bg-[var(--color-accent-green)] hover:text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-2 shadow-lg w-full sm:w-auto">
-                  {aboutFund?.primary_cta ?? "Download Fact Sheet"} <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
-                </button>
-                <button className="text-white/80 px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-2 hover:text-white w-full sm:w-auto">
-                  {aboutFund?.secondary_cta ?? "Discover Fund"} <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
-                </button>
+                {(aboutFund?.cta?.length
+                  ? aboutFund.cta
+                  : [{ cta_text: "Download Fact Sheet" }]
+                ).map((item, i) => {
+                  // First CTA is the solid primary, any extras are ghost buttons.
+                  const className = i === 0
+                    ? "bg-white text-black hover:bg-[var(--color-accent-green)] hover:text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-2 shadow-lg w-full sm:w-auto"
+                    : "text-white/80 px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-2 hover:text-white w-full sm:w-auto";
+                  const label = (
+                    <>
+                      {item.cta_text} <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />
+                    </>
+                  );
+                  const href = getCtaHref(item);
+                  return href ? (
+                    <a
+                      key={item.id ?? i}
+                      href={href}
+                      rel="noopener noreferrer"
+                      download
+                      className={className}
+                    >
+                      {label}
+                    </a>
+                  ) : (
+                    <button key={item.id ?? i} className={className}>
+                      {label}
+                    </button>
+                  );
+                })}
               </motion.div>
             </div>
 
@@ -605,7 +600,7 @@ export const AboutFund = ({
                           {approach?.why_cef_body ?? "CeF addresses this gap by structuring investments that combine credit enhancement, blended finance, and institutional capital mobilisation."}
                         </p>
 
-                        <AnimatePresence>
+                        {/* <AnimatePresence>
                           {isLastCardActive && (
                             <motion.div
                               initial={{ opacity: 0, y: 20 }}
@@ -622,7 +617,7 @@ export const AboutFund = ({
                               </a>
                             </motion.div>
                           )}
-                        </AnimatePresence>
+                        </AnimatePresence> */}
                       </div>
                     </div>
 

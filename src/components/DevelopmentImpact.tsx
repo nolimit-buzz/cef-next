@@ -63,7 +63,7 @@ export const DevelopmentImpact = ({ cms }: { cms?: DevelopmentImpactSection }) =
               <p className="text-lg text-white/70 font-light leading-relaxed mb-8 max-w-xl">
                 {cms?.body ?? "We deliver impact by displacing fossil fuels, driving local economic growth, and building sustainable communities. Guided by a strong Gender & Impact Lens, we empower women-led enterprises and ensure equitable job creation across the green economy."}
               </p>
-              <a href="#" className="text-sm font-medium text-white hover:text-white/80 transition-colors flex items-center gap-1">
+              <a href="/impact" className="text-sm font-medium text-white hover:text-white/80 transition-colors flex items-center gap-1">
                 {cms?.learn_more_link ?? "Learn More"} <ArrowUpRight className="w-4 h-4" />
               </a>
             </motion.div>

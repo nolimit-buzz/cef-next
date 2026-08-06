@@ -1,6 +1,9 @@
 // Types for the Strapi `about` singleType (cms/src/api/about + cms/src/components/about-page/*).
 // Media fields are plain Cloudinary URL strings (see cms schema: media was converted to string).
 
+// The Fund Overview CTA reuses the shared `home-page.cta` component.
+import type { CtaItem } from "./home";
+
 export interface StatItem {
   id: number;
   value: string;
@@ -157,8 +160,7 @@ export interface FundOverviewSection {
   sectionLabel: string;
   heading: string;
   body: string;
-  ctaPrimary: string;
-  ctaSecondary: string;
+  cta?: CtaItem;
   items: FundOverviewItem[];
 }
 
