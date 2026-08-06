@@ -1,7 +1,9 @@
 "use client";
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { TrendingUp, Building2, Globe, ArrowUpRight, Linkedin, Youtube, Instagram, X } from 'lucide-react';
+// `X` here is the close-button glyph. The X *platform* icon is aliased to
+// XIcon so it does not shadow it.
+import { TrendingUp, Building2, Globe, ArrowUpRight, Linkedin, Youtube, Instagram, X, Twitter as XIcon, Facebook } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -23,11 +25,24 @@ const CTA_ICONS: Record<string, LucideIcon> = {
   globe: Globe,
 };
 
-const SOCIAL_ICONS: Partial<Record<SocialPlatform, LucideIcon>> = {
+const SOCIAL_ICONS: Record<SocialPlatform, LucideIcon> = {
   linkedin: Linkedin,
   youtube: Youtube,
   instagram: Instagram,
+  x: XIcon,
+  facebook: Facebook,
 };
+
+// Fixed render order. Every platform gets an icon whether or not the CMS has a
+// URL for it yet, so the row keeps its shape while the Global entry is filled
+// in; icons without a URL fall back to '#'.
+const SOCIAL_ORDER: SocialPlatform[] = [
+  'linkedin',
+  'youtube',
+  'instagram',
+  'x',
+  'facebook',
+];
 
 const SOCIAL_LABELS: Record<SocialPlatform, string> = {
   linkedin: 'LinkedIn',
@@ -176,12 +191,8 @@ export const Footer = ({ global }: { global?: GlobalData | null }) => {
     }))
     : defaultFooterLinkGroups;
 
-  // Only render icons for platforms we have an icon for and that have a real
-  // URL — an empty list is better than the placeholder `href="#"` icons that
-  // used to ship.
-  const socialLinks = (global?.social_links ?? []).filter(
-    (link) => link.url && SOCIAL_ICONS[link.platform]
-  );
+  const socialUrl = (platform: SocialPlatform) =>
+    global?.social_links?.find((link) => link.platform === platform)?.url;
 
   const handleCtaClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (href === SUBMIT_PROJECT_HREF) {
@@ -410,27 +421,28 @@ export const Footer = ({ global }: { global?: GlobalData | null }) => {
 
           {/* Bottom Bar */}
           <div className="flex flex-col items-center justify-center pt-12 border-t border-[var(--color-border)]">
-            {socialLinks.length > 0 && (
-              <div className="flex gap-4 mb-8">
-                {socialLinks.map((link) => {
-                  const Icon = SOCIAL_ICONS[link.platform]!;
-                  const label = SOCIAL_LABELS[link.platform];
-                  return (
-                    <a
-                      key={link.platform}
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={label}
-                      title={label}
-                      className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center hover:bg-white/5 hover:border-white/20 transition-all text-[var(--color-text-secondary)] hover:text-white"
-                    >
-                      <Icon className="w-4 h-4" aria-hidden="true" />
-                    </a>
-                  );
-                })}
-              </div>
-            )}
+            <div className="flex gap-4 mb-8">
+              {SOCIAL_ORDER.map((platform) => {
+                const Icon = SOCIAL_ICONS[platform];
+                const label = SOCIAL_LABELS[platform];
+                const url = socialUrl(platform);
+                return (
+                  <a
+                    key={platform}
+                    href={url ?? '#'}
+                    // Only open a new tab for a real destination — '_blank' on
+                    // '#' would open an empty tab.
+                    target={url ? '_blank' : undefined}
+                    rel={url ? 'noopener noreferrer' : undefined}
+                    aria-label={label}
+                    title={label}
+                    className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center hover:bg-white/5 hover:border-white/20 transition-all text-[var(--color-text-secondary)] hover:text-white"
+                  >
+                    <Icon className="w-4 h-4" aria-hidden="true" />
+                  </a>
+                );
+              })}
+            </div>
             <div className="text-xs text-[var(--color-text-secondary)] flex flex-row items-center gap-2 justify-center">
             < div className="inline items-center gap-2">
              <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy & Terms of Service</Link>

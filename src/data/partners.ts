@@ -16,9 +16,7 @@ export const partners: readonly Partner[] = [
   { type: "logo", name: "InfraCredit", src: "/assets/infracredit.svg" },
   { type: "logo", name: "Shelter Afrique", src: "/assets/shelter-afrique.svg" },
   { type: "text", name: "All On" },
-  // Climate Bonds Initiative blocks hotlinking; swap to a logo once the asset
-  // is added to /public/assets.
-  { type: "text", name: "Climate Bonds" },
+  { type: "logo", name: "Climate Bonds", src: "/assets/partner-climate-bonds-logo.svg" },
   { type: "logo", name: "FMDQ", src: "/assets/fmdq.svg" },
   { type: "logo", name: "USAID", src: "/assets/USAID.svg" },
   { type: "logo", name: "UK NIAF", src: "/assets/UKNIAF_Logo-1.svg" },
