@@ -1,0 +1,21 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Empty unless set on the host — the build then falls back to .env.
+        NEXT_PUBLIC_STRAPI_URL: ${NEXT_PUBLIC_STRAPI_URL:-}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-}
+    image: cef-frontend:latest
+    container_name: cef-frontend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    # Server-side runtime vars: Brevo credentials and the CMS base URL.
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: 0.0.0.0

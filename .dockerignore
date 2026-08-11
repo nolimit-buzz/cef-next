@@ -1,0 +1,26 @@
+# Host-built dependencies and build output must never enter the image.
+node_modules
+.next
+build
+dist
+coverage
+
+.git
+.gitignore
+.claude
+tsconfig.tsbuildinfo
+
+# Netlify config is irrelevant to the container deploy.
+netlify.toml
+*.md
+*.log
+
+# .env.local is a dev-only override (it points NEXT_PUBLIC_STRAPI_URL at
+# localhost, which is unreachable from inside the container) and takes
+# precedence over .env, so it must stay out of the build.
+.env.local
+
+# NOTE: .env is intentionally NOT ignored. `next build` loads it itself, which
+# is how the NEXT_PUBLIC_* values get inlined into the client bundle without
+# --build-arg flags. It is copied into the builder stage only; the runner stage
+# never receives it.
