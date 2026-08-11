@@ -22,9 +22,13 @@ ARG NEXT_PUBLIC_STRAPI_URL=""
 ARG NEXT_PUBLIC_SITE_URL=""
 
 ENV NODE_ENV=production
-# Caps V8's heap so Node garbage-collects instead of growing until the kernel
-# OOM-kills the build — that kill is what silently ends builds on small VPSes.
-ENV NODE_OPTIONS=--max-old-space-size=2048
+# This image is built in GitHub Actions (see .github/workflows/build-image.yml),
+# not on the Dokploy VPS, specifically because the VPS doesn't have enough RAM
+# to run `next build` (SWC + type-check + static generation) without the
+# kernel OOM-killing it mid-build — BuildKit reports that kill as the step
+# being CANCELED. Actions runners have far more headroom; don't lower this
+# back down to "fit the VPS" without first moving the build back there too.
+ENV NODE_OPTIONS=--max-old-space-size=4096
 
 # Empty args are unset rather than exported: Next gives real process env
 # precedence over .env files, so an empty var would shadow the .env value.

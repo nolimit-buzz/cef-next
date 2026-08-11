@@ -1,0 +1,51 @@
+name: Build and push frontend image
+
+# Builds the Docker image here instead of on the Dokploy VPS. The VPS build
+# was getting OOM-killed during `next build` (BuildKit reports that as the
+# step being CANCELED) because the box doesn't have enough RAM to run SWC +
+# type-checking + static generation over this dependency set. Actions
+# runners have plenty of headroom; Dokploy just pulls the finished image.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: syntaxdesigner
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            syntaxdesigner/cef-next:latest
+            syntaxdesigner/cef-next:${{ github.sha }}
+          build-args: |
+            NEXT_PUBLIC_STRAPI_URL=${{ vars.NEXT_PUBLIC_STRAPI_URL }}
+            NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Optional: trigger a Dokploy redeploy once the image is pushed.
+      # Requires the DOKPLOY_DEPLOY_WEBHOOK secret to be set in the repo;
+      # the step is skipped (not failed) if it isn't configured yet.
+      - name: Trigger Dokploy redeploy
+        if: ${{ env.DOKPLOY_DEPLOY_WEBHOOK != '' }}
+        env:
+          DOKPLOY_DEPLOY_WEBHOOK: ${{ secrets.DOKPLOY_DEPLOY_WEBHOOK }}
+        run: curl -fsSL -X POST "$DOKPLOY_DEPLOY_WEBHOOK"
