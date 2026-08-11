@@ -1060,7 +1060,8 @@ const InvestorEnquiriesSection = ({ data }: { data?: InvestorEnquiriesSectionDat
                 </div>
               </motion.a>
 
-              <motion.a variants={fadeUp} href={`tel:${(data?.phone ?? '').replace(/[\s()]/g, '')}`} className="flex items-start gap-5 group">
+{/* Phone */}
+              {/* <motion.a variants={fadeUp} href={`tel:${(data?.phone ?? '').replace(/[\s()]/g, '')}`} className="flex items-start gap-5 group">
                 <div className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center shrink-0 group-hover:border-[var(--color-accent)] transition-colors">
                   <Phone className="w-5 h-5 text-gray-400 group-hover:text-[var(--color-accent)] transition-colors" />
                 </div>
@@ -1068,7 +1069,7 @@ const InvestorEnquiriesSection = ({ data }: { data?: InvestorEnquiriesSectionDat
                   <span className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">{data?.phoneLabel}</span>
                   <span className="block text-lg font-medium text-[#0A1224] group-hover:text-[var(--color-accent)] transition-colors">{data?.phone}</span>
                 </div>
-              </motion.a>
+              </motion.a> */}
 
               <motion.div variants={fadeUp} className="flex items-start gap-5 group">
                 <div className="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center shrink-0 group-hover:border-[var(--color-accent)] transition-colors">
