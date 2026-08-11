@@ -5,7 +5,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 FROM base AS deps
 COPY package.json package-lock.json ./
-RUN npm ci
+# --no-audit/--no-fund skip work that costs memory on small build hosts.
+RUN npm ci --no-audit --no-fund
 
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
@@ -19,12 +20,21 @@ ARG NEXT_PUBLIC_STRAPI_URL=""
 ARG NEXT_PUBLIC_SITE_URL=""
 
 ENV NODE_ENV=production
+# Caps V8's heap so Node garbage-collects instead of growing until the kernel
+# OOM-kills the build — that kill is what silently ends builds on small VPSes.
+ENV NODE_OPTIONS=--max-old-space-size=2048
 
 # Empty args are unset rather than exported: Next gives real process env
 # precedence over .env files, so an empty var would shadow the .env value.
 RUN set -e; \
     [ -n "$NEXT_PUBLIC_STRAPI_URL" ] || unset NEXT_PUBLIC_STRAPI_URL; \
     [ -n "$NEXT_PUBLIC_SITE_URL" ] || unset NEXT_PUBLIC_SITE_URL; \
+    if [ -z "$NEXT_PUBLIC_STRAPI_URL" ] && [ ! -f .env ]; then \
+      echo "ERROR: NEXT_PUBLIC_STRAPI_URL is not set and no .env file is present."; \
+      echo "It is inlined at build time, so the site would ship without a CMS URL."; \
+      echo "Set it as a build arg in Dokploy (Build > Build Args)."; \
+      exit 1; \
+    fi; \
     npm run build
 
 FROM base AS runner
@@ -48,4 +58,9 @@ RUN rm -f .env .env.local .env.production
 
 USER nextjs
 EXPOSE ${PORT}
+
+# Node 20 has a built-in fetch, so no curl/wget needs installing.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD node -e "fetch('http://127.0.0.1:'+(process.env.PORT||3000)+'/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+
 CMD ["node", "server.js"]
