@@ -29,7 +29,9 @@ RUN set -e; \
 
 FROM base AS runner
 ENV NODE_ENV=production
-ENV PORT=3000
+# Default port; override at runtime with -e PORT=... or PORT in .env.
+ARG PORT=3000
+ENV PORT=${PORT}
 # Must bind 0.0.0.0 or the standalone server is unreachable from the proxy.
 ENV HOSTNAME=0.0.0.0
 WORKDIR /app
@@ -45,5 +47,5 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 RUN rm -f .env .env.local .env.production
 
 USER nextjs
-EXPOSE 3000
+EXPOSE ${PORT}
 CMD ["node", "server.js"]
