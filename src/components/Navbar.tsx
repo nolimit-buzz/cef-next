@@ -132,6 +132,31 @@ export const Navbar = () => {
 
   const closeMegaMenu = () => setActiveMegaMenu(null);
 
+  // startsWith so nested routes (/portfolio/[slug]) keep their parent lit; '/'
+  // must match exactly or it would be active everywhere.
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
+
+  const navLinkClass = (href: string) =>
+    cn(
+      "text-sm font-medium transition-colors flex items-center gap-1 py-3 cursor-pointer",
+      useDarkText
+        ? "text-gray-800 hover:text-[var(--color-accent)]"
+        : "text-white/90 hover:text-white",
+      // Active links carry an underline in their own colour: white over the
+      // transparent hero nav, brand blue once the nav goes solid.
+      isActive(href) && "font-semibold border-b-2 border-current",
+      isActive(href) && (useDarkText ? "text-[#0094DA]" : "text-white"),
+    );
+
+  const mobileNavLinkClass = (href: string) =>
+    cn(
+      "text-base md:text-xl font-medium tracking-widest uppercase transition-colors",
+      isActive(href)
+        ? "text-[var(--color-accent-green)]"
+        : "text-white hover:text-[var(--color-accent-green)]",
+    );
+
   // FIX 2: Click-toggle for mega menus — supports tablet touch in addition to desktop hover
   const toggleMegaMenu = (menu: string) => {
     setActiveMegaMenu((prev) => (prev === menu ? null : menu));
@@ -187,12 +212,8 @@ export const Navbar = () => {
             {/* FIX 3: Added py-3 to ensure ≥44px tap target height */}
             <Link
               href="/about"
-              className={cn(
-                "text-sm font-medium transition-colors flex items-center gap-1 py-3 cursor-pointer",
-                useDarkText
-                  ? "text-gray-800 hover:text-[var(--color-accent)]"
-                  : "text-white/90 hover:text-white",
-              )}
+              className={navLinkClass("/about")}
+              aria-current={isActive("/about") ? "page" : undefined}
             >
               About
             </Link>
@@ -205,12 +226,8 @@ export const Navbar = () => {
           >
             <Link
               href="/portfolio"
-              className={cn(
-                "text-sm font-medium transition-colors flex items-center gap-1 py-3 cursor-pointer",
-                useDarkText
-                  ? "text-gray-800 hover:text-[var(--color-accent)]"
-                  : "text-white/90 hover:text-white",
-              )}
+              className={navLinkClass("/portfolio")}
+              aria-current={isActive("/portfolio") ? "page" : undefined}
             >
               Portfolio
             </Link>
@@ -218,12 +235,8 @@ export const Navbar = () => {
 
           <Link
             href="/impact"
-            className={cn(
-              "text-sm font-medium transition-colors flex items-center gap-1 py-3",
-              useDarkText
-                ? "text-gray-800 hover:text-[var(--color-accent)]"
-                : "text-white/90 hover:text-white",
-            )}
+            className={navLinkClass("/impact")}
+            aria-current={isActive("/impact") ? "page" : undefined}
             onMouseEnter={closeMegaMenu}
           >
             Impact
@@ -231,12 +244,8 @@ export const Navbar = () => {
 
           <Link
             href="/investor-relations"
-            className={cn(
-              "text-sm font-medium transition-colors flex items-center gap-1 py-3",
-              useDarkText
-                ? "text-gray-800 hover:text-[var(--color-accent)]"
-                : "text-white/90 hover:text-white",
-            )}
+            className={navLinkClass("/investor-relations")}
+            aria-current={isActive("/investor-relations") ? "page" : undefined}
             onMouseEnter={closeMegaMenu}
           >
             Investor Relations
@@ -244,12 +253,8 @@ export const Navbar = () => {
 
           <Link
             href="/eligibility"
-            className={cn(
-              "text-sm font-medium transition-colors flex items-center gap-1 py-3",
-              useDarkText
-                ? "text-gray-800 hover:text-[var(--color-accent)]"
-                : "text-white/90 hover:text-white",
-            )}
+            className={navLinkClass("/eligibility")}
+            aria-current={isActive("/eligibility") ? "page" : undefined}
             onMouseEnter={closeMegaMenu}
           >
             Eligibility Criteria
@@ -277,12 +282,8 @@ export const Navbar = () => {
 
           <Link
             href="/contact"
-            className={cn(
-              "text-sm font-medium transition-colors flex items-center gap-1 py-3",
-              useDarkText
-                ? "text-gray-800 hover:text-[var(--color-accent)]"
-                : "text-white/90 hover:text-white",
-            )}
+            className={navLinkClass("/contact")}
+            aria-current={isActive("/contact") ? "page" : undefined}
             onMouseEnter={closeMegaMenu}
           >
             Contact
@@ -673,7 +674,8 @@ export const Navbar = () => {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-base md:text-xl font-medium tracking-widest uppercase text-white hover:text-[var(--color-accent-green)] transition-colors"
+                className={mobileNavLinkClass(item.href)}
+                aria-current={isActive(item.href) ? "page" : undefined}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.label}
@@ -704,7 +706,8 @@ export const Navbar = () => {
 
             <Link
               href="/contact"
-              className="text-base md:text-xl font-medium tracking-widest uppercase text-white hover:text-[var(--color-accent-green)] transition-colors"
+              className={mobileNavLinkClass("/contact")}
+              aria-current={isActive("/contact") ? "page" : undefined}
               onClick={() => setMobileMenuOpen(false)}
             >
               Contact
@@ -867,8 +870,11 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
   const heroY = useTransform(scrollY, [0, 600], [0, 100]);
   const router = useRouter();
 
+  // Hero uses min-h rather than a fixed h-[100dvh]: on short viewports (iPhone
+  // SE, 768px laptops) the fixed height clipped content behind the fixed
+  // navbar. The pt clears the navbar; the section now grows instead.
   return (
-    <section className="relative h-[100dvh] min-h-[600px] lg:min-h-[800px] flex flex-col justify-end pb-16 overflow-hidden bg-obsidian text-white ">
+    <section className="relative min-h-[100dvh] lg:min-h-[800px] flex flex-col justify-end pt-28 lg:pt-32 pb-16 overflow-hidden bg-obsidian text-white ">
 
       {/* Video Background */}
       <motion.div style={{ opacity: 1 }} className="absolute inset-0 z-0 bg-obsidian">
@@ -894,10 +900,17 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
         <div className="absolute inset-0 bg-[#050A15]/80 z-10" />
       </motion.div>
 
-      {/* FIX 6: Replaced max-w-7xl mx-auto px-6 with container-responsive */}
+      {/* The content block and the bottom bar share one parallax wrapper. When
+          the y-transform lived only on the content block it slid down into the
+          stationary bottom bar on scroll and the two collided. */}
       <motion.div
         style={{ opacity: heroOpacity, y: heroY }}
-        className="relative z-20 w-full container-responsive flex flex-col xl:flex-row justify-between xl:items-center items-start gap-8 xl:gap-12 mb-8 lg:mb-12"
+        className="relative z-20 w-full"
+      >
+
+      {/* FIX 6: Replaced max-w-7xl mx-auto px-6 with container-responsive */}
+      <div
+        className="w-full container-responsive flex flex-col xl:flex-row justify-between xl:items-center items-start gap-8 xl:gap-12 mb-8 lg:mb-12"
       >
         {/* Left Content */}
         <motion.div
@@ -1001,20 +1014,16 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
             />
           </div>
         </motion.div>
-      </motion.div>
+      </div>
 
       {/* Bottom Row */}
       {/* FIX 9: container-responsive replaces max-w-7xl mx-auto px-6 */}
-      <motion.div
-        style={{ opacity: heroOpacity }}
-        className="relative z-20 w-full container-responsive border-t border-white/20 pt-6 flex justify-between items-center"
-      >
+      <div className="w-full container-responsive border-t border-white/20 pt-6 flex justify-start items-center">
         <div className="text-[10px] md:text-xs font-medium tracking-widest uppercase text-white/60">
           {hero?.down_text ?? "Nigeria’s First Certified Green Fund"}
         </div>
-        <div className="text-[10px] md:text-xs font-medium tracking-widest uppercase text-white/60">
-          Scroll to Explore
-        </div>
+      </div>
+
       </motion.div>
     </section>
   );

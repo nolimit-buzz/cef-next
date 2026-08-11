@@ -68,17 +68,34 @@ export const InvestorRelationsPage = ({ sections = [] }: { sections: InvestorRel
   );
 };
 
+// Most CMS labels slugify straight onto their section id; these do not.
+const SECTION_ID_OVERRIDES: Record<string, string> = {
+  'investor enquiries': 'enquiries',
+};
+
+const sectionIdFor = (label: string) =>
+  SECTION_ID_OVERRIDES[label.toLowerCase()] ?? label.toLowerCase().replace(/\s+/g, '-');
+
 const StickySubNav = ({ navItems }: { navItems?: StickyNavSectionData['navItems'] }) => {
   const [activeSection, setActiveSection] = useState('');
+  // Nav items are CMS-driven but some sections are not mounted (e.g. Downloads).
+  // Rather than let those render as dead buttons, keep only the items whose
+  // target section is actually on the page — self-healing when one is restored.
+  const [renderedItems, setRenderedItems] = useState<StickyNavSectionData['navItems']>([]);
 
   const items = navItems ?? [];
+
+  useEffect(() => {
+    setRenderedItems(items.filter(item => document.getElementById(sectionIdFor(item.label))));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navItems]);
 
   useEffect(() => {
     if (!items.length) return;
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 150;
       for (const item of items) {
-        const id = item.label.toLowerCase().replace(/\s+/g, '-');
+        const id = sectionIdFor(item.label);
         const element = document.getElementById(id);
         if (element) {
           const { top, bottom } = element.getBoundingClientRect();
@@ -103,13 +120,13 @@ const StickySubNav = ({ navItems }: { navItems?: StickyNavSectionData['navItems'
     }
   };
 
-  if (!items.length) return null;
+  if (!renderedItems.length) return null;
 
   return (
     <div className="sticky top-[57px] z-40 w-full bg-[#dae7fa]/80 backdrop-blur-md border-b border-gray-200 py-4 hidden md:block transition-all duration-300">
       <div className="max-w-7xl mx-auto px-6 flex items-center gap-3 overflow-x-auto no-scrollbar">
-        {items.map(item => {
-          const id = item.label.toLowerCase().replace(/\s+/g, '-');
+        {renderedItems.map(item => {
+          const id = sectionIdFor(item.label);
           return (
             <button
               key={item.id}
