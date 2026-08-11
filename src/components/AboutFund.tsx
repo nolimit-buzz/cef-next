@@ -511,16 +511,14 @@ export const AboutFund = ({
                       !partner.src ? (
                         <span
                           key={i}
-                          className="text-lg md:text-2xl font-sans italic tracking-tight text-[var(--color-text-secondary)]/30 hover:text-[var(--color-text-secondary)] transition-colors cursor-default"
+                          className="text-lg md:text-2xl font-sans italic tracking-tight text-[var(--color-text-secondary)] cursor-default"
                         >
                           {partner.name}
                         </span>
                       ) : (
                         <div
                           key={i}
-                          className="flex items-center justify-center h-8 w-32 flex-shrink-0
-                                     grayscale opacity-30 hover:grayscale-0 hover:opacity-100
-                                     transition-all duration-300 cursor-default"
+                          className="flex items-center justify-center h-8 w-32 flex-shrink-0 cursor-default"
                         >
                           <img
                             src={partner.src}
@@ -687,17 +685,19 @@ export const AboutFund = ({
                         className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-110"
                         referrerPolicy="no-referrer"
                       />
-                      <div className="absolute inset-0 bg-[rgb(0,133,202)]/40 mix-blend-multiply group-hover:bg-[rgb(0,133,202)]/60 transition-colors duration-500" />
+                      {/* The hovered appearance is the resting state: the copy
+                          must be readable without interaction. */}
+                      <div className="absolute inset-0 bg-[rgb(0,133,202)]/60 mix-blend-multiply" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                       <div className="absolute top-6 right-6">
-                        <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
+                        <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center bg-white text-black">
                           <span className="text-xl font-light">+</span>
                         </div>
                       </div>
                       <div className="absolute bottom-8 left-8 right-8">
                         <span className="text-[10px] font-bold uppercase tracking-widest text-white/60 mb-2 block">Impact</span>
                         <h4 className="text-xl font-medium text-white mb-3">{item.title}</h4>
-                        <p className="text-sm text-white/90 lg:text-white/70 font-light leading-relaxed opacity-100 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <p className="text-sm text-white/90 font-light leading-relaxed">
                           {item.desc}
                         </p>
                       </div>
