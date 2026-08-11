@@ -1,5 +1,7 @@
 FROM node:20-alpine AS base
-RUN apk add --no-cache libc6-compat
+# NOTE: no libc6-compat. It makes Node report a glibc runtime, so npm installs
+# @next/swc-linux-x64-gnu instead of the musl build, and the gnu binary then
+# fails to relocate on Alpine ("__register_atfork: symbol not found").
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 
