@@ -58,8 +58,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Next's standalone output bundles .env; drop it so no secret ships in the
-# image. Runtime values come from the container environment instead.
+
 RUN rm -f .env .env.local .env.production
 
 USER nextjs
