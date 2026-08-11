@@ -665,6 +665,7 @@ export const Navbar = () => {
             className="fixed inset-0 bg-[var(--color-background)] z-40 flex flex-col items-center justify-start pt-24 pb-8 overflow-y-auto gap-6 lg:hidden"
           >
             {[
+              { href: "/", label: "Home" },
               { href: "/about", label: "About" },
               { href: "/portfolio", label: "Portfolio" },
               { href: "/impact", label: "Impact" },
