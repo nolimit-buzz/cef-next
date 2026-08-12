@@ -1,10 +1,5 @@
 name: Build and push frontend image
 
-# Builds the Docker image here instead of on the Dokploy VPS. The VPS build
-# was getting OOM-killed during `next build` (BuildKit reports that as the
-# step being CANCELED) because the box doesn't have enough RAM to run SWC +
-# type-checking + static generation over this dependency set. Actions
-# runners have plenty of headroom; Dokploy just pulls the finished image.
 on:
   push:
     branches: [main]
