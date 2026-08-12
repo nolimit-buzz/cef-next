@@ -41,11 +41,12 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # Optional: trigger a Dokploy redeploy once the image is pushed.
       # Requires the DOKPLOY_DEPLOY_WEBHOOK secret to be set in the repo;
-      # the step is skipped (not failed) if it isn't configured yet.
+      # the step is skipped (not failed) if it isn't configured yet. (A step
+      # can't read its own `env:` block inside its own `if:`, so the guard
+      # checks `secrets` directly instead.)
       - name: Trigger Dokploy redeploy
-        if: ${{ env.DOKPLOY_DEPLOY_WEBHOOK != '' }}
+        if: ${{ secrets.DOKPLOY_DEPLOY_WEBHOOK != '' }}
         env:
           DOKPLOY_DEPLOY_WEBHOOK: ${{ secrets.DOKPLOY_DEPLOY_WEBHOOK }}
         run: curl -fsSL -X POST "$DOKPLOY_DEPLOY_WEBHOOK"
