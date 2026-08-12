@@ -11,6 +11,8 @@ permissions:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    env:
+      DOKPLOY_DEPLOY_WEBHOOK: ${{ secrets.DOKPLOY_DEPLOY_WEBHOOK }}
     steps:
       - uses: actions/checkout@v4
 
@@ -37,11 +39,9 @@ jobs:
           cache-to: type=gha,mode=max
 
       # Requires the DOKPLOY_DEPLOY_WEBHOOK secret to be set in the repo;
-      # the step is skipped (not failed) if it isn't configured yet. (A step
-      # can't read its own `env:` block inside its own `if:`, so the guard
-      # checks `secrets` directly instead.)
+      # the step is skipped (not failed) if it isn't configured yet. `if:`
+      # can't read `secrets` directly, so the job-level env var above is
+      # used as the guard instead.
       - name: Trigger Dokploy redeploy
-        if: ${{ secrets.DOKPLOY_DEPLOY_WEBHOOK != '' }}
-        env:
-          DOKPLOY_DEPLOY_WEBHOOK: ${{ secrets.DOKPLOY_DEPLOY_WEBHOOK }}
+        if: ${{ env.DOKPLOY_DEPLOY_WEBHOOK != '' }}
         run: curl -fsSL -X POST "$DOKPLOY_DEPLOY_WEBHOOK"
