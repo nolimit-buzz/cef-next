@@ -4,7 +4,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { ArrowUpRight, Globe2, Zap, LayoutGrid, List, Plus, Minus } from 'lucide-react';
 import Link from "next/link";
 import Breadcrumbs from '../components/Breadcrumbs';
-import { cn } from '../lib/utils';
+import { cn, isWideStatCard, statGridSpan } from '../lib/utils';
 import dynamic from 'next/dynamic';
 const NigeriaMap = dynamic(() => import('../components/NigeriaMap').then(m => m.NigeriaMap), { ssr: false });
 import { FundPerformanceChart } from '../components/FundPerformanceChart';
@@ -313,7 +313,7 @@ const PerformanceSection = ({
                   className="grid grid-cols-12 gap-6"
                 >
                   {sdgCards.map((card, idx) => {
-                    const isTopRow = idx < 3;
+                    const isWide = isWideStatCard(idx, sdgCards.length);
                     const num = Number(card.sdgNumber);
                     const sdg: ResolvedSdg = { id: num, color: sdgColors[num] ?? '#999999', label: sdgTitles[num] ?? `SDG ${num}` };
                     return (
@@ -321,20 +321,20 @@ const PerformanceSection = ({
                         key={card.id}
                         variants={itemVariants}
                         className={cn(
-                          "col-span-12 group relative bg-white border border-blue-100/60 p-8 flex flex-col justify-between min-h-[240px] overflow-hidden transition-all duration-500 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-blue-200/60 hover:-translate-y-0.5",
-                          isTopRow ? "md:col-span-6 lg:col-span-4" : "md:col-span-6",
+                          "group relative bg-white border border-blue-100/60 p-8 flex flex-col justify-between min-h-[240px] overflow-hidden transition-all duration-500 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-blue-200/60 hover:-translate-y-0.5",
+                          statGridSpan(idx, sdgCards.length),
                         )}
                       >
                         <div className={cn(
                           "absolute top-0 right-0 bg-gradient-to-bl from-[#E8F2FF] to-transparent opacity-50 pointer-events-none",
-                          isTopRow ? "w-64 h-64" : "w-80 h-80",
+                          isWide ? "w-80 h-80" : "w-64 h-64",
                         )} />
                         <div className="relative z-10">
                           <div className="flex justify-between items-start mb-4">
                             <h3 className="text-4xl lg:text-5xl font-light text-[#0A1224] tracking-tight">{card.value}</h3>
                             <ArrowUpRight className="w-8 h-8 text-blue-300/70 transition-all duration-500 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-blue-400" strokeWidth={1.5} />
                           </div>
-                          <p className={cn("text-gray-500 text-sm leading-relaxed", isTopRow ? "max-w-[200px]" : "max-w-[250px]")}>{card.description}</p>
+                          <p className={cn("text-gray-500 text-sm leading-relaxed", isWide ? "max-w-[250px]" : "max-w-[200px]")}>{card.description}</p>
                         </div>
                         <div className="relative z-10 mt-6 flex justify-start">
                           <SdgBadge {...sdg} />

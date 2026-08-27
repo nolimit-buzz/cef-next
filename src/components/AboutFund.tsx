@@ -424,7 +424,7 @@ export const AboutFund = ({
                   <FocusCard
                     icon={Sun}
                     headline={c0?.eyebrow ?? "Energy Transition"}
-                    statement={c0?.statement ?? "Decarbonizing the National Grid with Renewable Infrastructure."}
+                    statement={c0?.statement ?? "Decarbonizing the National Off-Grid with Renewable Infrastructure."}
                     proof={c0?.proof ?? "500MW Pipeline"}
                     tags={(c0?.tags as string[] | null) ?? ["SDG 7", "ESG"]}
                     tooltipText="Clean Energy Focus"
@@ -434,7 +434,7 @@ export const AboutFund = ({
                     icon={ShieldCheck}
                     headline={c1?.eyebrow ?? "Financial Resilience"}
                     statement={c1?.statement ?? "Eliminating FX Risk through Local Currency Funding."}
-                    proof={c1?.proof ?? "₦1.2B AUM"}
+                    proof={c1?.proof ?? "₦15.4B AUM"}
                     tags={(c1?.tags as string[] | null) ?? ["Risk Mitigated"]}
                     tooltipText="Risk Management"
                     image={c1?.image ?? "https://images.unsplash.com/photo-1545459720-aac8509eb02c?q=80&w=800&auto=format&fit=crop"}

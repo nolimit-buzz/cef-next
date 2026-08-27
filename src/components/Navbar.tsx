@@ -824,7 +824,7 @@ const DEFAULT_SLIDES = [
     href: "/news",
     isMetric: false,
   },
-  { label: "Total Dividends Paid", value: "₦730M", link: "Across two distributions", isMetric: true },
+  { label: "Portfolio Yield", value: "~22%", link: "Average dividend yield", isMetric: true },
   { label: "Series 1 Investors", value: "8", link: "100% Subscribed", isMetric: true },
   { label: "Fund Rating", value: "BBB(IM)", link: "Investment Grade / Stable", isMetric: true },
   { label: "Green Certification", value: "Active", link: "Climate Bonds Initiative", isMetric: true },
@@ -841,12 +841,12 @@ export const Hero = ({ hero }: { hero?: HeroSection }) => {
     href?: string;
     isMetric: boolean;
   }[] = hero?.sliding_card?.length
-    ? hero.sliding_card.map((card, i) => ({
+    ? hero.sliding_card.map((card) => ({
         label: card.subtitle,
         value: card.title,
         link: card.CTA,
         href: card.link,
-        isMetric: i > 0,
+        isMetric: !card.link && card.title.length <= 20,
       }))
     : DEFAULT_SLIDES;
 

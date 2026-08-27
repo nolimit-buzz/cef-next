@@ -1,5 +1,5 @@
 "use client";
-import  { useState } from 'react';
+import  { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 import Link from "next/link";
@@ -47,7 +47,20 @@ export const NigeriaMap = ({
   states,
   projects,
 }: NigeriaMapProps) => {
-  const [activeState, setActiveState] = useState<string | null>(null);
+  // The map opens on the first state (Nigeria) rather than the empty "Select a
+  // State" panel, so the regional data is visible without a click.
+  const [activeState, setActiveState] = useState<string | null>(() => states[0]?.stateName ?? null);
+
+  // This is a dynamic `ssr: false` import, so `states` is normally populated at
+  // mount and the initializer above is enough. The effect only covers the case
+  // where states arrive late; the ref keeps it from re-selecting after the user
+  // has deliberately deselected.
+  const hasSeededActiveState = useRef(activeState !== null);
+  useEffect(() => {
+    if (hasSeededActiveState.current || !states.length) return;
+    hasSeededActiveState.current = true;
+    setActiveState(states[0].stateName);
+  }, [states]);
 
   const handleStateClick = (stateName: string) => {
     setActiveState(activeState === stateName ? null : stateName);
@@ -156,7 +169,9 @@ export const NigeriaMap = ({
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <h3 className="text-2xl font-bold text-white mb-1">{activeState} State</h3>
+                    <h3 className="text-2xl font-bold text-white mb-1">
+                      {activeState === 'Nigeria' ? activeState : `${activeState} State`}
+                    </h3>
                     <div className="text-sm font-medium text-[var(--color-accent-green)] mb-6">{regionalImpactLabel}</div>
 
                     {activeData ? (

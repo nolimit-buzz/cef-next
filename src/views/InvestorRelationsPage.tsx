@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import Link from "next/link";
 import Breadcrumbs from '../components/Breadcrumbs';
-import { cn } from '../lib/utils';
+import { cn, statGridSpan } from '../lib/utils';
 import { getStrapiMediaURL } from '../lib/strapi';
 import { FundPerformanceChart } from '../components/FundPerformanceChart';
 import type {
@@ -370,8 +370,7 @@ const PerformanceHighlightsSection = ({ data }: { data?: PerformanceHighlightsSe
                   className="grid grid-cols-12 gap-6"
                 >
                   {highlights.map((h, idx) => {
-                    const isTopRow = idx < 3;
-                    const colSpan = isTopRow ? 'col-span-12 md:col-span-4' : 'col-span-12 md:col-span-6';
+                    const colSpan = statGridSpan(idx, highlights.length);
                     return (
                       <motion.div
                         key={h.id}
