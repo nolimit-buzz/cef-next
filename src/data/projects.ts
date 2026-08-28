@@ -313,9 +313,11 @@ export const portfolioData: PortfolioItem[] = [
         }
       ],
       galleryImages: [
-        'https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=1200&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=1200&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=1200&auto=format&fit=crop'
+        'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/portfolio-page/project-04-gallery-1.jpg',
+        'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/portfolio-page/project-04-gallery-2.jpg',
+        'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/portfolio-page/project-04-gallery-3.jpg',
+        'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/portfolio-page/project-04-gallery-4.jpg',
+        'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/portfolio-page/project-04-gallery-5.jpg'
       ]
     }
   },
