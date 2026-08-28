@@ -4,8 +4,9 @@ import { motion, useScroll, useTransform, AnimatePresence, useInView, useMotionV
 import { ArrowUpRight, Sun, ShieldCheck, Users, Globe2, Zap, Building2, Coins, TrendingUp, Leaf } from 'lucide-react';
 import { CountUp } from './CountUp';
 import type { AboutFundSection, ApproachSection } from '../types/home';
+import type { PartnerItem } from '../types/global';
 import { getCtaHref } from '../lib/strapi';
-import { partners } from '../data/partners';
+import { PartnerMarquee, toMarqueePartners } from './PartnerMarquee';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -307,9 +308,15 @@ const TimelineStep = ({ item, i, isLast, setLastActive }: { key?: React.Key, ite
 export const AboutFund = ({
   aboutFund,
   approach,
+  // Partners live on the Global single-type rather than this page's section:
+  // the same strip renders in the footer, and one source keeps them in step.
+  partners,
+  partnersLabel,
 }: {
   aboutFund?: AboutFundSection;
   approach?: ApproachSection;
+  partners?: PartnerItem[] | null;
+  partnersLabel?: string;
 }) => {
   const sectionRef = useRef<HTMLElement>(null);
   const [isLastCardActive, setIsLastCardActive] = useState(false);
@@ -344,10 +351,6 @@ export const AboutFund = ({
     { key: 'Fund Aims', label: approach?.tab_fund_aims ?? 'Fund Aims' },
     { key: 'How CeF Works', label: approach?.tab_how_cef ?? 'How CeF Works' },
   ];
-
-  const activePartners = aboutFund?.partners?.length
-    ? aboutFund.partners.map(p => ({ name: p.name, src: p.logo_url ?? null }))
-    : partners.map(p => ({ name: p.name, src: p.type === 'logo' ? (p as any).src : null }));
 
   return (
     <motion.section
@@ -489,49 +492,10 @@ export const AboutFund = ({
 
             {/* Strategic Partners Strip */}
 
-            <div className="py-12 border-t border-[var(--color-border)]">
-              <div className="flex flex-col items-center">
-                <span className="text-[10px] font-medium uppercase tracking-[0.4em] text-[var(--color-text-tertiary)] mb-8">
-                  {aboutFund?.strategic_partners_label ?? "Strategic Partners & Funders"}
-                </span>
-
-                <div className="w-full overflow-hidden relative">
-                  <div className="absolute top-0 bottom-0 left-0 w-32 bg-gradient-to-r from-[#0A0A0A] to-transparent z-10 pointer-events-none" />
-                  <div className="absolute top-0 bottom-0 right-0 w-32 bg-gradient-to-l from-[#0A0A0A] to-transparent z-10 pointer-events-none" />
-
-                  <motion.div
-                    animate={{ x: ["0%", "-50%"] }}
-                    transition={{ repeat: Infinity, ease: "linear", duration: 40 }}
-                    className="flex items-center gap-16 md:gap-24 whitespace-nowrap w-max px-12"
-                  >
-                    {[
-                      ...activePartners,
-                      ...activePartners,
-                    ].map((partner, i) =>
-                      !partner.src ? (
-                        <span
-                          key={i}
-                          className="text-lg md:text-2xl font-sans italic tracking-tight text-[var(--color-text-secondary)] cursor-default"
-                        >
-                          {partner.name}
-                        </span>
-                      ) : (
-                        <div
-                          key={i}
-                          className="flex items-center justify-center h-8 w-32 flex-shrink-0 cursor-default"
-                        >
-                          <img
-                            src={partner.src}
-                            alt={partner.name}
-                            className="h-full w-full object-contain"
-                          />
-                        </div>
-                      )
-                    )}
-                  </motion.div>
-                </div>
-              </div>
-            </div>
+            <PartnerMarquee
+              heading={partnersLabel ?? "OEM Strategic Partners"}
+              partners={toMarqueePartners(partners)}
+            />
           </motion.div>
         </div>
       </div>

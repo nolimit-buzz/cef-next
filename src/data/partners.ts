@@ -1,6 +1,6 @@
-// Single source of truth for the "Strategic Partners & Funders" marquee.
-// Previously duplicated in Footer.tsx and AboutFund.tsx, where the two copies
-// were free to drift apart.
+// Fallback for the partner marquee, used only when the CMS returns no partners
+// (an outage, or a fresh install before seeding). The live list is the
+// `partners` field on the Global single-type; keep this in step with it.
 //
 // Logos are self-hosted from /public/assets rather than hotlinked from each
 // partner's own domain: those origins can rename assets, block cross-origin
@@ -12,12 +12,14 @@ export type Partner =
   | { type: "text"; name: string };
 
 export const partners: readonly Partner[] = [
-  { type: "logo", name: "NSIA", src: "/assets/nsia.svg" },
   { type: "logo", name: "InfraCredit", src: "/assets/infracredit.svg" },
   { type: "logo", name: "Shelter Afrique", src: "/assets/shelter-afrique.svg" },
   { type: "text", name: "All On" },
-  { type: "logo", name: "Climate Bonds", src: "/assets/partner-climate-bonds-logo.svg" },
-  { type: "logo", name: "FMDQ", src: "/assets/fmdq.svg" },
-  { type: "logo", name: "USAID", src: "/assets/USAID.svg" },
-  { type: "logo", name: "UK NIAF", src: "/assets/UKNIAF_Logo-1.svg" },
+  { type: "logo", name: "Transsion", src: "/assets/partner-transsion-logo.svg" },
+  { type: "logo", name: "itel", src: "/assets/partner-itel-logo.svg" },
+  { type: "logo", name: "DYQUE", src: "/assets/partner-dyque-logo.png" },
+  { type: "logo", name: "TankVolt", src: "/assets/partner-tankvolt-logo.png" },
+  { type: "logo", name: "Cawin", src: "/assets/partner-cawin-logo.png" },
+  { type: "logo", name: "AlphaESS", src: "/assets/partner-alphaess-logo.svg" },
+  { type: "logo", name: "GoodWe", src: "/assets/partner-goodwe-logo.svg" },
 ] as const;

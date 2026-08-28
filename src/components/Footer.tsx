@@ -7,7 +7,7 @@ import { TrendingUp, Building2, Globe, ArrowUpRight, Linkedin, Youtube, Instagra
 import type { LucideIcon } from 'lucide-react';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { partners } from "../data/partners";
+import { PartnerMarquee, toMarqueePartners } from "./PartnerMarquee";
 import type { GlobalData, SocialPlatform } from "../types/global";
 
 // Sentinel href for the Project Sponsors card. The click handler intercepts it
@@ -306,49 +306,10 @@ export const Footer = ({ global }: { global?: GlobalData | null }) => {
             </div>
 
             {/* Strategic Partners Marquee */}
-            <div className="py-12 border-t border-[var(--color-border)]">
-              <div className="flex flex-col items-center">
-                <span className="text-[10px] font-medium uppercase tracking-[0.4em] text-[var(--color-text-tertiary)] mb-8">
-                  Strategic Partners & Funders
-                </span>
-
-                <div className="w-full overflow-hidden relative">
-                  <div className="absolute top-0 bottom-0 left-0 w-32 bg-gradient-to-r from-[#0A0A0A] to-transparent z-10 pointer-events-none" />
-                  <div className="absolute top-0 bottom-0 right-0 w-32 bg-gradient-to-l from-[#0A0A0A] to-transparent z-10 pointer-events-none" />
-
-                  <motion.div
-                    animate={{ x: ["0%", "-50%"] }}
-                    transition={{ repeat: Infinity, ease: "linear", duration: 40 }}
-                    className="flex items-center gap-16 md:gap-24 whitespace-nowrap w-max px-12"
-                  >
-                    {[
-                      ...partners,
-                      ...partners, // duplicate for seamless loop
-                    ].map((partner, i) =>
-                      partner.type !== "logo" ? (
-                        <span
-                          key={i}
-                          className="text-lg md:text-2xl font-sans italic tracking-tight text-[var(--color-text-secondary)] cursor-default"
-                        >
-                          {partner.name}
-                        </span>
-                      ) : (
-                        <div
-                          key={i}
-                          className="flex items-center justify-center h-8 w-32 flex-shrink-0 cursor-default"
-                        >
-                          <img
-                            src={partner.src}
-                            alt={partner.name}
-                            className="h-full w-full object-contain"
-                          />
-                        </div>
-                      )
-                    )}
-                  </motion.div>
-                </div>
-              </div>
-            </div>
+            <PartnerMarquee
+              heading={global?.strategic_partners_label ?? "OEM Strategic Partners"}
+              partners={toMarqueePartners(global?.partners)}
+            />
           </div>
         </div>
 

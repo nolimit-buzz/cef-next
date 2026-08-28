@@ -48,7 +48,7 @@ export const portfolioData: PortfolioItem[] = [
     status: 'Active',
     description: 'An e-mobility company deploying e-2Ws, e-3Ws, swap stations, and logistics solutions for farm-to-market and last-mile delivery.',
     metrics: [
-      { label: 'New Connection', value: '150', icon: Zap },
+      { label: 'Operational EVs', value: '150', icon: Zap },
       { label: 'CO2 avoided', value: '8,454', icon: Leaf },
       { label: 'Job Created', value: '10', icon: Users },
       { label: 'SMEs Supported', value: '3', icon: Briefcase },
@@ -58,7 +58,7 @@ export const portfolioData: PortfolioItem[] = [
       { id: 13, color: '#3F7E44', label: 'Climate Action' },
       { id: 8, color: '#A21942', label: 'Decent Work and Economic Growth' },
     ],
-    image: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?q=80&w=800&auto=format&fit=crop',
+    image: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/portfolio-page/project-01-image.jpg',
     caseStudy: {
       overview: [
         "SwapStation Mobility is revolutionizing the e-mobility sector in Nigeria by deploying a comprehensive network of electric 2-wheelers (e-2Ws), 3-wheelers (e-3Ws), and innovative battery swap stations.",
@@ -86,7 +86,7 @@ export const portfolioData: PortfolioItem[] = [
           sdg: { id: 13, color: '#3F7E44', label: 'Climate Action' }
         },
         {
-          label: 'New Connection',
+          label: 'Operational EVs',
           value: '150',
           icon: Zap,
           description: 'Energy savings achieved through the high efficiency of electric drivetrains compared to internal combustion engines.',
@@ -118,10 +118,10 @@ export const portfolioData: PortfolioItem[] = [
     status: 'Active',
     description: 'A renewable energy company, focusing on accelerating rural electrification through the development of mini-grid systems.',
     metrics: [
-      { label: 'New Connection', value: '150', icon: Zap },
-      { label: 'CO2 avoided', value: '352', icon: Leaf },
-      { label: 'Job Created', value: '5', icon: Users },
-      { label: 'SMEs Supported', value: '6', icon: Briefcase },
+      { label: 'New Connection', value: '6,000+', icon: Zap },
+      { label: 'CO2 avoided', value: '352+', icon: Leaf },
+      { label: 'Job Created', value: '5+', icon: Users },
+      { label: 'SMEs Supported', value: '6+', icon: Briefcase },
     ],
     sdgs: [
       { id: 7, color: '#FCC30B', label: 'Affordable and Clean Energy' },
@@ -149,7 +149,7 @@ export const portfolioData: PortfolioItem[] = [
       impactMetrics: [
         {
           label: 'CO2 Avoided',
-          value: '352',
+          value: '352+',
           icon: Leaf,
           description: 'Reduction in carbon emissions by replacing diesel generators and kerosene lamps with clean solar energy.',
           image: 'https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?q=80&w=800&auto=format&fit=crop',
@@ -157,7 +157,7 @@ export const portfolioData: PortfolioItem[] = [
         },
         {
           label: 'New Connection',
-          value: '150',
+          value: '6,000+',
           icon: Zap,
           description: 'Providing first-time access to reliable electricity for homes and small businesses.',
           image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop',
@@ -165,7 +165,7 @@ export const portfolioData: PortfolioItem[] = [
         },
         {
           label: 'Job Created',
-          value: '5',
+          value: '5+',
           icon: Users,
           description: 'Local employment created in the construction, operation, and maintenance of the mini-grids.',
           image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800&auto=format&fit=crop',
@@ -188,9 +188,9 @@ export const portfolioData: PortfolioItem[] = [
     status: 'Active',
     description: 'Manages and rent tower infrastructure sites to Mobile Network Operators and Internet Service Providers.',
     metrics: [
-      { label: 'New Connection', value: '5,000', icon: Zap },
-      { label: 'CO2 avoided', value: '6,694', icon: Leaf },
-      { label: 'Job Created', value: '200', icon: Users },
+      { label: 'Telecom Connections', value: '500,000+', icon: Zap },
+      { label: 'CO2 avoided', value: '6,694+', icon: Leaf },
+      { label: 'Job Created', value: '200+', icon: Users },
       { label: 'SMEs Supported', value: '200+', icon: Briefcase },
     ],
     sdgs: [
@@ -198,7 +198,7 @@ export const portfolioData: PortfolioItem[] = [
       { id: 13, color: '#3F7E44', label: 'Climate Action' },
       { id: 8, color: '#A21942', label: 'Decent Work and Economic Growth' },
     ],
-    image: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=800&auto=format&fit=crop',
+    image: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/portfolio-page/project-03-image.jpg',
     caseStudy: {
       overview: [
         "HotSpot Network is a leading telecommunications infrastructure provider in Nigeria, specializing in the management and leasing of tower sites to Mobile Network Operators (MNOs) and Internet Service Providers (ISPs).",
@@ -219,15 +219,15 @@ export const portfolioData: PortfolioItem[] = [
       impactMetrics: [
         {
           label: 'CO2 Avoided',
-          value: '6,694',
+          value: '6,694+',
           icon: Leaf,
           description: 'Substantial decrease in carbon emissions by replacing diesel power with solar energy at telecom sites.',
           image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=800&auto=format&fit=crop',
           sdg: { id: 13, color: '#3F7E44', label: 'Climate Action' }
         },
         {
-          label: 'New Connection',
-          value: '5,000',
+          label: 'Telecom Connections',
+          value: '500,000+',
           icon: Zap,
           description: 'Improved network reliability and expanded coverage, connecting more people to digital services.',
           image: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=800&auto=format&fit=crop',
@@ -235,7 +235,7 @@ export const portfolioData: PortfolioItem[] = [
         },
         {
           label: 'Job Created',
-          value: '200',
+          value: '200+',
           icon: Users,
           description: 'Jobs created in the installation, maintenance, and security of the upgraded tower sites.',
           image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800&auto=format&fit=crop',
@@ -258,7 +258,7 @@ export const portfolioData: PortfolioItem[] = [
     status: 'Active',
     description: "A solar asset holding platform that invests in and owns solar equipment's installed and operated by renewable energy service companies.",
     metrics: [
-      { label: 'New Connection', value: '17', icon: Zap },
+      { label: 'New Connection', value: '44+', icon: Zap },
       { label: 'CO2 avoided', value: '2,174', icon: Leaf },
       { label: 'Job Created', value: '6', icon: Users },
       { label: 'SMEs Supported', value: '3', icon: Briefcase },
@@ -268,7 +268,7 @@ export const portfolioData: PortfolioItem[] = [
       { id: 13, color: '#3F7E44', label: 'Climate Action' },
       { id: 8, color: '#A21942', label: 'Decent Work and Economic Growth' },
     ],
-    image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=800&auto=format&fit=crop',
+    image: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/portfolio-page/project-04-image.jpg',
     caseStudy: {
       overview: [
         "GroSolar is an innovative solar asset holding platform that facilitates the deployment of Solar Home Systems (SHS) across Nigeria.",
@@ -297,7 +297,7 @@ export const portfolioData: PortfolioItem[] = [
         },
         {
           label: 'New Connection',
-          value: '17',
+          value: '44+',
           icon: Zap,
           description: 'Households newly electrified with reliable Solar Home Systems.',
           image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=800&auto=format&fit=crop',

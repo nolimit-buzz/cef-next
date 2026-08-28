@@ -159,9 +159,9 @@ const HOME_POPULATE_QUERY = [
   // Hero — sliding card panel + impact stats row
   "populate[sections][on][home-page.hero-section][populate][sliding_card][populate]=*",
   "populate[sections][on][home-page.hero-section][populate][stats][populate]=*",
-  // About Fund — 5-box bento grid + scrolling partners strip
+  // About Fund — 5-box bento grid. The partners strip below it is site-wide and
+  // comes from the Global type, not from this section.
   "populate[sections][on][home-page.about-fund-section][populate][bento_cards][populate]=*",
-  "populate[sections][on][home-page.about-fund-section][populate][partners][populate]=*",
   "populate[sections][on][home-page.about-fund-section][populate][cta][populate]=*",
   // Approach — scalar fields come automatically; only arrays need explicit populate
   "populate[sections][on][home-page.approach-section][populate][why_cef_cards][populate]=*",
@@ -221,6 +221,7 @@ const GLOBAL_POPULATE_QUERY = [
   "populate[social_links][populate]=*",
   "populate[footer_links][populate][links][populate]=*",
   "populate[partner_cta_cards][populate]=*",
+  "populate[partners][populate]=*",
 ].join("&");
 
 // Global backs the layout, so it is rendered on every route. Unlike the page

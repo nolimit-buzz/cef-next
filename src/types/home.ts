@@ -25,12 +25,6 @@ export interface BentoCard {
   image?: string | null;
 }
 
-export interface PartnerItem {
-  id: number;
-  name: string;
-  logo_url: string | null;
-}
-
 export interface WhyCefCard {
   id: number;
   title: string;
@@ -96,9 +90,7 @@ export interface AboutFundSection {
   eyebrow: string;
   headline: string;
   cta?: CtaItem[];
-  strategic_partners_label: string;
   bento_cards: BentoCard[];
-  partners?: PartnerItem[];
 }
 
 export interface ApproachSection {

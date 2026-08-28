@@ -8,6 +8,7 @@ import type {
   NewsSection,
   EligibilitySection,
 } from "../types/home";
+import type { PartnerItem } from "../types/global";
 import { Hero, ImpactStats } from "../components/Navbar";
 import { AboutFund } from "../components/AboutFund";
 import { Portfolio } from "../components/Portfolio";
@@ -22,7 +23,15 @@ function find<T extends HomePageSection>(
   return sections.find((s) => s.__component === component) as T | undefined;
 }
 
-export function HomePage({ sections }: { sections: HomePageSection[] }) {
+export function HomePage({
+  sections,
+  partners,
+  partnersLabel,
+}: {
+  sections: HomePageSection[];
+  partners?: PartnerItem[] | null;
+  partnersLabel?: string;
+}) {
   const hero = find<HeroSection>(sections, "home-page.hero-section");
   const aboutFund = find<AboutFundSection>(sections, "home-page.about-fund-section");
   const approach = find<ApproachSection>(sections, "home-page.approach-section");
@@ -35,7 +44,12 @@ export function HomePage({ sections }: { sections: HomePageSection[] }) {
     <main>
       <Hero hero={hero} />
       <ImpactStats stats={hero?.stats} />
-      <AboutFund aboutFund={aboutFund} approach={approach} />
+      <AboutFund
+        aboutFund={aboutFund}
+        approach={approach}
+        partners={partners}
+        partnersLabel={partnersLabel}
+      />
       <Portfolio cms={portfolio} />
       <DevelopmentImpact cms={developmentImpact} />
       {/* <Blog cms={news} /> */}
