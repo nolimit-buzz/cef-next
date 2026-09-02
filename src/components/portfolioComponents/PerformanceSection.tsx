@@ -6,14 +6,6 @@ import { FundPerformanceChart } from '../FundPerformanceChart';
 import type { PerformanceSection as PerformanceSectionData } from '../../types/portfolio';
 import { fadeUp, staggerContainer, itemVariants, getSdgStyle } from './shared';
 
-const COL_SPAN_CLASSES = [
-  'col-span-12 md:col-span-6 lg:col-span-4',
-  'col-span-12 md:col-span-6 lg:col-span-4',
-  'col-span-12 md:col-span-12 lg:col-span-4',
-  'col-span-12 md:col-span-6',
-  'col-span-12 md:col-span-6',
-];
-const DEFAULT_COL_SPAN = 'col-span-12 md:col-span-6';
 
 export const PerformanceSection = ({ sectionLabel, headingPrimary, headingSecondary, description, tabSdgLabel, tabFinancialLabel, sdgCards }: PerformanceSectionData) => {
   const [activePerfTab, setActivePerfTab] = useState<'sdg' | 'financial'>('sdg');
@@ -90,19 +82,19 @@ export const PerformanceSection = ({ sectionLabel, headingPrimary, headingSecond
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: false, margin: "-100px" }}
-                  className="grid grid-cols-12 gap-6"
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                 >
-                  {sdgCards.map((card, i) => {
+                  {sdgCards.map((card) => {
                     const style = getSdgStyle(card.sdgNumber);
                     return (
-                      <motion.div key={card.id} variants={itemVariants} className={`${COL_SPAN_CLASSES[i] ?? DEFAULT_COL_SPAN} group relative bg-white border border-blue-100/60 p-8 flex flex-col justify-between min-h-[240px] overflow-hidden transition-all duration-500 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-blue-200/60 hover:-translate-y-0.5`}>
-                        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-[#E8F2FF] to-transparent opacity-50 pointer-events-none" />
+                      <motion.div key={card.id} variants={itemVariants} className="group relative bg-white border border-blue-100/60 p-8 flex flex-col justify-between min-h-[240px] overflow-hidden transition-all duration-500 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:border-blue-200/60 hover:-translate-y-0.5">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#E8F2FF] to-transparent opacity-50 pointer-events-none" />
                         <div className="relative z-10">
                           <div className="flex justify-between items-start mb-4">
                             <h3 className="text-4xl lg:text-5xl font-light text-[#0A1224] tracking-tight">{card.value}</h3>
                             <ArrowUpRight className="w-8 h-8 text-blue-300/70 transition-all duration-500 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-blue-400" strokeWidth={1.5} />
                           </div>
-                          <p className="text-gray-500 text-sm leading-relaxed max-w-[250px]">{card.description}</p>
+                          <p className="text-gray-500 text-sm leading-relaxed max-w-[200px]">{card.description}</p>
                         </div>
                         <div className="relative z-10 mt-6 flex justify-start">
                           <div
