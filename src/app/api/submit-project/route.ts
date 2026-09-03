@@ -99,6 +99,8 @@ export async function POST(request: Request) {
     text,
     html,
     replyTo: email,
+    type: "project-submission",
+    payload: { projectName, sector, description, impact, contactName, email },
   });
 
   if (!result.ok) {

@@ -63,12 +63,60 @@ async function isSenderUsable(apiKey: string): Promise<boolean> {
   }
 }
 
+// Which form produced the mail. Drives the sheet partitioning in the CMS's
+// spreadsheet export, so these strings must match the ones in
+// cms/src/admin/extensions/email-log/workbook.ts.
+export type MailType = "contact" | "project-submission" | "investor-enquiry";
+
 type SendArgs = {
   subject: string;
   text: string;
   html: string;
   replyTo: string;
+  type?: MailType;
+  payload?: Record<string, unknown> | null;
 };
+
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
+
+type EmailLogEntry = {
+  type: string;
+  to: string;
+  from: string;
+  replyTo: string | null;
+  subject: string;
+  body: string;
+  payload: Record<string, unknown> | null;
+  status: "sent" | "failed";
+  error: string | null;
+  messageId: string | null;
+  smtpResponse: string | null;
+};
+
+// Best-effort archive write. A CMS that is down, misconfigured or missing the
+// Public "create" permission on email-log must never turn a *delivered* email
+// into an error for the visitor, so every failure is swallowed and only logged.
+async function logToStrapi(entry: EmailLogEntry) {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/email-logs`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        data: { ...entry, sentAt: new Date().toISOString() },
+      }),
+    });
+
+    if (!response.ok) {
+      console.error(
+        "[mail] failed to log email in Strapi",
+        response.status,
+        await response.text(),
+      );
+    }
+  } catch (error) {
+    console.error("[mail] failed to log email in Strapi", error);
+  }
+}
 
 type SendResult =
   | { ok: true; id?: string }
@@ -79,6 +127,8 @@ export async function sendTransactionalEmail({
   text,
   html,
   replyTo,
+  type,
+  payload,
 }: SendArgs): Promise<SendResult> {
   const apiKey = process.env.BREVO_API_KEY;
 
@@ -112,17 +162,33 @@ export async function sendTransactionalEmail({
       }),
     });
 
-    const payload = (await response.json().catch(() => null)) as
+    const brevoResponse = (await response.json().catch(() => null)) as
       | { messageId?: string; message?: string; code?: string }
       | null;
 
     if (!response.ok) {
-      console.error("Brevo error:", response.status, payload);
+      console.error("Brevo error:", response.status, brevoResponse);
 
       return { ok: false, error: "send-failed" };
     }
 
-    return { ok: true, id: payload?.messageId };
+    // Only delivered mail is archived. `status` and `error` still exist on the
+    // schema, so failures can be logged later without a migration.
+    await logToStrapi({
+      type: type ?? "other",
+      to: CONTACT_TO,
+      from: FROM_EMAIL,
+      replyTo,
+      subject,
+      body: text,
+      payload: payload ?? null,
+      status: "sent",
+      error: null,
+      messageId: brevoResponse?.messageId ?? null,
+      smtpResponse: brevoResponse ? JSON.stringify(brevoResponse) : null,
+    });
+
+    return { ok: true, id: brevoResponse?.messageId };
   } catch (error) {
     console.error("Email sending failed:", error);
 

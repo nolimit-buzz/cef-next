@@ -90,6 +90,8 @@ export async function POST(request: Request) {
     text,
     html,
     replyTo: email,
+    type: "investor-enquiry",
+    payload: { fullName, institution, email, subject, message },
   });
 
   if (!result.ok) {

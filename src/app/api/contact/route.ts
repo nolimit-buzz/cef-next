@@ -93,6 +93,8 @@ export async function POST(request: Request) {
     text,
     html,
     replyTo: email,
+    type: "contact",
+    payload: { firstName, lastName, fullName, email, department, message },
   });
 
 
