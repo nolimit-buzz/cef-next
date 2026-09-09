@@ -340,7 +340,7 @@ export const portfolioData: PortfolioItem[] = [
       { id: 13, color: '#3F7E44', label: 'Climate Action' },
       { id: 8, color: '#A21942', label: 'Decent Work and Economic Growth' },
     ],
-    image: 'https://images.unsplash.com/photo-1508514177221-188b1c77eca2?q=80&w=800&auto=format&fit=crop',
+    image: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/portfolio-page/project-05-image.jpg',
     caseStudy: {
       overview: [
         "Pirano specializes in delivering tailored Commercial and Industrial (C&I) solar solutions to businesses across Nigeria, helping them transition to reliable, clean energy.",
@@ -364,7 +364,7 @@ export const portfolioData: PortfolioItem[] = [
           value: '3,523',
           icon: Leaf,
           description: 'Substantial reduction in industrial carbon emissions by displacing diesel generation.',
-          image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=800&auto=format&fit=crop',
+          image: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/portfolio-page/project-05-impact-metric-1-image.jpg',
           sdg: { id: 13, color: '#3F7E44', label: 'Climate Action' }
         },
         {
@@ -372,7 +372,7 @@ export const portfolioData: PortfolioItem[] = [
           value: '7',
           icon: Zap,
           description: 'Large-scale commercial facilities successfully transitioned to solar power.',
-          image: 'https://images.unsplash.com/photo-1508514177221-188b1c77eca2?q=80&w=800&auto=format&fit=crop',
+          image: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/portfolio-page/project-05-impact-metric-2-image.jpg',
           sdg: { id: 7, color: '#FCC30B', label: 'Affordable and Clean Energy' }
         },
         {
@@ -380,14 +380,14 @@ export const portfolioData: PortfolioItem[] = [
           value: '5',
           icon: Users,
           description: 'High-skilled jobs created in solar engineering, project management, and maintenance.',
-          image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=800&auto=format&fit=crop',
+          image: 'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/portfolio-page/project-05-impact-metric-3-image.jpg',
           sdg: { id: 8, color: '#A21942', label: 'Decent Work and Economic Growth' }
         }
       ],
       galleryImages: [
-        'https://images.unsplash.com/photo-1508514177221-188b1c77eca2?q=80&w=1200&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?q=80&w=1200&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1466611653911-95081537e5b7?q=80&w=1200&auto=format&fit=crop'
+        'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/portfolio-page/project-05-gallery-1.jpg',
+        'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/portfolio-page/project-05-gallery-2.jpg',
+        'https://res.cloudinary.com/diqfojkri/image/upload/CEF/seed-media/portfolio-page/project-05-gallery-3.jpg'
       ]
     }
   },

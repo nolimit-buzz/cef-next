@@ -222,6 +222,7 @@ const GLOBAL_POPULATE_QUERY = [
   "populate[footer_links][populate][links][populate]=*",
   "populate[partner_cta_cards][populate]=*",
   "populate[partners][populate]=*",
+  "populate[oem_partners][populate]=*",
 ].join("&");
 
 // Global backs the layout, so it is rendered on every route. Unlike the page

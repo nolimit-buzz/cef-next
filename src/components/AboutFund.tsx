@@ -7,6 +7,7 @@ import type { AboutFundSection, ApproachSection } from '../types/home';
 import type { PartnerItem } from '../types/global';
 import { getCtaHref } from '../lib/strapi';
 import { PartnerMarquee, toMarqueePartners } from './PartnerMarquee';
+import { strategic_partners } from '../data/partners';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -308,8 +309,8 @@ const TimelineStep = ({ item, i, isLast, setLastActive }: { key?: React.Key, ite
 export const AboutFund = ({
   aboutFund,
   approach,
-  // Partners live on the Global single-type rather than this page's section:
-  // the same strip renders in the footer, and one source keeps them in step.
+  // The strategic partners live on the Global single-type rather than this
+  // page's section, alongside the OEM list the footer strip uses.
   partners,
   partnersLabel,
 }: {
@@ -490,11 +491,12 @@ export const AboutFund = ({
               );
             })()}
 
-            {/* Strategic Partners Strip */}
+            {/* Strategic Partners Strip — home page only. The OEM strip is in
+                the footer, so every route gets that one. */}
 
             <PartnerMarquee
-              heading={partnersLabel ?? "OEM Strategic Partners"}
-              partners={toMarqueePartners(partners)}
+              heading={partnersLabel ?? "Strategic Partners"}
+              partners={toMarqueePartners(partners, strategic_partners)}
             />
           </motion.div>
         </div>

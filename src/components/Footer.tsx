@@ -8,6 +8,7 @@ import type { LucideIcon } from 'lucide-react';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PartnerMarquee, toMarqueePartners } from "./PartnerMarquee";
+import { oem_partners } from "../data/partners";
 import type { GlobalData, SocialPlatform } from "../types/global";
 
 // Sentinel href for the Project Sponsors card. The click handler intercepts it
@@ -305,10 +306,11 @@ export const Footer = ({ global }: { global?: GlobalData | null }) => {
               ))}
             </div>
 
-            {/* Strategic Partners Marquee */}
+            {/* OEM Partners Marquee — the footer renders site-wide, so this is
+                the one strip every route shows. */}
             <PartnerMarquee
-              heading={global?.strategic_partners_label ?? "OEM Strategic Partners"}
-              partners={toMarqueePartners(global?.partners)}
+              heading={global?.oem_partners_label ?? "OEM Partners"}
+              partners={toMarqueePartners(global?.oem_partners, oem_partners)}
             />
           </div>
         </div>

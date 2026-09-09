@@ -31,19 +31,28 @@ export interface CtaCard {
   background_image?: string;
 }
 
-// Partners are site-wide: the same marquee renders in the footer and on the
-// home page, so the list lives here rather than on either page's sections.
+// Partners are site-wide rather than tied to one page's sections: the OEM
+// marquee renders in the footer on every route, and the strategic marquee
+// renders on the home page.
 export interface PartnerItem {
   id?: number;
   name: string;
   logo_url: string | null;
   logo_url_alt_text?: string;
+  /**
+   * Set when the logo is baked onto an opaque background plate. The marquee
+   * flattens logos to white, which turns a plated logo into a solid white
+   * block, so these show the name at rest and the real logo on hover.
+   */
+  plated?: boolean;
 }
 
 export interface GlobalData {
   id?: number;
   strategic_partners_label?: string;
   partners?: PartnerItem[];
+  oem_partners_label?: string;
+  oem_partners?: PartnerItem[];
   contact_email?: string;
   support_email?: string;
   project_funding_email?: string;
