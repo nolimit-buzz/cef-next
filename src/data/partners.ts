@@ -11,36 +11,38 @@
 // Logos are self-hosted from /public/assets rather than hotlinked from each
 // partner's own domain: those origins can rename assets, block cross-origin
 // requests, or go down, and at least one (climatebonds.net) already returns 403
-// to hotlinks. Partners with no local asset render as a text wordmark instead.
+// to hotlinks.
+//
+// Each partner ships two exports of the same mark: `-w` is the all-white
+// version the strip shows at rest against its near-black background, and the
+// unsuffixed file is the brand-colour version revealed on hover. `color` is
+// optional — omit it and the logo simply stays white, which is what NSIA and
+// Transsion need (see below). Partners with no usable asset render as a text
+// wordmark instead.
 
-// "logo"   — art on a transparent ground, so the marquee can flatten it to white.
-// "plated" — the mark is baked onto an opaque background plate (Climate Bonds'
-//            blue box, NSIA's green box, itel's red pill). Flattening those to
-//            white yields a solid white rectangle, so the marquee shows the name
-//            as a wordmark at rest and reveals the real logo on hover instead.
-// "text"   — no local asset at all; name only.
 export type Partner =
-  | { type: "logo"; name: string; src: string }
-  | { type: "plated"; name: string; src: string }
+  | { type: "logo"; name: string; white: string; color?: string }
   | { type: "text"; name: string };
 
 export const strategic_partners: readonly Partner[] = [
-  { type: "plated", name: "Climate Bonds", src: "/assets/partner-climate-bonds-logo.svg" },
-  { type: "logo", name: "FMDQ", src: "/assets/fmdq.svg" },
-  { type: "logo", name: "USAID", src: "/assets/USAID.svg" },
-  { type: "logo", name: "UKNIaF", src: "/assets/UKNIAF_Logo-1.svg" },
-  { type: "plated", name: "NSIA", src: "/assets/nsia.svg" },
+  { type: "logo", name: "Climate Bonds", white: "/assets/climate-bonds-w.svg", color: "/assets/climate-bonds.svg" },
+  { type: "logo", name: "FMDQ", white: "/assets/fmdq-w.svg", color: "/assets/fmdq.svg" },
+  { type: "logo", name: "USAID", white: "/assets/usaid-w.svg", color: "/assets/usaid.svg" },
+  { type: "logo", name: "UKNIaF", white: "/assets/ukniaf-w.svg", color: "/assets/ukniaf.svg" },
+  { type: "logo", name: "NSIA", white: "/assets/nsia-w.svg", color: "/assets/nsia.svg" },
 ] as const;
 
 export const oem_partners: readonly Partner[] = [
-  { type: "logo", name: "Transsion", src: "/assets/partner-transsion-logo.svg" },
-  { type: "plated", name: "itel", src: "/assets/partner-itel-logo.svg" },
-  { type: "logo", name: "DYQUE", src: "/assets/partner-dyque-logo.png" },
-  { type: "logo", name: "TankVolt", src: "/assets/partner-tankvolt-logo.png" },
-  { type: "logo", name: "Cawin", src: "/assets/partner-cawin-logo.png" },
-  { type: "logo", name: "AlphaESS", src: "/assets/partner-alphaess-logo.svg" },
-  { type: "logo", name: "GoodWe", src: "/assets/partner-goodwe-logo.svg" },
-  // No local asset yet — these fall through to the marquee's text wordmark.
-  { type: "text", name: "Levene Solar" },
-  { type: "text", name: "Coleman Cables" },
+  // transsion.svg is filled pure black, so it would vanish against #0A0A0A on
+  // hover. Stays white until a dark-background export exists.
+  { type: "logo", name: "Transsion", white: "/assets/transsion-w.svg" },
+  { type: "logo", name: "itel", white: "/assets/itel-w.svg", color: "/assets/itel.svg" },
+  { type: "logo", name: "DYQUE", white: "/assets/dyque-w.svg", color: "/assets/dyque.svg" },
+  { type: "logo", name: "TankVolt", white: "/assets/tankvolt-w.svg", color: "/assets/tankvolt.svg" },
+  // cawin.png is colour-only (its artwork is already near-white) — wordmark for now.
+  { type: "text", name: "Cawin" },
+  { type: "logo", name: "AlphaESS", white: "/assets/alphaess-w.svg", color: "/assets/alphaess.svg" },
+  { type: "logo", name: "GoodWe", white: "/assets/goodwe-w.svg", color: "/assets/goodwe.svg" },
+  { type: "logo", name: "Levene Solar", white: "/assets/levene-w.svg", color: "/assets/levene.svg" },
+  { type: "logo", name: "Coleman Cables", white: "/assets/coleman-w.svg", color: "/assets/coleman.svg" },
 ] as const;

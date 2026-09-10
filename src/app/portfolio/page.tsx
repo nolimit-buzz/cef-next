@@ -1,5 +1,4 @@
 import { getPortfolioPage } from "../../lib/strapi";
-import { resolveProject } from "../../lib/resolveProject";
 import type { PortfolioPageSection } from "../../types/portfolio";
 import { HeroSection } from "../../components/portfolioComponents/HeroSection";
 import { PerformanceSection } from "../../components/portfolioComponents/PerformanceSection";
@@ -13,9 +12,12 @@ export default async function Page() {
   const projectsSection = sections.find(
     (s) => s.__component === 'portfolio-page.projects-section',
   );
-  const resolvedProjects =
+  // Passed raw (not through resolveProject()) because resolved metric icons
+  // are React components, which can't cross the server->client props
+  // boundary — NigeriaMap resolves them client-side instead.
+  const rawProjects =
     projectsSection?.__component === 'portfolio-page.projects-section'
-      ? projectsSection.projects.map(resolveProject)
+      ? projectsSection.projects
       : [];
 
   return (
@@ -30,7 +32,7 @@ export default async function Page() {
           case 'portfolio-page.projects-section':
             return <ProjectsSection key={key} {...section} />;
           case 'portfolio-page.nigeria-map-section':
-            return <NigeriaMapSection key={key} section={section} projects={resolvedProjects} />;
+            return <NigeriaMapSection key={key} section={section} projects={rawProjects} />;
           default:
             return null;
         }

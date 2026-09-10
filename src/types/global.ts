@@ -37,14 +37,15 @@ export interface CtaCard {
 export interface PartnerItem {
   id?: number;
   name: string;
+  /** The all-white logo the marquee shows at rest. */
   logo_url: string | null;
   logo_url_alt_text?: string;
   /**
-   * Set when the logo is baked onto an opaque background plate. The marquee
-   * flattens logos to white, which turns a plated logo into a solid white
-   * block, so these show the name at rest and the real logo on hover.
+   * Brand-colour version of the same mark, revealed on hover. Leave empty for
+   * a logo with no colour export that reads on a near-black background — the
+   * marquee then keeps showing the white one.
    */
-  plated?: boolean;
+  logo_url_color?: string | null;
 }
 
 export interface GlobalData {

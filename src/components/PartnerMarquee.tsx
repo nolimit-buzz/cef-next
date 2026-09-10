@@ -6,15 +6,11 @@ import type { PartnerItem } from "../types/global";
 
 export interface MarqueePartner {
   name: string;
-  /** null renders the name as a text wordmark instead of a logo. */
-  src: string | null;
+  /** The all-white logo shown at rest; null renders the name as a wordmark. */
+  white: string | null;
+  /** Brand-colour logo revealed on hover. Absent means the logo stays white. */
+  color?: string | null;
   alt?: string;
-  /**
-   * The logo is baked onto an opaque background plate, so it cannot be
-   * flattened to white. Shows the name as a wordmark, swapping in the real
-   * logo on hover.
-   */
-  plated?: boolean;
 }
 
 /**
@@ -31,21 +27,23 @@ export function toMarqueePartners(
   if (cms?.length) {
     return cms.map((p) => ({
       name: p.name,
-      src: p.logo_url ?? null,
+      white: p.logo_url ?? null,
+      color: p.logo_url_color ?? null,
       alt: p.logo_url_alt_text || p.name,
-      plated: p.plated ?? false,
     }));
   }
-  return fallback.map((p) => ({
-    name: p.name,
-    src: p.type === "text" ? null : p.src,
-    plated: p.type === "plated",
-  }));
+  return fallback.map((p) =>
+    p.type === "text"
+      ? { name: p.name, white: null }
+      : { name: p.name, white: p.white, color: p.color ?? null },
+  );
 }
 
-/** Shared so a plated logo's resting name matches a text-only partner's. */
+/** Shared so a wordmark partner sits consistently beside the logos. */
 const wordmark =
   "text-lg md:text-2xl font-sans italic tracking-tight text-white whitespace-nowrap";
+
+const logoBox = "flex items-center justify-center h-8 w-32 flex-shrink-0 cursor-default";
 
 /**
  * The scrolling partner logo strip, used for both the home page's strategic
@@ -83,8 +81,8 @@ export function PartnerMarquee({
               ...partners,
               ...partners, // duplicate for seamless loop
             ].map((partner, i) => {
-              // No asset at all — the name is the only thing to show.
-              if (!partner.src) {
+              // No usable asset — the name is the only thing to show.
+              if (!partner.white) {
                 return (
                   <span key={i} className={`${wordmark} cursor-default`}>
                     {partner.name}
@@ -92,40 +90,33 @@ export function PartnerMarquee({
                 );
               }
 
-              // Plated logos can't be flattened to white, so the wordmark
-              // carries the resting state and hover reveals the real logo.
-              if (partner.plated) {
+              // White-only: no brand-colour export that reads on a dark ground.
+              if (!partner.color) {
                 return (
-                  <div
-                    key={i}
-                    className="group relative flex items-center justify-center h-8 min-w-32 flex-shrink-0 px-2 cursor-default"
-                  >
-                    <span
-                      className={`${wordmark} transition-opacity duration-300 group-hover:opacity-0`}
-                    >
-                      {partner.name}
-                    </span>
+                  <div key={i} className={logoBox}>
                     <img
-                      src={partner.src}
+                      src={partner.white}
                       alt={partner.alt ?? partner.name}
-                      className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                      className="h-full w-full object-contain"
                     />
                   </div>
                 );
               }
 
-              // brightness-0 crushes the logo to black, invert flips it to pure
-              // white — one uniform treatment for logos that each ship in their
-              // own brand colours. Hover drops the filter to show the real thing.
+              // Cross-fade white → brand colour on hover. The colour image is
+              // aria-hidden so the partner is announced once, not twice.
               return (
-                <div
-                  key={i}
-                  className="group flex items-center justify-center h-8 w-32 flex-shrink-0 cursor-default"
-                >
+                <div key={i} className={`group relative ${logoBox}`}>
                   <img
-                    src={partner.src}
+                    src={partner.white}
                     alt={partner.alt ?? partner.name}
-                    className="h-full w-full object-contain brightness-0 invert transition-[filter] duration-300 group-hover:brightness-100 group-hover:invert-0"
+                    className="h-full w-full object-contain transition-opacity duration-300 group-hover:opacity-0"
+                  />
+                  <img
+                    src={partner.color}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   />
                 </div>
               );

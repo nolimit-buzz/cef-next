@@ -1,13 +1,13 @@
 "use client";
 import dynamic from 'next/dynamic';
 
-import type { NigeriaMapSection as NigeriaMapSectionData, ResolvedProject } from '../../types/portfolio';
+import type { NigeriaMapSection as NigeriaMapSectionData, ProjectItem } from '../../types/portfolio';
 
 const NigeriaMap = dynamic(() => import('../NigeriaMap').then(m => m.NigeriaMap), { ssr: false });
 
 interface NigeriaMapSectionProps {
   section: NigeriaMapSectionData;
-  projects: ResolvedProject[];
+  projects: ProjectItem[];
 }
 
 export const NigeriaMapSection = ({ section, projects }: NigeriaMapSectionProps) => {

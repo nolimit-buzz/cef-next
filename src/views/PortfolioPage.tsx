@@ -90,7 +90,7 @@ export const PortfolioPage = ({ sections }: { sections: PortfolioPageSection[] }
           noProjectsText={nigeriaMapSection.noProjectsText}
           futureEvaluationText={nigeriaMapSection.futureEvaluationText}
           states={nigeriaMapSection.states}
-          projects={resolvedProjects}
+          projects={projectsSection?.projects ?? []}
         />
       )}
     </div>

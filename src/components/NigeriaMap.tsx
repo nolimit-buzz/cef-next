@@ -1,12 +1,13 @@
 "use client";
-import  { useEffect, useRef, useState } from 'react';
+import  { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 import Link from "next/link";
 import { ArrowUpRight } from 'lucide-react';
 
 import { sdgColors, sdgTitles } from '../lib/sdgMeta';
-import type { StateItem, ResolvedProject } from '../types/portfolio';
+import { resolveProject } from '../lib/resolveProject';
+import type { StateItem, ProjectItem, ResolvedProject } from '../types/portfolio';
 
 const geoUrl = "https://unpkg.com/world-atlas@2.0.2/countries-110m.json";
 
@@ -26,7 +27,7 @@ export interface NigeriaMapProps {
   noProjectsText: string;
   futureEvaluationText: string;
   states: StateItem[];
-  projects: ResolvedProject[];
+  projects: ProjectItem[];
 }
 
 export const NigeriaMap = ({
@@ -45,8 +46,13 @@ export const NigeriaMap = ({
   noProjectsText,
   futureEvaluationText,
   states,
-  projects,
+  projects: rawProjects,
 }: NigeriaMapProps) => {
+  // Metric icons resolve to React components, which can't be passed as
+  // server-component props to a client component — projects arrive raw and
+  // are resolved here instead.
+  const projects: ResolvedProject[] = useMemo(() => rawProjects.map(resolveProject), [rawProjects]);
+
   // The map opens on the first state (Nigeria) rather than the empty "Select a
   // State" panel, so the regional data is visible without a click.
   const [activeState, setActiveState] = useState<string | null>(() => states[0]?.stateName ?? null);

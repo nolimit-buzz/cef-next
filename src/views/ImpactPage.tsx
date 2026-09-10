@@ -21,6 +21,7 @@ import type {
   CorePillarsSection as CorePillarsSectionData,
   CaseStudySpotlightSection as CaseStudySpotlightSectionData,
 } from "../types/impact";
+import type { StateItem, ProjectItem } from "../types/portfolio";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -40,7 +41,15 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
 };
 
-export const ImpactPage = ({ sections }: { sections: ImpactPageSection[] }) => {
+export const ImpactPage = ({
+  sections,
+  states,
+  projects,
+}: {
+  sections: ImpactPageSection[];
+  states: StateItem[];
+  projects: ProjectItem[];
+}) => {
   const hero = sections.find(
     (s): s is HeroSectionData => s.__component === "impact-page.hero-section",
   );
@@ -64,7 +73,7 @@ export const ImpactPage = ({ sections }: { sections: ImpactPageSection[] }) => {
       {hero && <HeroSection {...hero} />}
       {statement && <ImpactStatementSection {...statement} />}
       {body && <ImpactBodySection {...body} />}
-      <SDGMap />
+      <SDGMap states={states} projects={projects} />
       {pillars && <CorePillarsSection {...pillars} />}
       {caseStudy && <CaseStudySpotlight {...caseStudy} />}
     </main>
