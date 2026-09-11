@@ -17,9 +17,18 @@ export const ProjectsSection = ({ sectionLabel, headingPrimary, headingSecondary
 
   const filters = ['All', ...Array.from(new Set(projects.map(item => item.sector)))];
 
+  // Display-only override: the underlying sector value stays 'SOLAR HOMES
+  // SYSTEMS' (matches CMS data and project cards); only this filter button's
+  // label reads differently.
+  const FILTER_LABEL_OVERRIDES: Record<string, string> = {
+    'SOLAR HOMES SYSTEMS': 'Solar as a Service',
+  };
+
   const filteredProjects = activeFilter === 'All'
     ? projects
-    : projects.filter(project => project.sector === activeFilter);
+    : projects.filter(project =>
+        project.sector === activeFilter || (project.additionalSectors ?? []).includes(activeFilter)
+      );
 
   const toggleExpand = (id: string) => {
     setExpandedAccordionId(expandedAccordionId === id ? null : id);
@@ -62,7 +71,7 @@ export const ProjectsSection = ({ sectionLabel, headingPrimary, headingSecondary
                       : 'bg-white/5 text-white/60 hover:bg-white/10'
                   }`}
                 >
-                  {filter}
+                  {FILTER_LABEL_OVERRIDES[filter] ?? filter}
                 </button>
               ))}
             </div>
