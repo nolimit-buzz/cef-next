@@ -26,9 +26,7 @@ export const ProjectsSection = ({ sectionLabel, headingPrimary, headingSecondary
 
   const filteredProjects = activeFilter === 'All'
     ? projects
-    : projects.filter(project =>
-        project.sector === activeFilter || (project.additionalSectors ?? []).includes(activeFilter)
-      );
+    : projects.filter(project => project.sector === activeFilter);
 
   const toggleExpand = (id: string) => {
     setExpandedAccordionId(expandedAccordionId === id ? null : id);

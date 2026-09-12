@@ -37,6 +37,13 @@ export const Portfolio = ({ cms }: { cms?: PortfolioSection }) => {
 
   const uniqueSectors = Array.from(new Set(items.map(item => item.sector)));
 
+  // Display-only override: the underlying sector value stays 'SOLAR HOMES
+  // SYSTEMS' (matches CMS data and project cards); only this filter button's
+  // label reads differently.
+  const FILTER_LABEL_OVERRIDES: Record<string, string> = {
+    'SOLAR HOMES SYSTEMS': 'Solar as a Service',
+  };
+
   const filteredData = items.filter(item => {
     const matchSector = selectedSector ? item.sector === selectedSector : true;
     return matchSector;
@@ -114,7 +121,7 @@ export const Portfolio = ({ cms }: { cms?: PortfolioSection }) => {
                 onClick={() => setSelectedSector(sector)}
                 className={`${idx < 2 ? 'col-span-2' : 'col-span-3'} sm:col-auto px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest whitespace-nowrap transition-all ${selectedSector === sector ? 'bg-white text-black' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
               >
-                {sector}
+                {FILTER_LABEL_OVERRIDES[sector] ?? sector}
               </button>
             ))}
           </div>

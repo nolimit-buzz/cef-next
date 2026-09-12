@@ -252,8 +252,8 @@ export const portfolioData: PortfolioItem[] = [
   {
     id: '04',
     name: 'GroSolar',
-    sector: 'SOLAR HOMES SYSTEMS',
-    sectorColor: '#F7931D',
+    sector: 'C&I SOLAR',
+    sectorColor: '#0054A6',
     location: 'Nigeria',
     status: 'Active',
     description: "A solar asset holding platform that invests in and owns solar equipment's installed and operated by renewable energy service companies.",
@@ -324,8 +324,8 @@ export const portfolioData: PortfolioItem[] = [
   {
     id: '05',
     name: 'Pirano',
-    sector: 'C&I SOLAR',
-    sectorColor: '#0054A6',
+    sector: 'SOLAR HOMES SYSTEMS',
+    sectorColor: '#F7931D',
     location: 'Nigeria',
     status: 'Active',
     description: 'Commercial and Industrial solar solutions providing reliable and clean energy to businesses, reducing operational costs and carbon footprint.',

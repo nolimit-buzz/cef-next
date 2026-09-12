@@ -101,7 +101,6 @@ export interface ProjectItem {
   projectId: string;
   name: string;
   sector: string;
-  additionalSectors?: string[] | null;
   sectorColor: string;
   location: string;
   status: string;
